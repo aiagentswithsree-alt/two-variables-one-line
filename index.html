@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Two Variables, One Line</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* THEME:START */
+:root{
+  --bg:#f5eee2;--paper:#fbf7ef;--ink:#2a2620;--muted:#6f675b;--line:#2a2620;--soft:#e7dccb;
+  --req:#e8833a;--res:#5e9e5a;--hs:#3c7fb8;--warn:#d64545;--accent:#cfe8b4;--accent-ink:#2f5b1f;
+  --chip1:#f6dfa3;--chip2:#d6ecc4;--chip3:#e2d7f5;--node:#f3c969;--node2:#8fb3e0;--node3:#b9a6e6;--node4:#9ccf8f;
+  --shadow:3px 3px 0 var(--line);--r:14px;
+  --mono:'JetBrains Mono',ui-monospace,monospace;--sans:Inter,system-ui,sans-serif;
+}
+[data-theme=dark]{
+  --bg:#1c1a17;--paper:#25221e;--ink:#efe7da;--muted:#a59c8e;--line:#efe7da;--soft:#3a352e;
+  --accent:#3d5a2c;--accent-ink:#d6f0c0;--chip1:#5a4a20;--chip2:#2f4a26;--chip3:#3d3358;
+}
+/* THEME:END */
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+body{background-image:radial-gradient(var(--soft) 1px,transparent 1px);background-size:18px 18px}
+button{font:inherit;color:inherit;cursor:pointer}
+.mono{font-family:var(--mono)}
+header.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--bg);border-bottom:2px solid var(--line)}
+.iconbtn{width:38px;height:38px;border:2px solid var(--line);border-radius:10px;background:var(--paper);display:grid;place-items:center;box-shadow:2px 2px 0 var(--line)}
+.iconbtn:active{transform:translate(2px,2px);box-shadow:none}
+.brand{font-family:var(--mono);font-weight:800;font-size:18px;flex:1}
+.brand mark{background:var(--accent);color:inherit;padding:0 4px}
+.wrap{max-width:1180px;margin:0 auto;padding:18px 16px 110px;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}}
+.wrap>*{min-width:0}
+.card{background:var(--paper);border:2px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.crumb{font-family:var(--mono);font-size:13px;color:var(--muted)}
+h1{font-family:var(--mono);font-weight:800;font-size:clamp(26px,4vw,40px);margin:6px 0 10px;letter-spacing:-.5px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12px;padding:4px 10px;border:2px solid var(--line);border-radius:999px;background:var(--chip1)}
+.chip:nth-child(2){background:var(--chip2)}.chip:nth-child(3){background:var(--chip3)}
+.tagline{color:var(--muted);margin:10px 0 14px}
+.stage{padding:12px;position:relative}
+.metrics{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.metric{flex:1 0 110px;border:2px solid var(--line);border-radius:10px;padding:6px 10px;background:var(--bg)}
+.metric small{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.6px;color:var(--muted);text-transform:uppercase}
+.metric b{font-family:var(--mono);font-size:18px;white-space:nowrap}
+.metric.total{background:var(--accent)}
+.metric.flash b{color:var(--warn)}
+svg.scene{width:100%;height:auto;display:block;margin-top:8px}
+.legend{display:flex;gap:14px;align-items:center;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.controls{margin-left:auto;display:flex;gap:6px}
+.stage:fullscreen{background:var(--paper);overflow:auto}
+.side{display:flex;flex-direction:column;gap:14px}
+.steps{padding:12px 14px}
+.steps .hdr{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+.stepnav{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.stepnav button{min-width:30px;height:30px;border:2px solid var(--line);border-radius:8px;background:var(--bg);font-family:var(--mono);font-size:12px;padding:0 8px}
+.stepnav button.done{background:var(--chip2)}
+.stepnav button.on{background:var(--ink);color:var(--paper)}
+.panel{padding:16px 18px}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.8px;color:var(--muted)}
+.tag{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;border:2px solid var(--line);margin:6px 0}
+.tag.CONCEPT{background:var(--chip2)}.tag.PROBLEM{background:#f4c3c3;color:#2a2620}.tag.RECAP{background:var(--chip3)}.tag.TRY{background:var(--chip1)}
+.panel h2{font-family:var(--mono);font-size:21px;margin:6px 0 10px}
+.panel p{line-height:1.6;margin:0 0 10px}
+.box{border:2px dashed var(--line);border-radius:10px;padding:10px 12px;margin:12px 0;background:var(--bg)}
+.box .kicker{display:block;margin-bottom:4px}
+.changes div{display:flex;gap:8px;font-size:14px;margin:4px 0}
+.changes i{font-style:normal;font-family:var(--mono);font-weight:800;width:14px}
+.points{padding-left:18px;line-height:1.6}
+table.tbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13px}
+table.tbl td{padding:4px 0;border-bottom:1px dashed var(--soft)}table.tbl td:last-child{text-align:right}
+table.tbl tr.sum td{font-weight:800;border-bottom:none;border-top:2px solid var(--line)}
+.quiz button{display:block;width:100%;text-align:left;margin:6px 0;padding:8px 10px;border:2px solid var(--line);border-radius:8px;background:var(--paper)}
+.quiz button.ok{background:var(--chip2)}.quiz button.bad{background:#f4c3c3;color:#2a2620}
+.fb{font-size:14px;margin-top:6px}
+.learn ul{padding-left:18px;line-height:1.7;margin:6px 0 0}
+.bottombar{position:fixed;left:0;right:0;bottom:0;z-index:15;display:flex;gap:10px;padding:12px 16px;background:var(--bg);border-top:2px solid var(--line)}
+.bottombar button{border:2px solid var(--line);border-radius:12px;padding:12px 16px;background:var(--paper);box-shadow:2px 2px 0 var(--line);font-weight:600}
+.bottombar .next{flex:1;background:var(--accent);color:var(--accent-ink);text-align:left;display:flex;justify-content:space-between;font-family:var(--mono)}
+.bottombar button:disabled{opacity:.4;cursor:default}
+.drawer{position:fixed;inset:0 auto 0 0;width:min(360px,90vw);z-index:40;background:var(--paper);border-right:2px solid var(--line);transform:translateX(-102%);transition:transform .25s;display:flex;flex-direction:column}
+.drawer.open{transform:none}
+.scrim{position:fixed;inset:0;background:#0006;z-index:30;display:none}.scrim.open{display:block}
+.drawer .dh{display:flex;align-items:center;gap:8px;padding:14px;border-bottom:2px solid var(--line);font-family:var(--mono);font-weight:800}
+.drawer .list{overflow:auto;flex:1;padding:8px 10px}
+.mod{margin:4px 0}.mod>button{width:100%;display:flex;gap:8px;align-items:center;border:0;background:none;padding:8px 4px;font-family:var(--mono);font-weight:600;text-align:left}
+.mod .sw{width:14px;height:12px;border-radius:3px;border:1.5px solid var(--line)}
+.mod .cnt{margin-left:auto;font-size:11px;color:var(--muted)}
+.mod ul{list-style:none;margin:0 0 6px 22px;padding:0;border-left:2px dashed var(--soft)}
+.mod li a{display:block;padding:6px 10px;color:var(--ink);text-decoration:none;font-size:14px;border-radius:8px;margin-left:6px}
+.mod li a.cur{background:var(--accent);border:2px solid var(--line)}
+.mod li a.done::after{content:" ✓";color:var(--res);font-weight:800}
+.drawer .prog{padding:12px 14px;border-top:2px solid var(--line);font-family:var(--mono);font-size:13px;display:flex;justify-content:space-between}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <button class="iconbtn" id="menuBtn" aria-label="Open course menu">☰</button>
+  <div class="brand" id="brand"></div>
+  <button class="iconbtn" id="themeBtn" aria-label="Toggle dark mode">◐</button>
+</header>
+<div class="scrim" id="scrim"></div>
+<nav class="drawer" id="drawer" aria-label="Course">
+  <div class="dh"><span style="flex:1">Course</span><span class="mono" id="lessonCount" style="font-size:11px;font-weight:400"></span><button class="iconbtn" id="closeDrawer" aria-label="Close menu">✕</button></div>
+  <div class="list" id="courseList"></div>
+  <div class="prog"><span>PROGRESS</span><span id="progTxt"></span></div>
+</nav>
+
+<main class="wrap">
+  <section>
+    <div class="crumb" id="crumb"></div>
+    <h1 id="title"></h1>
+    <div class="chips" id="chips"></div>
+    <p class="tagline" id="tagline"></p>
+    <div class="card stage" id="stage">
+      <div class="metrics" id="metrics"></div>
+      <svg class="scene" id="scene" viewBox="0 0 720 400" role="img" aria-label="Animated diagram"></svg>
+      <div class="legend" id="legend">
+        <span><i class="dot" style="background:var(--req)"></i>request</span>
+        <span><i class="dot" style="background:var(--res)"></i>response</span>
+        <span><i class="dot" style="border:2px solid var(--hs)"></i>handshake</span>
+        <div class="controls">
+          <button class="iconbtn" id="restartBtn" aria-label="Restart lesson">↺</button>
+          <button class="iconbtn" id="pauseBtn" aria-label="Pause animation">❚❚</button>
+          <button class="iconbtn" id="fsBtn" aria-label="Full screen">⤢</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <aside class="side">
+    <div class="card steps">
+      <div class="hdr"><span>In this lesson</span><span id="stepCount"></span></div>
+      <div class="stepnav" id="stepNav"></div>
+    </div>
+    <article class="card panel" id="panel" aria-live="polite"></article>
+    <div class="card panel learn" id="learn"></div>
+  </aside>
+</main>
+
+<div class="bottombar">
+  <button id="backBtn">← Back</button>
+  <button class="next" id="nextBtn"><span id="nextTxt"></span><span>→</span></button>
+</div>
+
+<script>
+/* COURSE-DATA:START — the only part you rewrite for a new lesson/course */
+const RL = {m:-6/5, d:28/5, label:'60x + 50y = 280', at:1.6, color:'var(--hs)'};       // Radha's bill line
+const WL = {m:-1,   d:5,    label:'x + y = 5',        at:4.2, color:'var(--req)'};      // the 5 kg clue
+const PLOT_LEGEND = [['var(--hs)','line'],['var(--res)','solution ✓'],['var(--warn)','not a solution'],['var(--req)','moving point']];
+const AX = {xl:'x · kg of mangoes', yl:'y · kg of bananas'};
+
+const COURSE = {
+  brand: 'Two Variables, <mark>One Line</mark>',
+  storageKey: 'gm9-ch13-two-variables',
+  modules: [
+    { name: 'One Equation', color: '#e2b44a', lessons: [
+      {
+        slug: 'one-bill-many-answers',
+        title: 'One Bill, Many Answers',
+        minutes: 10, level: 'Grade 9',
+        tagline: 'Radha paid ₹280 for mangoes and bananas. Follow that one bill until it turns into a straight line.',
+        learn: ['Turn a shopping situation into a linear equation in two variables','Write any such equation in standard form ax + by + c = 0','Check whether an ordered pair is a solution','Why one equation has infinitely many solutions','Why every solution sits on one straight line'],
+        nextTeaser: 'How Steep Is a Line? — measuring the tilt of Radha’s line with rise and run.',
+        unitPrefix: '₹', unit: '',
+        legend: PLOT_LEGEND,
+        metrics: [ {id:'mango',label:'Mangoes 60x'},{id:'banana',label:'Bananas 50y'} ],
+        totalLabel: 'Bill (target ₹280)',
+        nodes: [], edges: [],
+        steps: [
+          { nav:'The bill', tag:'CONCEPT', title:'Radha pays ₹280',
+            body:['At a fruit cart, mangoes cost <b>₹60 a kg</b> and bananas <b>₹50 a kg</b>. Radha buys some of each and pays <b>₹280</b>.','She has forgotten how many kilograms of each she bought. Can we work it out?'],
+            key:'Two unknown amounts, one known fact. The whole chapter grows from this setting.',
+            plot:{xr:[-1,7],yr:[-2.5,7],...AX}, metrics:{} },
+          { nav:'Write it', tag:'CONCEPT', title:'Name the unknowns, write the equation',
+            body:['Let <b>x</b> = kg of mangoes and <b>y</b> = kg of bananas. Mangoes cost 60x rupees and bananas cost 50y rupees.','Both sides below measure the same money, so <b>60x + 50y = 280</b>.'],
+            changes:[['+','x = kilograms of mangoes'],['+','y = kilograms of bananas'],['+','equation 60x + 50y = 280']],
+            key:'An equation with two variables, each raised only to the power 1, is a <b>linear equation in two variables</b>.',
+            plot:{xr:[-1,7],yr:[-2.5,7],...AX}, metrics:{} },
+          { nav:'Standard form', tag:'CONCEPT', title:'Put it in standard form',
+            body:['Any such equation can be written as <b>ax + by + c = 0</b>, where a and b are not both zero.','Move 280 across: <b>60x + 50y − 280 = 0</b>. Dividing every term by 10 gives the same equation with smaller numbers: 6x + 5y − 28 = 0.'],
+            table:{title:'Reading off a, b, c',rows:[['a (coefficient of x)','60'],['b (coefficient of y)','50'],['c (constant)','−280']],foot:'Fractions or decimals are allowed too; we usually clear them by multiplying.'},
+            quiz:{q:'Which is 2y = 7 written in standard form?',options:['0·x + 2y − 7 = 0','2x + y − 7 = 0','It is not a linear equation in two variables'],answer:0,why:'The coefficient of x is simply 0. Equations like this still count as linear equations in two variables.'},
+            plot:{xr:[-1,7],yr:[-2.5,7],...AX}, metrics:{} },
+          { nav:'First guess', tag:'CONCEPT', title:'Try x = 3, y = 2',
+            body:['Substitute: 60 × 3 + 50 × 2 = 180 + 100 = 280. The bill matches.','So x = 3, y = 2 is a <b>solution</b>. We write it as the ordered pair <b>(3, 2)</b>: x first, then y.'],
+            key:'A solution is a pair of values that makes the left side equal the right side.',
+            plot:{xr:[-1,7],yr:[-2.5,7],...AX, points:[{x:3,y:2,label:'(3, 2) ✓',ok:true}], movers:[{from:[0,0],to:[3,2]}]},
+            metrics:{mango:180,banana:100} },
+          { nav:'Swap order', tag:'PROBLEM', title:'Case: the pair written backwards',
+            body:['What about (2, 3)? That means 2 kg mangoes and 3 kg bananas: 120 + 150 = 270. The bill is ₹10 short.','Same two numbers, different order, different answer.'],
+            changes:[['~','x: 3 → 2 kg'],['~','y: 2 → 3 kg'],['~','bill: ₹280 → ₹270 ✗']],
+            key:'Order matters. In (a, b) the first number is always x and the second is always y.',
+            plot:{xr:[-1,7],yr:[-2.5,7],...AX, points:[{x:3,y:2,label:'(3, 2) ✓',ok:true,dx:34,dy:14},{x:2,y:3,label:'(2, 3) ✗',bad:true}], movers:[{from:[0,0],to:[2,3]}]},
+            metrics:{mango:120,banana:150}, flash:['_total'] },
+          { nav:'More answers', tag:'CONCEPT', title:'Pick any x, and y follows',
+            body:['Choose a value for x, put it in, and solve the one-variable equation that is left for y.','x = 0.5 gives 30 + 50y = 280, so y = 5. Since x can be any number, the solutions never run out.'],
+            table:{title:'Solutions found so far',rows:[['x = 0','y = 5.6'],['x = 0.5','y = 5'],['x = 1','y = 4.4'],['x = 3','y = 2']],foot:'Each row puts the bill at exactly ₹280.'},
+            plot:{xr:[-1,7],yr:[-2.5,7],...AX, points:[{x:0,y:5.6,label:'(0, 5.6)',ok:true,dx:44,dy:4},{x:0.5,y:5,label:'(0.5, 5)',ok:true,dx:50,dy:6},{x:1,y:4.4,label:'(1, 4.4)',ok:true,dx:50,dy:6},{x:3,y:2,label:'(3, 2)',ok:true,dx:40,dy:6}], movers:[{from:[0.5,0],to:[0.5,5]}]},
+            metrics:{mango:30,banana:250} },
+          { nav:'The line', tag:'CONCEPT', title:'All the solutions form a line',
+            body:['Rearranged, the equation reads <b>y = −(6/5)x + 28/5</b>. Plotting every solution gives one straight line.','Each point on the line is a solution, and each solution is a point on the line.'],
+            key:'The graph of a linear equation in two variables is always a straight line.',
+            quiz:{q:'Is (4, 0.8) on Radha’s line?',options:['Yes: 240 + 40 = 280','No: x must be a whole number','No: the point is too close to the x-axis'],answer:0,why:'60 × 4 + 50 × 0.8 = 240 + 40 = 280, so the pair satisfies the equation and lies on the line.'},
+            plot:{xr:[-1,7],yr:[-2.5,7],...AX, lines:[RL], points:[{x:0,y:5.6,ok:true},{x:0.5,y:5,ok:true},{x:1,y:4.4,ok:true},{x:3,y:2,label:'(3, 2)',ok:true,dx:40,dy:6}], movers:[{from:[0,5.6],to:[14/3,0]}]},
+            metrics:{mango:180,banana:100} },
+          { nav:'Real limits', tag:'PROBLEM', title:'Case: a solution no shop can sell',
+            body:['Follow the line further. At x = 6, y = −1.6: 360 − 80 = 280. The equation is satisfied.','But nobody can buy −1.6 kg of bananas. Only the part of the line where x ≥ 0 and y ≥ 0 makes sense for Radha.'],
+            changes:[['+','point (6, −1.6) satisfies the equation'],['-','negative kilograms are impossible in real life']],
+            key:'Algebra gives every solution. The situation decides which ones are sensible.',
+            plot:{xr:[-1,7],yr:[-2.5,7],...AX, lines:[RL], points:[{x:3,y:2,label:'(3, 2)',ok:true,dx:40,dy:6},{x:6,y:-1.6,label:'(6, −1.6) ?',bad:true,dx:-50,dy:4}], movers:[{from:[3,2],to:[6,-1.6]}]},
+            metrics:{mango:360,banana:-80}, flash:['banana'] },
+          { nav:'Recap', tag:'RECAP', title:'One bill, a whole line of answers',
+            body:['One equation narrowed Radha’s purchase down to a line, not to one answer. To pin it down we need a second fact.'],
+            points:['Linear equation in two variables: ax + by + c = 0, with a and b not both zero.','A solution is an ordered pair; the order is (x, y).','There are infinitely many solutions, and together they make a straight line.','The real situation can rule out some solutions, such as negative amounts.'],
+            table:{title:'The (3, 2) bill',rows:[['3 kg mangoes × ₹60','₹180'],['2 kg bananas × ₹50','₹100']],sum:['total','₹280'],foot:'Correct, but (0.5, 5) and (1, 4.4) also give ₹280.'},
+            plot:{xr:[-1,7],yr:[-2.5,7],...AX, lines:[RL], points:[{x:3,y:2,label:'(3, 2)',ok:true,dx:40,dy:6}]},
+            metrics:{mango:180,banana:100} }
+        ]
+      },
+      {
+        slug: 'how-steep-is-a-line',
+        title: 'How Steep Is a Line?',
+        minutes: 12, level: 'Grade 9',
+        tagline: 'Ride a cyclist up and down straight-line roads and measure steepness with one number.',
+        learn: ['What rise, run and slope mean','Why the slope is the same between any two points on a line','Positive, negative, zero and undefined slopes','Reading the slope m and intercept d from y = mx + d','Getting the slope from standard form: m = −a/b'],
+        nextTeaser: 'Where Two Lines Meet — add a second clue to Radha’s bill and find the single answer.',
+        unit: '', total: false,
+        legend: [['var(--req)','run (across)'],['var(--res)','rise (up/down)'],['var(--hs)','line']],
+        metrics: [ {id:'rise',label:'Rise'},{id:'run',label:'Run'},{id:'slope',label:'Slope = rise ÷ run'} ],
+        nodes: [], edges: [],
+        steps: [
+          { nav:'The hill', tag:'CONCEPT', title:'Steeper road, harder ride',
+            body:['On a flat road you pedal easily. As the road tilts upward you work harder, and the steeper it gets, the harder it is.','In maths, the steepness of a line is called its <b>slope</b> (or gradient).'],
+            key:'Slope is one number that tells you how much a line climbs or falls.',
+            plot:{xr:[-1,9],yr:[-1,10],equal:true, lines:[{m:1.5,d:-3,label:'road',at:6.6}], movers:[{from:[2,0],to:[8,9]}]}, metrics:{} },
+          { nav:'Rise & run', tag:'CONCEPT', title:'Measure rise and run',
+            body:['Go from A(2, 0) to B(4, 3). You move 2 units right (the <b>run</b>) and 3 units up (the <b>rise</b>).','Slope = rise ÷ run = (y₂ − y₁) ÷ (x₂ − x₁) = 3 ÷ 2.'],
+            key:'Right is a positive run, up is a positive rise.',
+            plot:{xr:[-1,9],yr:[-1,10],equal:true, lines:[{m:1.5,d:-3}], tri:{a:[2,0],b:[4,3]}, points:[{x:2,y:0,label:'A(2, 0)',dx:-40,dy:-4},{x:4,y:3,label:'B(4, 3)',dx:-44,dy:-4}]},
+            metrics:{rise:3,run:2,slope:'3/2'} },
+          { nav:'Any two points', tag:'CONCEPT', title:'Same slope wherever you measure',
+            body:['Now measure from B(4, 3) to D(8, 9): run 4, rise 6. Slope = 6 ÷ 4 = 3/2, the same as before.','A straight line has one slope. The triangle grows, but its shape stays the same.'],
+            changes:[['~','run: 2 → 4'],['~','rise: 3 → 6'],['~','slope: unchanged at 3/2']],
+            quiz:{q:'On this line, what is y when x = 6?',options:['6','4.5','9'],answer:0,why:'From B(4, 3), a run of 2 gives a rise of 3 (slope 3/2), so the point is (6, 6).'},
+            plot:{xr:[-1,9],yr:[-1,10],equal:true, lines:[{m:1.5,d:-3}], tri:{a:[4,3],b:[8,9]}, points:[{x:2,y:0,label:'A',dx:-18,dy:-4},{x:4,y:3,label:'B(4, 3)',dx:-44,dy:-4},{x:8,y:9,label:'D(8, 9)',dx:-46,dy:-2}]},
+            metrics:{rise:6,run:4,slope:'3/2'} },
+          { nav:'Downhill', tag:'CONCEPT', title:'A road that falls',
+            body:['From P(−4, 5) to Q(−1, 2): run +3, rise −3. Slope = −3 ÷ 3 = −1.','Go the other way, Q to P: rise +3, run −3. The slope is still −1, so the order of the points does not matter.'],
+            key:'Negative slope: the line goes down as you move left to right.',
+            plot:{xr:[-6,4],yr:[-2,7],equal:true, lines:[{m:-1,d:1,label:'y = −x + 1',at:1.8}], tri:{a:[-4,5],b:[-1,2]}, points:[{x:-4,y:5,label:'P(−4, 5)',dx:-52,dy:4},{x:-1,y:2,label:'Q(−1, 2)',dx:42,dy:-4}], movers:[{from:[-4,5],to:[2,-1]}]},
+            metrics:{rise:-3,run:3,slope:'−1'} },
+          { nav:'Read m', tag:'CONCEPT', title:'Slope hides in y = mx + d',
+            body:['Take two points on y = mx + d. Their rise is (mx₂ + d) − (mx₁ + d) = m(x₂ − x₁), and dividing by the run leaves just <b>m</b>.','So in <b>y = −2x + 4</b> the slope is −2, and d = 4 is where the line crosses the y-axis, at (0, 4).'],
+            key:'In y = mx + d: m is the slope and d is the y-intercept. You can read both straight off.',
+            plot:{xr:[-2,5],yr:[-2,6],equal:true, lines:[{m:-2,d:4,label:'y = −2x + 4',at:2.6}], tri:{a:[0,4],b:[1,2]}, points:[{x:0,y:4,label:'(0, 4)',dx:-34,dy:-4},{x:1,y:2,label:'(1, 2)',dx:34,dy:-4},{x:2,y:0,label:'(2, 0)',dx:30,dy:-12}]},
+            metrics:{rise:-2,run:1,slope:'−2'} },
+          { nav:'Flat & vertical', tag:'PROBLEM', title:'Case: lines with no tilt, or all tilt',
+            body:['<b>y = 3</b> is flat: the rise is always 0, so the slope is 0.','<b>x = 2</b> stands straight up: the run is 0, and rise ÷ 0 cannot be computed. Its slope is <b>undefined</b>.'],
+            changes:[['+','horizontal line y = 3 → slope 0'],['+','vertical line x = 2 → run 0'],['-','x = 2 cannot be written as y = mx + d']],
+            key:'Horizontal: slope 0. Vertical: slope undefined, because we cannot divide by zero.',
+            plot:{xr:[-2,6],yr:[-1,6],equal:true, lines:[{m:0,d:3,label:'y = 3',at:4.6,color:'var(--node4)'},{x:2,label:'x = 2',at:5,color:'var(--warn)'}], tri:{a:[2,0.5],b:[2,4.5]}},
+            metrics:{rise:4,run:0,slope:'undefined'}, flash:['slope','run'] },
+          { nav:'From standard', tag:'TRY', title:'Slope of Radha’s line',
+            body:['From ax + by + c = 0 we get y = −(a/b)x − c/b, so <b>m = −a/b</b> (when b ≠ 0).','Radha’s 6x + 5y − 28 = 0 has slope −6/5: each extra kilogram of mangoes means 1.2 kg fewer bananas.'],
+            quiz:{q:'What is the slope of 2x + 4y − 12 = 0?',options:['−1/2','2','−2'],answer:0,why:'m = −a/b = −2/4 = −1/2. The line falls by 1 for every 2 steps to the right.'},
+            plot:{xr:[-1,7],yr:[-1,7],equal:true, lines:[{...RL,label:'6x + 5y − 28 = 0',at:3.6}], tri:{a:[0,5.6],b:[1,4.4]}, points:[{x:0,y:5.6},{x:1,y:4.4}]},
+            metrics:{rise:-1.2,run:1,slope:'−6/5'} },
+          { nav:'Ramp', tag:'TRY', title:'Build a ramp to a rule',
+            body:['A goods ramp must have slope <b>1/12</b> and climb <b>0.5 m</b> to the loading floor.','Run = rise ÷ slope = 0.5 × 12 = <b>6 m</b> of floor space.'],
+            quiz:{q:'If the floor were 0.75 m high, how long a run would the same rule need?',options:['9 m','6.75 m','12 m'],answer:0,why:'Run = 0.75 × 12 = 9 m. A gentler slope always costs more length.'},
+            plot:{xr:[-0.5,7],yr:[-0.5,1.5], lines:[{m:1/12,d:0,label:'slope 1/12',at:2.6}], tri:{a:[0,0],b:[6,0.5]}, movers:[{from:[0,0],to:[6,0.5]}]},
+            metrics:{rise:'0.5 m',run:'6 m',slope:'1/12'} },
+          { nav:'Recap', tag:'RECAP', title:'Slope, summed up',
+            body:['Slope is rise ÷ run between any two points, and it does not change along a straight line.'],
+            points:['Rise and run can be negative, and the point order does not change the slope.','In y = mx + d, m is the slope and d the y-intercept.','From standard form, m = −a/b.','Two lines with the same slope never meet. That matters in the next lesson.'],
+            table:{title:'Slope cheat-sheet',rows:[['rises left → right','m > 0'],['falls left → right','m < 0'],['horizontal, y = k','m = 0'],['vertical, x = k','undefined']],foot:'slope = (y₂ − y₁) ÷ (x₂ − x₁)'},
+            plot:{xr:[-4,6],yr:[-2,6],equal:true, lines:[{m:1.5,d:-1,label:'m > 0',at:3.3,color:'var(--res)'},{m:-1,d:3,label:'m < 0',at:-2.4,color:'var(--req)'},{m:0,d:5,label:'m = 0',at:4.4,color:'var(--node4)'},{x:5,label:'undefined',at:1,color:'var(--warn)'}]},
+            metrics:{rise:3,run:2,slope:'3/2'} }
+        ]
+      }
+    ]},
+    { name: 'Two Equations', color: '#8fb3e0', lessons: [
+      {
+        slug: 'where-two-lines-meet',
+        title: 'Where Two Lines Meet',
+        minutes: 14, level: 'Grade 9',
+        tagline: 'A second clue turns Radha’s line of answers into one exact answer. See when that works and when it can’t.',
+        learn: ['What a pair of linear equations is and what its solution means','Solving by substitution','Solving by elimination','Reading the solution off a graph','The ratio test: one, none or infinitely many solutions'],
+        nextTeaser: 'Practice time — turn the word problems in Exercise Set 13.5 into pairs of equations and solve them.',
+        unit: '', total: false,
+        legend: PLOT_LEGEND,
+        metrics: [ {id:'x',label:'x · mangoes'},{id:'y',label:'y · bananas'},{id:'bill',label:'Bill = ₹280?'},{id:'wt',label:'Weight = 5 kg?'} ],
+        nodes: [], edges: [],
+        steps: [
+          { nav:'Second clue', tag:'CONCEPT', title:'Radha remembers the weight',
+            body:['One equation left us a whole line of answers. Then Radha remembers that the bag weighed <b>5 kg</b> in all.','That gives a second equation: <b>x + y = 5</b>.'],
+            changes:[['+','clue 1: 60x + 50y = 280'],['+','clue 2: x + y = 5']],
+            plot:{xr:[-1,7],yr:[-1,7],...AX, lines:[RL]}, metrics:{} },
+          { nav:'Two lines', tag:'CONCEPT', title:'A pair of linear equations',
+            body:['Two equations in the same x and y make a <b>pair of linear equations</b>: a₁x + b₁y + c₁ = 0 and a₂x + b₂y + c₂ = 0.','A solution of the pair must satisfy <b>both</b>, so it must lie on both lines.'],
+            key:'Solving the pair means finding the point the two lines share.',
+            plot:{xr:[-1,7],yr:[-1,7],...AX, lines:[RL,WL]}, metrics:{} },
+          { nav:'Guess', tag:'PROBLEM', title:'Case: guess and check',
+            body:['Try pairs that weigh 5 kg. (1, 4) gives a ₹260 bill and (2, 3) gives ₹270. Both miss.','Guessing works for small whole numbers, but the answer could be 49/29. We need a method.'],
+            changes:[['+','(1, 4): weight ✓, bill ₹260 ✗'],['+','(2, 3): weight ✓, bill ₹270 ✗']],
+            plot:{xr:[-1,7],yr:[-1,7],...AX, lines:[RL,WL], points:[{x:1,y:4,label:'(1, 4) ✗',bad:true,dx:-44,dy:-4},{x:2,y:3,label:'(2, 3) ✗',bad:true,dx:-44,dy:-4}], movers:[{from:[0,5],to:[2,3]}]},
+            metrics:{x:2,y:3,bill:'₹270 ✗',wt:'5 kg ✓'}, flash:['bill'] },
+          { nav:'Substitute', tag:'CONCEPT', title:'Method 1: substitution',
+            body:['From x + y = 5, write <b>y = 5 − x</b>. Put that into the bill: 60x + 50(5 − x) = 280.','That is 10x + 250 = 280, so <b>x = 3</b>, and then y = 5 − 3 = <b>2</b>.'],
+            points:['Express one variable in terms of the other.','Substitute into the other equation, which leaves one variable.','Solve, then work back for the second variable.'],
+            plot:{xr:[-1,7],yr:[-1,7],...AX, lines:[RL,WL], points:[{x:3,y:2,label:'(3, 2) ✓',ok:true,dx:44,dy:-4}], movers:[{from:[0,5],to:[3,2]}]},
+            metrics:{x:3,y:2,bill:'₹280 ✓',wt:'5 kg ✓'} },
+          { nav:'Eliminate', tag:'CONCEPT', title:'Method 2: elimination',
+            body:['Multiply x + y = 5 by 50: 50x + 50y = 250. Now both equations have 50y.','Subtract it from 60x + 50y = 280: y drops out, leaving <b>10x = 30</b>, so x = 3. Same answer, by a different route.'],
+            key:'Elimination makes one variable’s coefficients match, then subtracts so that variable disappears.',
+            quiz:{q:'To eliminate x instead, multiply x + y = 5 by…',options:['60','50','10'],answer:0,why:'60x + 60y = 300 now has the same x-coefficient as the bill equation. Subtracting gives 10y = 20, so y = 2.'},
+            plot:{xr:[-1,7],yr:[-1,7],...AX, lines:[RL,WL], points:[{x:3,y:2,label:'(3, 2) ✓',ok:true,dx:44,dy:-4}]},
+            metrics:{x:3,y:2,bill:'₹280 ✓',wt:'5 kg ✓'} },
+          { nav:'Meet point', tag:'CONCEPT', title:'The graph agrees',
+            body:['The two lines cross at exactly one point, <b>(3, 2)</b>: 3 kg of mangoes and 2 kg of bananas.','They cross because their slopes differ (−6/5 and −1). In ratio form, a₁/a₂ = 60/1 is not equal to b₁/b₂ = 50/1.'],
+            key:'If a₁/a₂ ≠ b₁/b₂, the lines intersect once, so the pair has a unique solution.',
+            plot:{xr:[-1,7],yr:[-1,7],...AX, lines:[RL,WL], points:[{x:3,y:2,label:'meet · (3, 2)',ok:true,dx:56,dy:-4}], movers:[{from:[0,5.6],to:[3,2]},{from:[0,5],to:[3,2]}]},
+            metrics:{x:3,y:2,bill:'₹280 ✓',wt:'5 kg ✓'} },
+          { nav:'No answer', tag:'PROBLEM', title:'Case: a clue that contradicts',
+            body:['Suppose the second note had said <b>12x + 10y = 50</b>. Doubling the simplified bill equation 6x + 5y = 28 gives 12x + 10y = 56.','The same left side cannot equal both 56 and 50. Elimination ends in 0 = 6, which is impossible, so there is <b>no solution</b>.'],
+            changes:[['-','clue 2: x + y = 5'],['+','clue 2: 12x + 10y = 50'],['~','lines are now parallel (both slope −6/5)']],
+            key:'a₁/a₂ = b₁/b₂ ≠ c₁/c₂ → parallel lines → no solution.',
+            plot:{xr:[-1,7],yr:[-1,7],...AX, lines:[RL,{m:-6/5,d:5,label:'12x + 10y = 50',at:0.8,color:'var(--warn)'}]},
+            warn:[], metrics:{x:'none',y:'none',bill:'—',wt:'—'}, flash:['x','y'] },
+          { nav:'Endless', tag:'PROBLEM', title:'Case: a clue that repeats',
+            body:['Now suppose the note said <b>120x + 100y = 560</b>. That is just the bill equation doubled, so it tells us nothing new.','Elimination ends in 0 = 0, which is always true. Every point on the line works, so there are <b>infinitely many solutions</b>.'],
+            changes:[['+','clue 2: 120x + 100y = 560'],['~','the two lines coincide']],
+            key:'a₁/a₂ = b₁/b₂ = c₁/c₂ → the same line → infinitely many solutions.',
+            plot:{xr:[-1,7],yr:[-1,7],...AX, lines:[{...RL,width:7,label:''},{m:-6/5,d:28/5,label:'120x + 100y = 560',at:3.4,color:'var(--req)',dash:true}], movers:[{from:[0,5.6],to:[14/3,0]}]},
+            metrics:{x:'any',y:'on line',bill:'₹280 ✓',wt:'unknown'}, flash:['x','y'] },
+          { nav:'Check', tag:'TRY', title:'Predict before you solve',
+            body:['Look at <b>x + 2y = 4</b> and <b>3x + 6y = 15</b>. Compare the ratios before doing any algebra.','a₁/a₂ = 1/3, b₁/b₂ = 2/6 = 1/3, and c₁/c₂ = 4/15.'],
+            quiz:{q:'How many solutions does this pair have?',options:['Exactly one','None: the lines are parallel','Infinitely many'],answer:1,why:'The x- and y-ratios match (1/3) but the constants give 4/15, so the lines have the same slope −1/2 and never meet.'},
+            plot:{xr:[-1,7],yr:[-1,4], lines:[{m:-0.5,d:2,label:'x + 2y = 4',at:1,color:'var(--hs)'},{m:-0.5,d:2.5,label:'3x + 6y = 15',at:4.4,color:'var(--req)'}]},
+            metrics:{} },
+          { nav:'Recap', tag:'RECAP', title:'Two clues, one answer',
+            body:['Radha bought <b>3 kg of mangoes and 2 kg of bananas</b>. One clue gave a line of answers; two independent clues gave a single point.'],
+            points:['Substitution: rewrite one variable, plug it in, solve.','Elimination: match coefficients, subtract, solve.','Graphically, the solution is where the lines cross.','Check the ratios first to know how many solutions to expect.'],
+            table:{title:'Ratio test',rows:[['a₁/a₂ ≠ b₁/b₂','cross · 1 solution'],['a₁/a₂ = b₁/b₂ = c₁/c₂','same line · ∞'],['a₁/a₂ = b₁/b₂ ≠ c₁/c₂','parallel · none']],foot:'Radha: 3 × ₹60 + 2 × ₹50 = ₹280, and 3 + 2 = 5 kg.'},
+            plot:{xr:[-1,7],yr:[-1,7],...AX, lines:[RL,WL], points:[{x:3,y:2,label:'(3, 2)',ok:true,dx:40,dy:-4}]},
+            metrics:{x:3,y:2,bill:'₹280 ✓',wt:'5 kg ✓'} }
+        ]
+      }
+    ]}
+  ]
+};
+/* COURSE-DATA:END */
+
+/* ENGINE:START — reusable; do not edit per lesson */
+const $=s=>document.querySelector(s);
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const ALL=COURSE.modules.flatMap((m,mi)=>m.lessons.map((l,li)=>({...l,mi,li,module:m})));
+let L=ALL[0], S=0, playing=true, raf=0, packets=[];
+const doneKey=COURSE.storageKey+'-done';
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function layout(){ // centre the iso grid in the viewBox
+  if(!L.nodes.length)return;
+  const pts=L.nodes.map(n=>({x:(n.gx-n.gy)*72,y:(n.gx+n.gy)*44}));
+  const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y);
+  const ox=360-(Math.min(...xs)+Math.max(...xs))/2, oy=200-(Math.min(...ys)+Math.max(...ys))/2;
+  L.nodes.forEach((n,i)=>{n.x=pts[i].x+ox;n.y=pts[i].y+oy;});
+}
+const NS='http://www.w3.org/2000/svg';
+function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);parent&&parent.appendChild(e);return e;}
+function tile(g,x,y,w=58){el('polygon',{points:`${x},${y-w*.5} ${x+w},${y} ${x},${y+w*.5} ${x-w},${y}`,fill:'var(--paper)',stroke:'var(--line)','stroke-width':2},g);
+  el('polygon',{points:`${x-w},${y} ${x},${y+w*.5} ${x},${y+w*.5+8} ${x-w},${y+8}`,fill:'var(--soft)',stroke:'var(--line)','stroke-width':2},g);
+  el('polygon',{points:`${x+w},${y} ${x},${y+w*.5} ${x},${y+w*.5+8} ${x+w},${y+8}`,fill:'var(--bg)',stroke:'var(--line)','stroke-width':2},g);}
+function pill(g,x,y,text,warn){const t=el('text',{x,y,'text-anchor':'middle','font-family':'JetBrains Mono, monospace','font-size':11,fill:warn?'#fff':'var(--ink)'});t.textContent=text;g.appendChild(t);
+  const w=Math.max(40,text.length*6.9+16);const r=el('rect',{x:x-w/2,y:y-13,width:w,height:19,rx:9.5,fill:warn?'var(--warn)':'var(--paper)',stroke:'var(--line)','stroke-width':1.5});g.insertBefore(r,t);}
+function drawNode(g,n,step){
+  const warn=(step.warn||[]).includes(n.id);const x=n.x,y=n.y;
+  tile(g,x,y);
+  const fill=warn?'#f4c3c3':(n.color||'var(--node)');
+  if(n.kind==='laptop'){
+    el('polygon',{points:`${x-30},${y-2} ${x+2},${y+14} ${x+30},${y} ${x-2},${y-16}`,fill:'var(--soft)',stroke:'var(--line)','stroke-width':2},g);
+    el('polygon',{points:`${x-30},${y-2} ${x-2},${y-16} ${x-2},${y-56} ${x-30},${y-42}`,fill:'#3b3a40',stroke:'var(--line)','stroke-width':2},g);
+    el('polygon',{points:`${x-26},${y-8} ${x-6},${y-18} ${x-6},${y-50} ${x-26},${y-40}`,fill:'#b9a6e6'},g);
+  }else if(n.kind==='cyl'){
+    el('path',{d:`M${x-22},${y-40} v28 a22,9 0 0 0 44,0 v-28`,fill,stroke:'var(--line)','stroke-width':2},g);
+    el('ellipse',{cx:x,cy:y-40,rx:22,ry:9,fill,stroke:'var(--line)','stroke-width':2},g);
+  }else{ // hex block
+    const h=22,r=26;const top=[0,1,2,3,4,5].map(i=>{const a=Math.PI/3*i;return [x+r*Math.cos(a),y-34+r*.55*Math.sin(a)]});
+    el('path',{d:`M${x-r},${y-34} L${x-r},${y-34+h} A${r},${r*.55} 0 0 0 ${x+r},${y-34+h} L${x+r},${y-34} Z`,fill,stroke:'var(--line)','stroke-width':2,opacity:.92},g);
+    el('polygon',{points:top.map(p=>p.join(',')).join(' '),fill,stroke:'var(--line)','stroke-width':2},g);
+  }
+  pill(g,x,y+52,n.sub?`${n.label} · ${n.sub}`:n.label);
+  const extra=(step.labels||{})[n.id];if(extra)pill(g,x,n.kind==='laptop'?y-66:y-62,extra,warn);
+}
+function drawPlot(svg,step){
+  const P=step.plot,[x0,x1]=P.xr||[-1,7],[y0,y1]=P.yr||[-1,7];
+  const W=720,H=400,pl=46,pr=20,pt=18,pb=34;
+  let sx=(W-pl-pr)/(x1-x0),sy=(H-pt-pb)/(y1-y0);if(P.equal){sx=sy=Math.min(sx,sy);}
+  const ox=pl+((W-pl-pr)-(x1-x0)*sx)/2-x0*sx, oy=pt+((H-pt-pb)-(y1-y0)*sy)/2+y1*sy;
+  const X=x=>ox+x*sx,Y=y=>oy-y*sy;
+  const defs=el('defs',{},svg);const cp=el('clipPath',{id:'pc'},defs);
+  el('rect',{x:X(x0),y:Y(y1),width:(x1-x0)*sx,height:(y1-y0)*sy},cp);
+  const gg=el('g',{},svg),gl=el('g',{'clip-path':'url(#pc)'},svg),gp=el('g',{},svg);
+  el('rect',{x:X(x0),y:Y(y1),width:(x1-x0)*sx,height:(y1-y0)*sy,fill:'var(--paper)',stroke:'var(--line)','stroke-width':2,rx:6},gg);
+  const st=(x1-x0)>12||(y1-y0)>12?2:1;
+  const tx=v=>{const e=el('text',{'font-family':'JetBrains Mono, monospace','font-size':10,fill:'var(--muted)'},gg);e.textContent=v;return e;};
+  const xs=(x1-x0)<=3?0.5:st, ys=(y1-y0)<=3?0.5:st;
+  for(let i=Math.ceil(x0/xs)*xs;i<=x1+1e-9;i+=xs){el('line',{x1:X(i),y1:Y(y0),x2:X(i),y2:Y(y1),stroke:'var(--soft)','stroke-width':1},gg);
+    if(Math.abs(i)>1e-9&&i>x0+1e-9&&i<x1-1e-9){const e=tx(String(+i.toFixed(1)).replace('-','−'));e.setAttribute('x',X(i));e.setAttribute('y',Math.min(Math.max(Y(0)+14,Y(y1)+12),Y(y0)-3));e.setAttribute('text-anchor','middle');}}
+  for(let j=Math.ceil(y0/ys)*ys;j<=y1+1e-9;j+=ys){el('line',{x1:X(x0),y1:Y(j),x2:X(x1),y2:Y(j),stroke:'var(--soft)','stroke-width':1},gg);
+    if(Math.abs(j)>1e-9&&j>y0+1e-9&&j<y1-1e-9){const e=tx(String(+j.toFixed(1)).replace('-','−'));e.setAttribute('x',Math.max(X(0)-6,X(x0)+14));e.setAttribute('y',Y(j)+3);e.setAttribute('text-anchor','end');}}
+  if(y0<=0&&y1>=0)el('line',{x1:X(x0),y1:Y(0),x2:X(x1),y2:Y(0),stroke:'var(--line)','stroke-width':2},gg);
+  if(x0<=0&&x1>=0)el('line',{x1:X(0),y1:Y(y0),x2:X(0),y2:Y(y1),stroke:'var(--line)','stroke-width':2},gg);
+  if(x0<=0&&y0<=0){const o=tx('0');o.setAttribute('x',X(0)-5);o.setAttribute('y',Y(0)+13);o.setAttribute('text-anchor','end');}
+  if(P.xl){const e=tx(P.xl);e.setAttribute('x',X(x1)-6);e.setAttribute('y',Y(Math.max(y0,0))-6);e.setAttribute('text-anchor','end');e.setAttribute('fill','var(--ink)');}
+  if(P.yl){const e=tx(P.yl);e.setAttribute('x',X(Math.max(x0,0))+6);e.setAttribute('y',Y(y1)+14);e.setAttribute('fill','var(--ink)');}
+  (P.lines||[]).forEach(l=>{const col=l.color||'var(--hs)';
+    const pts=l.x!=null?[[l.x,y0],[l.x,y1]]:[[x0,l.m*x0+l.d],[x1,l.m*x1+l.d]];
+    el('line',{x1:X(pts[0][0]),y1:Y(pts[0][1]),x2:X(pts[1][0]),y2:Y(pts[1][1]),stroke:col,'stroke-width':l.width||3.5,'stroke-linecap':'round','stroke-dasharray':l.dash?'10 8':'',opacity:l.width?.45:1},gl);
+    if(l.label){const at=l.at!=null?l.at:(x0+x1)/2;const px=l.x!=null?X(l.x):X(at),py=l.x!=null?Y(at):Y(l.m*at+l.d);pill(gp,px+(l.x!=null?0:0),py-12,l.label);}});
+  if(P.tri){const [ax,ay]=P.tri.a,[bx,by]=P.tri.b;
+    if(bx!==ax){el('line',{x1:X(ax),y1:Y(ay),x2:X(bx),y2:Y(ay),stroke:'var(--req)','stroke-width':3,'stroke-dasharray':'6 5'},gp);pill(gp,(X(ax)+X(bx))/2,Y(ay)+(by>=ay?20:-8),'run '+fmtN(bx-ax));}
+    el('line',{x1:X(bx),y1:Y(ay),x2:X(bx),y2:Y(by),stroke:'var(--res)','stroke-width':3,'stroke-dasharray':'6 5'},gp);
+    pill(gp,X(bx)+(bx>=ax?44:-44),(Y(ay)+Y(by))/2+4,'rise '+fmtN(by-ay));}
+  (P.points||[]).forEach(p=>{const c=p.ok?'var(--res)':p.bad?'var(--warn)':'var(--ink)';
+    el('circle',{cx:X(p.x),cy:Y(p.y),r:6.5,fill:c,stroke:'var(--line)','stroke-width':2},gp);
+    if(p.label)pill(gp,X(p.x)+(p.dx||0),Y(p.y)+(p.dy!=null?p.dy:-14),p.label,p.bad);});
+  packets=[];
+  (P.movers||[]).forEach((m,i)=>{const c=el('circle',{r:7,fill:m.kind==='response'?'var(--res)':'var(--req)',stroke:'var(--line)','stroke-width':2},gp);
+    packets.push({c,A:{x:X(m.from[0]),y:Y(m.from[1])},B:{x:X(m.to[0]),y:Y(m.to[1])},off:i*0.35,dur:2.4,bounce:true});});
+}
+function fmtN(v){v=+(+v).toFixed(2);return (v<0?'−':v>0?'+':'')+Math.abs(v);}
+function fmtM(v){if(typeof v==='string')return v;const r=Math.round(v*10)/10;return (r<0?'−':'')+(L.unitPrefix||'')+Math.abs(r)+(L.unit?' '+L.unit:'');}
+function render(){
+  const step=L.steps[S];const svg=$('#scene');svg.innerHTML='';
+  if(step.plot){drawPlot(svg,step);}else{layout();
+  const shown=new Set(step.show||L.nodes.map(n=>n.id));const by=Object.fromEntries(L.nodes.map(n=>[n.id,n]));
+  const ge=el('g',{},svg),gn=el('g',{},svg),gl=el('g',{},svg);
+  L.edges.forEach(([a,b])=>{if(!shown.has(a)||!shown.has(b))return;const A=by[a],B=by[b];
+    el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y,stroke:'var(--line)','stroke-width':2,'stroke-dasharray':'4 5',opacity:.55},ge);});
+  [...L.nodes].sort((a,b)=>a.y-b.y).forEach(n=>{if(shown.has(n.id))drawNode(gn,n,step)});
+  packets=[];
+  (step.flows||[]).forEach((f,i)=>{const A=by[f.from],B=by[f.to];if(!A||!B)return;
+    const mx=(A.x+B.x)/2+(f.dx||0),my=(A.y+B.y)/2+(f.from<f.to?-14:14)+(f.dy||0);
+    if(f.label)pill(gl,mx,my,f.label);
+    const col=f.kind==='response'?'var(--res)':f.kind==='handshake'?'var(--hs)':'var(--req)';
+    const c=el('circle',{r:6,fill:f.kind==='handshake'?'var(--paper)':col,stroke:f.kind==='handshake'?col:'var(--line)','stroke-width':f.kind==='handshake'?3:1.5},gl);
+    packets.push({c,A,B,off:i*0.5,dur:f.kind==='handshake'?1.4:1.8,bounce:f.kind==='handshake'});});
+  }
+  renderMetrics(step);renderPanel(step);renderNav();
+  $('#stepCount').textContent=`Step ${S+1} of ${L.steps.length}`;
+  $('#backBtn').disabled=S===0&&ALL.indexOf(L)===0;
+  const nxt=L.steps[S+1];const nl=ALL[ALL.indexOf(L)+1];
+  $('#nextTxt').textContent=nxt?`Next: ${nxt.nav}`:(nl?`Next lesson: ${nl.title}`:'Finish lesson');
+  if(location.hash!==`#${L.slug}-${S+1}`)history.replaceState(null,'',`#${L.slug}-${S+1}`);
+}
+function tick(t){
+  packets.forEach(p=>{let k=((t/1000)/p.dur+p.off)%1;if(p.bounce)k=k<.5?k*2:2-k*2;const e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+    p.c.setAttribute('cx',p.A.x+(p.B.x-p.A.x)*e);p.c.setAttribute('cy',p.A.y+(p.B.y-p.A.y)*e);});
+  if(playing&&!reduce)raf=requestAnimationFrame(tick);
+}
+function startAnim(){cancelAnimationFrame(raf);if(reduce){packets.forEach(p=>{p.c.setAttribute('cx',(p.A.x+p.B.x)/2);p.c.setAttribute('cy',(p.A.y+p.B.y)/2)});return;}raf=requestAnimationFrame(tick);}
+let shownVals={};
+function renderMetrics(step){
+  const box=$('#metrics');const m=step.metrics||{};const useTot=L.total!==false;
+  if(!box.dataset.lesson||box.dataset.lesson!==L.slug){box.dataset.lesson=L.slug;shownVals={};box.innerHTML=L.metrics.map(x=>`<div class="metric" data-id="${x.id}"><small>${x.label}</small><b>—</b></div>`).join('')+(useTot?`<div class="metric total" data-id="_total"><small>${L.totalLabel||'Total'}</small><b>—</b></div>`:'');}
+  const vals={...m};const keys=L.metrics.map(x=>x.id);const has=keys.some(k=>typeof m[k]==='number');
+  if(useTot)vals._total=has?keys.reduce((s,k)=>s+(typeof m[k]==='number'?m[k]:0),0):null;
+  [...keys,...(useTot?['_total']:[])].forEach(k=>{const card=box.querySelector(`[data-id="${k}"]`);const b=card.querySelector('b');const to=vals[k];
+    card.classList.toggle('flash',(step.flash||[]).includes(k));
+    if(to==null){b.textContent='—';shownVals[k]=0;return;}
+    if(typeof to==='string'){b.textContent=to;shownVals[k]=0;return;}
+    const from=shownVals[k]||0;shownVals[k]=to;const t0=performance.now();
+    const run=t=>{const k2=Math.min(1,(t-t0)/500);b.textContent=fmtM(k2<1?from+(to-from)*k2:to);if(k2<1)requestAnimationFrame(run)};reduce?b.textContent=fmtM(to):requestAnimationFrame(run);});
+}
+function renderPanel(step){
+  let h=`<span class="kicker">STEP ${S+1} / ${L.steps.length}</span><br><span class="tag ${step.tag||'CONCEPT'}">${step.tag||'CONCEPT'}</span><h2>${step.title}</h2>`;
+  (step.body||[]).forEach(p=>h+=`<p>${p}</p>`);
+  if(step.points)h+=`<ul class="points">${step.points.map(p=>`<li>${p}</li>`).join('')}</ul>`;
+  if(step.key)h+=`<div class="box"><span class="kicker">KEY IDEA</span>${step.key}</div>`;
+  if(step.changes)h+=`<div class="box changes"><span class="kicker">WHAT CHANGED</span>${step.changes.map(([o,t])=>`<div><i>${o}</i><span>${t}</span></div>`).join('')}</div>`;
+  if(step.table){const T=step.table;h+=`<div class="box"><span class="kicker">${T.title.toUpperCase()}</span><table class="tbl">${T.rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}${T.sum?`<tr class="sum"><td>${T.sum[0]}</td><td>${T.sum[1]}</td></tr>`:''}</table>${T.foot?`<div class="fb">${T.foot}</div>`:''}</div>`;}
+  if(step.quiz){const Q=step.quiz;h+=`<div class="box quiz"><span class="kicker">QUICK CHECK</span><div>${Q.q}</div>${Q.options.map((o,i)=>`<button data-i="${i}">${o}</button>`).join('')}<div class="fb" id="qfb"></div></div>`;}
+  if(S===L.steps.length-1&&L.nextTeaser)h+=`<div class="box"><span class="kicker">COMING UP</span>Next up: ${L.nextTeaser}</div>`;
+  $('#panel').innerHTML=h;
+  if(step.quiz)$('#panel').querySelectorAll('.quiz button').forEach(b=>b.onclick=()=>{const i=+b.dataset.i,Q=step.quiz;
+    b.classList.add(i===Q.answer?'ok':'bad');$('#qfb').innerHTML=(i===Q.answer?'✓ Right. ':'✗ Not quite. ')+Q.why;});
+}
+function renderNav(){
+  const done=store.get(doneKey,{});const seen=done[L.slug+':steps']||0;
+  $('#stepNav').innerHTML=L.steps.map((s,i)=>`<button class="${i===S?'on':''} ${i<seen?'done':''}" data-i="${i}" title="${s.nav}">${i===S?`${i+1} ${s.nav}`:i+1}</button>`).join('');
+  $('#stepNav').querySelectorAll('button').forEach(b=>b.onclick=()=>go(+b.dataset.i));
+}
+function renderHead(){
+  const m=L.module;$('#brand').innerHTML=COURSE.brand;document.title=`${L.title} · ${COURSE.brand.replace(/<[^>]+>/g,'')}`;
+  $('#crumb').textContent=`${String(L.mi+1).padStart(2,'0')}. ${m.name} / Lesson ${L.li+1} of ${m.lessons.length}`;
+  $('#title').textContent=L.title;$('#tagline').textContent=L.tagline;
+  $('#chips').innerHTML=`<span class="chip">⏱ ${L.minutes} min</span><span class="chip">▮ ${L.level}</span><span class="chip">☰ ${L.steps.length} steps</span>`;
+  if(L.legend){const lg=$('#legend');lg.querySelectorAll(':scope>span').forEach(s=>s.remove());lg.insertAdjacentHTML('afterbegin',L.legend.map(([c,t])=>`<span><i class="dot" style="background:${c}"></i>${t}</span>`).join(''));}
+  $('#learn').innerHTML=`<span class="kicker">YOU’LL LEARN</span><ul>${L.learn.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+  renderDrawer();
+}
+function renderDrawer(){
+  const done=store.get(doneKey,{});const total=ALL.length;const n=ALL.filter(l=>done[l.slug]).length;
+  $('#lessonCount').textContent=`${total} lessons`;$('#progTxt').textContent=`${n} / ${total}`;
+  $('#courseList').innerHTML=COURSE.modules.map((m,mi)=>`<div class="mod"><button aria-expanded="true"><span class="sw" style="background:${m.color}"></span>${String(mi+1).padStart(2,'0')}. ${m.name}<span class="cnt">${m.lessons.filter(l=>done[l.slug]).length}/${m.lessons.length}</span></button><ul>${m.lessons.map(l=>`<li><a href="#${l.slug}-1" class="${l.slug===L.slug?'cur':''} ${done[l.slug]?'done':''}">${l.title}</a></li>`).join('')}</ul></div>`).join('');
+  $('#courseList').querySelectorAll('.mod>button').forEach(b=>b.onclick=()=>{const ul=b.nextElementSibling;const o=ul.style.display!=='none';ul.style.display=o?'none':'';b.setAttribute('aria-expanded',!o)});
+  $('#courseList').querySelectorAll('a').forEach(a=>a.onclick=()=>toggleDrawer(false));
+}
+function markSeen(){const d=store.get(doneKey,{});d[L.slug+':steps']=Math.max(d[L.slug+':steps']||0,S+1);if(S===L.steps.length-1)d[L.slug]=true;store.set(doneKey,d);}
+function go(i){S=Math.max(0,Math.min(L.steps.length-1,i));markSeen();render();startAnim();}
+function openLesson(slug,step=0){const l=ALL.find(x=>x.slug===slug)||ALL[0];const changed=l!==L;L=l;if(changed)$('#metrics').dataset.lesson='';renderHead();go(step);window.scrollTo({top:0});}
+function next(){if(S<L.steps.length-1)return go(S+1);const nl=ALL[ALL.indexOf(L)+1];if(nl)openLesson(nl.slug,0);else{markSeen();renderDrawer();}}
+function back(){if(S>0)return go(S-1);const pl=ALL[ALL.indexOf(L)-1];if(pl)openLesson(pl.slug,pl.steps.length-1);}
+function route(){const m=location.hash.match(/^#([\w-]+?)-(\d+)$/);if(m)openLesson(m[1],+m[2]-1);else openLesson(ALL[0].slug,0);}
+function toggleDrawer(o){$('#drawer').classList.toggle('open',o);$('#scrim').classList.toggle('open',o);}
+$('#nextBtn').onclick=next;$('#backBtn').onclick=back;
+$('#restartBtn').onclick=()=>go(0);
+$('#pauseBtn').onclick=()=>{playing=!playing;$('#pauseBtn').textContent=playing?'❚❚':'▶';$('#pauseBtn').setAttribute('aria-label',playing?'Pause animation':'Play animation');if(playing)startAnim();};
+$('#fsBtn').onclick=()=>{const s=$('#stage');try{document.fullscreenElement?document.exitFullscreen():s.requestFullscreen()}catch(e){}};
+$('#menuBtn').onclick=()=>toggleDrawer(true);$('#closeDrawer').onclick=$('#scrim').onclick=()=>toggleDrawer(false);
+$('#themeBtn').onclick=()=>{const d=document.documentElement.dataset.theme==='dark'?'':'dark';document.documentElement.dataset.theme=d;store.set(COURSE.storageKey+'-theme',d)};
+document.documentElement.dataset.theme=store.get(COURSE.storageKey+'-theme','');
+addEventListener('keydown',e=>{if(e.target.closest('input,textarea'))return;if(e.key==='ArrowRight')next();if(e.key==='ArrowLeft')back();if(e.key===' '){e.preventDefault();$('#pauseBtn').click()}if(e.key==='Escape')toggleDrawer(false)});
+addEventListener('hashchange',()=>{const m=location.hash.match(/^#([\w-]+?)-(\d+)$/);if(m&&(m[1]!==L.slug||+m[2]-1!==S))route();});
+route();
+/* ENGINE:END */
+</script>
+</body>
+</html>
