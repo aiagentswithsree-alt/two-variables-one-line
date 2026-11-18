@@ -94,6 +94,34 @@ table.tbl tr.sum td{font-weight:800;border-bottom:none;border-top:2px solid var(
 .mod li a.cur{background:var(--accent);border:2px solid var(--line)}
 .mod li a.done::after{content:" ✓";color:var(--res);font-weight:800}
 .drawer .prog{padding:12px 14px;border-top:2px solid var(--line);font-family:var(--mono);font-size:13px;display:flex;justify-content:space-between}
+
+.board{margin:8px 0 10px;display:flex;flex-direction:column;gap:10px}
+.board .kicker{display:block;margin-bottom:4px}
+.qbox{border:2px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--chip1);font-size:16px;line-height:1.55}
+[data-theme=dark] .qbox{color:var(--ink)}
+.simple{border-left:4px solid var(--res);padding:6px 12px;background:var(--bg);border-radius:0 8px 8px 0;line-height:1.5}
+.gf{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gf>div{border:2px dashed var(--line);border-radius:10px;padding:8px 12px;background:var(--bg);line-height:1.5}
+.gf ul{margin:0;padding-left:18px}
+@media(max-width:560px){.gf{grid-template-columns:1fr}}
+.sol{margin-top:4px}
+ol.lines{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+ol.lines li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start;padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:var(--paper);scroll-margin-bottom:110px;scroll-margin-top:80px}
+ol.lines li.new{background:var(--accent);animation:pop .35s ease}
+ol.lines .n{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-family:var(--mono);font-size:12px;font-weight:800;background:var(--bg)}
+ol.lines .w{font-family:var(--mono);font-size:17px;font-weight:600;overflow-wrap:anywhere;white-space:pre-wrap}
+ol.lines .why{font-size:14px;color:var(--muted);margin-top:3px}
+ol.lines li.new .why{color:var(--accent-ink)}
+.more{font-size:14px;color:var(--muted);border:2px dashed var(--soft);border-radius:10px;padding:10px 12px;text-align:center}
+.check{border:2px dashed var(--res);border-radius:10px;padding:10px 12px;background:var(--bg);line-height:1.5}
+.ans{border:2px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--chip2);font-size:16px;line-height:1.55;box-shadow:2px 2px 0 var(--line)}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.82em;line-height:1.15;margin:0 2px}
+.fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 2px}
+.solvebtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.solvebtns button{border:2px solid var(--line);border-radius:8px;padding:7px 10px;background:var(--paper);font-size:13px;font-family:var(--mono);box-shadow:2px 2px 0 var(--line)}
+.tag.SOLVE{background:var(--chip1)}
+.points.big{font-size:16px;line-height:1.7}
+@keyframes pop{from{transform:translateY(6px);opacity:.2}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -119,6 +147,7 @@ table.tbl tr.sum td{font-weight:800;border-bottom:none;border-top:2px solid var(
     <div class="card stage" id="stage">
       <div class="metrics" id="metrics"></div>
       <svg class="scene" id="scene" viewBox="0 0 720 400" role="img" aria-label="Animated diagram"></svg>
+      <div class="board" id="board" aria-live="polite"></div>
       <div class="legend" id="legend">
         <span><i class="dot" style="background:var(--req)"></i>request</span>
         <span><i class="dot" style="background:var(--res)"></i>response</span>
@@ -353,6 +382,674 @@ const COURSE = {
     ]}
   ]
 };
+/* ---------- Exam practice: worked solutions, one line at a time ---------- */
+const mn=v=>String(v).replace(/^-/,"−");
+const fr=(a,b)=>`<span class="fr"><span>${mn(a)}</span><span>${mn(b)}</span></span>`;
+const PL=(slug,title,minutes,tagline,learn,nextTeaser,steps)=>({slug,title,minutes,level:'Exam practice',tagline,learn,nextTeaser,metrics:[],total:false,legend:[],nodes:[],edges:[],steps});
+const TRY='Read the question on the board and try it in your notebook. Then press <b>Next line</b> to check your working one step at a time.';
+
+const EX131 = PL('ex-13-1','Exercise 13.1 · Writing equations',10,
+ 'Turn words into equations and put equations into standard form, with every step written out.',
+ ['Build an equation when a, b, c are given','Rewrite any equation as ax + by + c = 0','Read off a, b and c correctly, including signs','Check whether an equation matches a word situation'],
+ 'Exercise 13.2 — checking solutions and finding your own.',
+[
+ {nav:'Q1',tag:'SOLVE',title:'Q1 · Build the equation',body:[TRY],
+  key:'Standard form is always ax + by + c = 0. Just put the numbers into the a, b and c places.',
+  solve:{q:'Write a linear equation in two variables in which a = 3, b = 0 and c = −1/5.',
+   simple:'We are told the three numbers. We only have to put them in their places.',
+   given:['a = 3','b = 0','c = −1/5'], find:'An equation ax + by + c = 0 with these values',
+   lines:[
+    ['ax + by + c = 0','Start from the standard form.'],
+    [`3x + 0·y + (−${fr(1,5)}) = 0`,'Put a = 3, b = 0, c = −1/5 in their places.'],
+    [`3x − ${fr(1,5)} = 0`,'0·y is 0, so it disappears. Adding a negative is the same as subtracting.'],
+    ['15x − 1 = 0','Optional: multiply every term by 5 to remove the fraction. It is the same equation.']],
+   check:'In 3x + 0·y − 1/5 = 0: the number with x is 3, with y is 0, and the constant is −1/5. ✓',
+   answer:'The equation is <b>3x + 0·y − 1/5 = 0</b>, that is, <b>3x − 1/5 = 0</b>.'}},
+ {nav:'Q2',tag:'SOLVE',title:'Q2 · Complete the table',body:[TRY],
+  key:'Bring every term to the left side, so the right side is 0. Whatever number stands with x is a, with y is b, and the number alone is c.',
+  solve:{q:'Complete the table after expressing each equation in standard form: (a) y − 15 = √2·x, (b) 3y − 2x = 0, (c) 5x = 3y, (d) x = 8, (e) 3y = 1.',
+   simple:'For each equation, move everything to one side so it looks like ax + by + c = 0. Then read off a, b and c.',
+   given:['Five equations'], find:'Standard form, coefficient of x (a), coefficient of y (b), constant (c)',
+   lines:[
+    ['(a) y − 15 = √2·x','Move √2·x to the left by subtracting it from both sides.'],
+    ['    −√2·x + y − 15 = 0  →  a = −√2, b = 1, c = −15','Now the right side is 0. Read the numbers in order: x first, then y, then the constant.'],
+    ['(b) 3y − 2x = 0  →  −2x + 3y + 0 = 0','Already = 0. Rewrite with x first.  a = −2, b = 3, c = 0.'],
+    ['(c) 5x = 3y  →  5x − 3y + 0 = 0','Subtract 3y from both sides.  a = 5, b = −3, c = 0.'],
+    ['(d) x = 8  →  1·x + 0·y − 8 = 0','There is no y, so its coefficient is 0.  a = 1, b = 0, c = −8.'],
+    ['(e) 3y = 1  →  0·x + 3y − 1 = 0','There is no x, so its coefficient is 0.  a = 0, b = 3, c = −1.']],
+   check:'Multiplying a whole equation by −1 is also correct: (a) can be √2·x − y + 15 = 0 with a = √2, b = −1, c = 15. Both answers get full marks.',
+   answer:'(a) −√2x + y − 15 = 0 | −√2 | 1 | −15<br>(b) −2x + 3y + 0 = 0 | −2 | 3 | 0<br>(c) 5x − 3y + 0 = 0 | 5 | −3 | 0<br>(d) x + 0·y − 8 = 0 | 1 | 0 | −8<br>(e) 0·x + 3y − 1 = 0 | 0 | 3 | −1'}},
+ {nav:'Q3 (i)',tag:'SOLVE',title:'Q3 (i) · Notebook and pen',body:[TRY],
+  key:'Test the equation with easy numbers. If the pen costs ₹10, which equation gives the notebook ₹20?',
+  solve:{q:'The cost of a notebook is twice the cost of a pen. Notebook = ₹t, pen = ₹p. Charlie wrote t = 2p and Meera wrote p = 2t. Who is correct?',
+   simple:'The notebook is the costlier one, double the pen. Which equation says that?',
+   given:['notebook costs ₹t','pen costs ₹p','notebook = 2 × pen'], find:'Whether t = 2p or p = 2t is correct',
+   lines:[
+    ['notebook = 2 × pen','Write the sentence in words first.'],
+    ['t = 2 × p,  so  t = 2p','Replace the words with the letters.'],
+    ['Test: p = 10  →  t = 2 × 10 = 20','Pen ₹10, notebook ₹20. The notebook is twice the pen. ✓'],
+    ['Meera: p = 2t  →  pen = 2 × notebook','That says the pen costs twice the notebook, which is the opposite. ✗']],
+   check:'Charlie’s equation keeps the notebook as the bigger price, as the question says.',
+   answer:'<b>Charlie</b> is correct: t = 2p (or t − 2p = 0).'}},
+ {nav:'Q3 (ii)',tag:'SOLVE',title:'Q3 (ii) · Runs in a match',body:[TRY],
+  solve:{q:'Two Indian batsmen together scored 176 runs. Manisha wrote x + y = 176, where x is one batsman’s runs and y is the other’s. Is this correct?',
+   simple:'“Together” means we add the two scores.',
+   given:['batsman 1 scored x runs','batsman 2 scored y runs','together = 176'], find:'Whether x + y = 176 is right',
+   lines:[
+    ['runs of batsman 1 + runs of batsman 2 = 176','“Together” means add.'],
+    ['x + y = 176','Put in the letters.'],
+    ['Standard form: x + y − 176 = 0  (a = 1, b = 1, c = −176)','It is a linear equation in two variables.']],
+   check:'Example: if one scored 100, the other scored 76. 100 + 76 = 176 ✓',
+   answer:'<b>Yes</b>, Manisha’s equation x + y = 176 is correct.'}},
+ {nav:'Tips',tag:'RECAP',title:'Exam checklist for 13.1',
+  body:['Use these each time a question asks for standard form.'],
+  points:['Move every term to the left so the right side is 0.','Write x first, then y, then the number.','A missing variable has coefficient 0: x = 8 means b = 0.','Keep the sign with the number: 5x − 3y means b = −3.','Multiplying the whole equation by −1 is allowed and still correct.'],
+  table:{title:'Standard form reminder',rows:[['form','ax + by + c = 0'],['a','number with x'],['b','number with y'],['c','number alone']]}}
+]);
+
+const EX132 = PL('ex-13-2','Exercise 13.2 · Solutions and graphs',16,
+ 'Check solutions, find your own, find unknown constants and place points in the right quadrant, all worked line by line.',
+ ['Check if an ordered pair is a solution','Find solutions by choosing x = 0 or y = 0','Find unknown constants such as m and n','Pick solutions in different quadrants','Answer True/False questions with reasons'],
+ 'Exercise 13.3 — slope questions, solved the same way.',
+[
+ {nav:'Q1',tag:'SOLVE',title:'Q1 · Is (4, 3) a solution?',body:[TRY],
+  key:'To check a pair, substitute it. If LHS = RHS, it is a solution.',
+  solve:{q:'Verify if the ordered pair (4, 3) is a solution of 5x − 6y = 2. Explain your reasoning.',
+   simple:'Put x = 4 and y = 3 into the left side and see if we get 2.',
+   given:['equation 5x − 6y = 2','pair (4, 3), so x = 4, y = 3'], find:'Whether LHS equals RHS',
+   lines:[
+    ['LHS = 5x − 6y','Write the left-hand side.'],
+    ['= 5 × 4 − 6 × 3','Put x = 4 and y = 3.'],
+    ['= 20 − 18 = 2','Multiply first, then subtract.'],
+    ['RHS = 2','The right-hand side is 2.'],
+    ['LHS = RHS','Both sides are equal.']],
+   check:'Both sides give 2. ✓',
+   answer:'Since LHS = RHS = 2, <b>(4, 3) is a solution</b> of 5x − 6y = 2.'},
+  plot:{xr:[-1,6],yr:[-8,5],lines:[{m:5/6,d:-1/3,label:'5x − 6y = 2',at:1.4}],points:[{x:4,y:3,label:'(4, 3) ✓',ok:true,dx:-44,dy:-4}]}},
+ {nav:'Q2 (i)',tag:'SOLVE',title:'Q2 (i) · Two solutions of 7x − 3y = 21',body:[TRY],
+  key:'Shortcut: put x = 0 to get one solution, and y = 0 to get another.',
+  solve:{q:'Find any two solutions of 7x − 3y = 21.',
+   simple:'Choose an easy value for x, then work out y. Do it twice.',
+   given:['7x − 3y = 21'], find:'Two ordered pairs (x, y)',
+   lines:[
+    ['Put x = 0:  7(0) − 3y = 21','Zero makes the x-term vanish.'],
+    ['−3y = 21  →  y = 21 ÷ (−3) = −7','Divide both sides by −3.'],
+    ['First solution: (0, −7)','Write x first, then y.'],
+    ['Put y = 0:  7x − 3(0) = 21','Zero makes the y-term vanish.'],
+    ['7x = 21  →  x = 3','Divide both sides by 7.'],
+    ['Second solution: (3, 0)','']],
+   check:'(0, −7): 0 − 3(−7) = 21 ✓   (3, 0): 21 − 0 = 21 ✓',
+   answer:'Two solutions are <b>(0, −7)</b> and <b>(3, 0)</b>.'},
+  plot:{xr:[-2,5],yr:[-8,3],lines:[{m:7/3,d:-7,label:'7x − 3y = 21',at:3.9}],points:[{x:0,y:-7,label:'(0, −7)',ok:true,dx:-40,dy:-4},{x:3,y:0,label:'(3, 0)',ok:true,dx:36,dy:-4}]}},
+ {nav:'Q2 (ii)',tag:'SOLVE',title:'Q2 (ii) · Two solutions of 2x + 3y = 5',body:[TRY],
+  key:'If x = 0 gives a fraction, pick another x that makes the numbers come out whole.',
+  solve:{q:'Find any two solutions of 2x + 3y = 5.',
+   simple:'x = 0 gives y = 5/3, which is allowed but messy. Try x = 1 and x = 4 instead.',
+   given:['2x + 3y = 5'], find:'Two ordered pairs (x, y)',
+   lines:[
+    ['Put x = 1:  2(1) + 3y = 5','Choose a small number for x.'],
+    ['3y = 5 − 2 = 3  →  y = 1','Move 2 to the right side, then divide by 3.'],
+    ['First solution: (1, 1)',''],
+    ['Put x = 4:  2(4) + 3y = 5','Another choice.'],
+    ['3y = 5 − 8 = −3  →  y = −1','Move 8 across, then divide by 3.'],
+    ['Second solution: (4, −1)','']],
+   check:'(1, 1): 2 + 3 = 5 ✓   (4, −1): 8 − 3 = 5 ✓',
+   answer:'Two solutions are <b>(1, 1)</b> and <b>(4, −1)</b>. (Others such as (0, 5/3) are also correct.)'},
+  plot:{xr:[-1,6],yr:[-3,3],lines:[{m:-2/3,d:5/3,label:'2x + 3y = 5',at:2.6}],points:[{x:1,y:1,label:'(1, 1)',ok:true,dx:0,dy:-14},{x:4,y:-1,label:'(4, −1)',ok:true,dx:0,dy:22}]}},
+ {nav:'Q3',tag:'SOLVE',title:'Q3 · Find m and n',body:[TRY],
+  key:'“(2, −1) is the solution” means x = 2 and y = −1 make each equation true. Substitute, and only m (or n) is left.',
+  solve:{q:'2mx + 3y = 7 and 4x + ny = −10. If (2, −1) is the solution of both equations, find m and n.',
+   simple:'We know x and y. Put them in, and each equation becomes a simple one with one unknown.',
+   given:['x = 2, y = −1','2mx + 3y = 7','4x + ny = −10'], find:'m and n',
+   lines:[
+    ['2m(2) + 3(−1) = 7','First equation: put x = 2, y = −1.'],
+    ['4m − 3 = 7','Multiply: 2m × 2 = 4m and 3 × (−1) = −3.'],
+    [`4m = 10  →  m = ${fr(10,4)} = ${fr(5,2)}`,'Add 3 to both sides, then divide by 4.'],
+    ['4(2) + n(−1) = −10','Second equation: put x = 2, y = −1.'],
+    ['8 − n = −10','4 × 2 = 8 and n × (−1) = −n.'],
+    ['−n = −18  →  n = 18','Subtract 8 from both sides, then multiply by −1.']],
+   check:'m = 5/2: 2(5/2)(2) + 3(−1) = 10 − 3 = 7 ✓   n = 18: 4(2) + 18(−1) = 8 − 18 = −10 ✓',
+   answer:'<b>m = 5/2</b> (= 2.5) and <b>n = 18</b>.'}},
+ {nav:'Q4 (i)',tag:'SOLVE',title:'Q4 (i) · 5x + 3y = 7 in two quadrants',body:[TRY],
+  key:'Quadrants: I (+, +), II (−, +), III (−, −), IV (+, −). Choose x values that make the signs change.',
+  solve:{q:'Find two solutions of 5x + 3y = 7 that lie in different quadrants. Name the quadrants.',
+   simple:'Pick one negative x and one positive x, find y each time, then look at the signs.',
+   given:['5x + 3y = 7'], find:'Two points in different quadrants',
+   lines:[
+    ['Put x = −1:  5(−1) + 3y = 7','Try a negative x.'],
+    ['3y = 7 + 5 = 12  →  y = 4','Add 5 to both sides, then divide by 3.'],
+    ['(−1, 4): x negative, y positive  →  Quadrant II',''],
+    ['Put x = 2:  5(2) + 3y = 7','Try a positive x.'],
+    ['3y = 7 − 10 = −3  →  y = −1','Subtract 10, then divide by 3.'],
+    ['(2, −1): x positive, y negative  →  Quadrant IV','']],
+   check:'(−1, 4): −5 + 12 = 7 ✓   (2, −1): 10 − 3 = 7 ✓',
+   answer:'<b>(−1, 4) in Quadrant II</b> and <b>(2, −1) in Quadrant IV</b>.'},
+  plot:{xr:[-3,4],yr:[-3,6],lines:[{m:-5/3,d:7/3,label:'5x + 3y = 7',at:-0.4}],points:[{x:-1,y:4,label:'(−1, 4) II',ok:true,dx:-50,dy:-4},{x:2,y:-1,label:'(2, −1) IV',ok:true,dx:50,dy:-4}]}},
+ {nav:'Q4 (ii)',tag:'SOLVE',title:'Q4 (ii) · 5x − 3y = 7 in two quadrants',body:[TRY],
+  solve:{q:'Find two solutions of 5x − 3y = 7 that lie in different quadrants. Name the quadrants.',
+   simple:'Same method: pick x, find y, read the signs.',
+   given:['5x − 3y = 7'], find:'Two points in different quadrants',
+   lines:[
+    ['Put x = 2:  5(2) − 3y = 7','Try a positive x.'],
+    ['−3y = 7 − 10 = −3  →  y = 1','Subtract 10, then divide by −3.'],
+    ['(2, 1): both positive  →  Quadrant I',''],
+    ['Put x = −1:  5(−1) − 3y = 7','Try a negative x.'],
+    ['−3y = 7 + 5 = 12  →  y = −4','Add 5, then divide by −3.'],
+    ['(−1, −4): both negative  →  Quadrant III','']],
+   check:'(2, 1): 10 − 3 = 7 ✓   (−1, −4): −5 + 12 = 7 ✓',
+   answer:'<b>(2, 1) in Quadrant I</b> and <b>(−1, −4) in Quadrant III</b>.'},
+  plot:{xr:[-3,4],yr:[-6,4],lines:[{m:5/3,d:-7/3,label:'5x − 3y = 7',at:3.3}],points:[{x:2,y:1,label:'(2, 1) I',ok:true,dx:-40,dy:-4},{x:-1,y:-4,label:'(−1, −4) III',ok:true,dx:58,dy:-4}]}},
+ {nav:'Q4 (iii)',tag:'SOLVE',title:'Q4 (iii) · −5x + 3y = 7 in two quadrants',body:[TRY],
+  solve:{q:'Find two solutions of −5x + 3y = 7 that lie in different quadrants. Name the quadrants.',
+   simple:'Pick x, find y, read the signs.',
+   given:['−5x + 3y = 7'], find:'Two points in different quadrants',
+   lines:[
+    ['Put x = 1:  −5(1) + 3y = 7','Try a positive x.'],
+    ['3y = 7 + 5 = 12  →  y = 4','Add 5, then divide by 3.'],
+    ['(1, 4): both positive  →  Quadrant I',''],
+    ['Put x = −2:  −5(−2) + 3y = 7','Try a negative x. Note −5 × −2 = +10.'],
+    ['3y = 7 − 10 = −3  →  y = −1','Subtract 10, then divide by 3.'],
+    ['(−2, −1): both negative  →  Quadrant III','']],
+   check:'(1, 4): −5 + 12 = 7 ✓   (−2, −1): 10 − 3 = 7 ✓',
+   answer:'<b>(1, 4) in Quadrant I</b> and <b>(−2, −1) in Quadrant III</b>.'},
+  plot:{xr:[-4,3],yr:[-3,6],lines:[{m:5/3,d:7/3,label:'−5x + 3y = 7',at:-2.6}],points:[{x:1,y:4,label:'(1, 4) I',ok:true,dx:40,dy:-4},{x:-2,y:-1,label:'(−2, −1) III',ok:true,dx:58,dy:-4}]}},
+ {nav:'Q4 (iv)',tag:'SOLVE',title:'Q4 (iv) · −5x − 3y = 7 in two quadrants',body:[TRY],
+  solve:{q:'Find two solutions of −5x − 3y = 7 that lie in different quadrants. Name the quadrants.',
+   simple:'Pick x, find y, read the signs.',
+   given:['−5x − 3y = 7'], find:'Two points in different quadrants',
+   lines:[
+    ['Put x = 1:  −5(1) − 3y = 7','Try a positive x.'],
+    ['−3y = 7 + 5 = 12  →  y = −4','Add 5, then divide by −3.'],
+    ['(1, −4): x positive, y negative  →  Quadrant IV',''],
+    ['Put x = −2:  −5(−2) − 3y = 7','Try a negative x. Note −5 × −2 = +10.'],
+    ['−3y = 7 − 10 = −3  →  y = 1','Subtract 10, then divide by −3.'],
+    ['(−2, 1): x negative, y positive  →  Quadrant II','']],
+   check:'(1, −4): −5 + 12 = 7 ✓   (−2, 1): 10 − 3 = 7 ✓',
+   answer:'<b>(1, −4) in Quadrant IV</b> and <b>(−2, 1) in Quadrant II</b>.'},
+  plot:{xr:[-4,3],yr:[-6,3],lines:[{m:-5/3,d:-7/3,label:'−5x − 3y = 7',at:0.4}],points:[{x:1,y:-4,label:'(1, −4) IV',ok:true,dx:50,dy:-4},{x:-2,y:1,label:'(−2, 1) II',ok:true,dx:-50,dy:-4}]}},
+ {nav:'Q5',tag:'SOLVE',title:'Q5 · Does C(2, 3) lie on the line?',body:[TRY],
+  key:'On the line ⇔ satisfies the equation. They always go together.',
+  solve:{q:'For the line 3x − 7y = 21: does C(2, 3) lie on the line? Does it satisfy the equation? Can points that are not on the line satisfy the equation?',
+   simple:'Substitute C into the equation. If it fails, the point is off the line.',
+   given:['line 3x − 7y = 21 through A(7, 0) and B(0, −3)','point C(2, 3)'], find:'Whether C is on the line',
+   lines:[
+    ['LHS = 3(2) − 7(3)','Put x = 2, y = 3.'],
+    ['= 6 − 21 = −15','Multiply, then subtract.'],
+    ['−15 ≠ 21','LHS is not equal to RHS.'],
+    ['So C does not satisfy the equation, and C is not on the line.','The graph agrees: C is above the line.'],
+    ['Every solution lies on the line, and every point on the line is a solution.','This is the key fact from the chapter.'],
+    ['So a point off the line can never satisfy the equation.','']],
+   check:'A(7, 0): 21 − 0 = 21 ✓ and B(0, −3): 0 + 21 = 21 ✓, so A and B are on the line, but C is not.',
+   answer:'C(2, 3) <b>does not lie</b> on the line and <b>does not satisfy</b> the equation (LHS = −15 ≠ 21). <b>No</b>, points not on the line cannot satisfy it.'},
+  plot:{xr:[-2,8],yr:[-4,4],lines:[{m:3/7,d:-3,label:'3x − 7y = 21',at:5.2}],points:[{x:7,y:0,label:'A(7, 0)',ok:true,dx:0,dy:-14},{x:0,y:-3,label:'B(0, −3)',ok:true,dx:40,dy:12},{x:2,y:3,label:'C(2, 3) ✗',bad:true,dx:44,dy:-4}]}},
+ {nav:'Q6',tag:'SOLVE',title:'Q6 · True or False',body:[TRY],
+  key:'For “False”, one counter-example is enough. For “True”, give the reason.',
+  solve:{q:'True or False? Justify. (i) A linear equation in two variables has only one solution. (ii) Its graph always passes through the origin. (iii) It can never have rational solutions. (iv) x = 3 is a valid linear equation in two variables. (v) 2x + 3y = 7 has infinitely many solutions. (vi) (1, 2) is a solution of 2x + 3y = 7.',
+   simple:'Decide each one, then give a reason or an example.',
+   given:['six statements'], find:'True / False with a reason',
+   lines:[
+    ['(i) FALSE','x + y = 2 has (0, 2), (1, 1), (2, 0) and many more. It has infinitely many solutions.'],
+    ['(ii) FALSE','x + y = 2: put (0, 0) → 0 ≠ 2. It passes through the origin only when c = 0.'],
+    ['(iii) FALSE','(1, 1) is a solution of x + y = 2, and 1 is a rational number.'],
+    ['(iv) TRUE','x = 3 can be written as 1·x + 0·y − 3 = 0, with a = 1, b = 0.'],
+    ['(v) TRUE','For every value of x we can find a y, so there is no end to the solutions.'],
+    ['(vi) FALSE','2(1) + 3(2) = 2 + 6 = 8 ≠ 7.']],
+   check:'Every “False” has an example that breaks it; every “True” has a reason.',
+   answer:'(i) False (ii) False (iii) False (iv) True (v) True (vi) False'}},
+ {nav:'Q7 (i)',tag:'SOLVE',title:'Q7 (i) · Same solutions',body:[TRY],
+  key:'Multiplying or dividing an equation by the same non-zero number does not change its solutions.',
+  solve:{q:'Compare the solutions of 3x + 4y = 7 and 6x + 8y = 14. Argue that every solution of one is also a solution of the other.',
+   simple:'Notice 6x + 8y = 14 is just 3x + 4y = 7 doubled.',
+   given:['3x + 4y = 7  …(1)','6x + 8y = 14  …(2)'], find:'Show they have the same solutions',
+   lines:[
+    ['(2) = 2 × (1):  2(3x + 4y) = 2(7)','Multiply both sides of (1) by 2.'],
+    ['Suppose (p, q) satisfies (1): 3p + 4q = 7','Take any solution of (1).'],
+    ['Then 6p + 8q = 2(3p + 4q) = 2 × 7 = 14','So (p, q) also satisfies (2).'],
+    ['Suppose (p, q) satisfies (2): 6p + 8q = 14','Take any solution of (2).'],
+    ['Then 3p + 4q = (6p + 8q) ÷ 2 = 14 ÷ 2 = 7','So (p, q) also satisfies (1).']],
+   check:'Example: (1, 1): 3 + 4 = 7 ✓ and 6 + 8 = 14 ✓',
+   answer:'Every solution of one is a solution of the other, so <b>both equations have the same set of solutions</b> (the same line).'},
+  plot:{xr:[-1,4],yr:[-1,3],lines:[{m:-3/4,d:7/4,width:8,label:''},{m:-3/4,d:7/4,label:'3x + 4y = 7 and 6x + 8y = 14',at:1.6,color:'var(--req)',dash:true}],points:[{x:1,y:1,label:'(1, 1)',ok:true,dx:0,dy:22}]}},
+ {nav:'Q7 (ii)',tag:'SOLVE',title:'Q7 (ii) · The general case',body:[TRY],
+  solve:{q:'Show that ax + by = c and kax + kby = kc, with k ≠ 0, have the same set of solutions.',
+   simple:'Same idea as part (i), but with k instead of 2.',
+   given:['ax + by = c  …(1)','kax + kby = kc  …(2), k ≠ 0'], find:'Show they have the same solutions',
+   lines:[
+    ['Let (p, q) satisfy (1): ap + bq = c','Take any solution of (1).'],
+    ['Multiply by k:  kap + kbq = kc','So (p, q) satisfies (2).'],
+    ['Let (p, q) satisfy (2): kap + kbq = kc','Take any solution of (2).'],
+    ['Divide by k (allowed because k ≠ 0):  ap + bq = c','So (p, q) satisfies (1).']],
+   check:'We could divide only because k ≠ 0. If k = 0, equation (2) becomes 0 = 0, which is a different story.',
+   answer:'Each solution of (1) satisfies (2) and each solution of (2) satisfies (1), so <b>the two equations have the same solutions</b>.'}},
+ {nav:'Tips',tag:'RECAP',title:'Exam checklist for 13.2',body:['Use these steps again and again.'],
+  points:['Checking a pair: substitute, work out LHS, compare with RHS, then write a conclusion.','Finding solutions: put x = 0, then y = 0. If you get a fraction, choose a different x.','Unknown constants: substitute the given x and y, then solve for the letter.','Quadrant: look at the signs of x and y.','True/False: give a counter-example for False.']}
+]);
+
+const EX133 = PL('ex-13-3','Exercise 13.3 · Slope',12,
+ 'Rank ski hills, find ramp slopes and read slopes from graphs, all solved step by step.',
+ ['Use slope = rise ÷ run','Compare steepness with decimals','Count grid squares to read a slope','Use a slope rule to find a length'],
+ 'Exercise 13.4 — framing a pair of equations from a story.',
+[
+ {nav:'Q1',tag:'SOLVE',title:'Q1 · Rank the ski hills',body:[TRY],
+  key:'Bigger slope = steeper. Turn each slope into a decimal so they are easy to compare.',
+  solve:{q:'Hill A: height 60 m, base 70 m. Hill B: height 60 m, base 110 m. Hill C: height 80 m, base 100 m. Rank the hills from least steep to most steep.',
+   simple:'Height is the rise and the base is the run. Find rise ÷ run for each hill.',
+   given:['A: rise 60, run 70','B: rise 60, run 110','C: rise 80, run 100'], find:'Order from least to greatest steepness',
+   lines:[
+    [`Slope A = ${fr(60,70)} = ${fr(6,7)} ≈ 0.86`,'rise ÷ run, then simplify.'],
+    [`Slope B = ${fr(60,110)} = ${fr(6,11)} ≈ 0.55`,''],
+    [`Slope C = ${fr(80,100)} = ${fr(4,5)} = 0.80`,''],
+    ['0.55 < 0.80 < 0.86','Compare the decimals.'],
+    ['B < C < A','Write the hills in that order.']],
+   check:'B has the longest base for the same height as A, so it should be the gentlest. ✓',
+   answer:'From least to greatest steepness: <b>B, C, A</b>.'}},
+ {nav:'Q2',tag:'SOLVE',title:'Q2 · Loading-dock ramp',body:[TRY],
+  solve:{q:'A ramp at a loading dock rises 2.5 m over a run of 4 m. Find the slope of the ramp.',
+   simple:'Slope = rise ÷ run.',
+   given:['rise = 2.5 m','run = 4 m'], find:'slope',
+   lines:[
+    [`Slope = ${fr('rise','run')} = ${fr('2.5','4')}`,'Use the formula.'],
+    [`= ${fr(25,40)}`,'Multiply top and bottom by 10 to remove the decimal.'],
+    [`= ${fr(5,8)} = 0.625`,'Divide top and bottom by 5.']],
+   check:'5/8 × 4 = 2.5 ✓ (slope × run gives the rise back)',
+   answer:'The slope of the ramp is <b>5/8</b> (= 0.625).'},
+  plot:{xr:[-0.5,5],yr:[-0.5,3.5],equal:true,lines:[{m:0.625,d:0,label:'ramp',at:3.2}],tri:{a:[0,0],b:[4,2.5]}}},
+ {nav:'Q3 (i)',tag:'SOLVE',title:'Q3 (i) · Horizontal line',body:[TRY],
+  solve:{q:'Find the slope of line l, which is parallel to the x-axis (horizontal).',
+   simple:'A flat line does not go up or down.',
+   given:['l is horizontal'], find:'slope of l',
+   lines:[
+    ['Take two points on l, e.g. (−2, 1.5) and (3, 1.5)','Every point on l has the same y.'],
+    ['rise = 1.5 − 1.5 = 0,  run = 3 − (−2) = 5','Subtract the y’s, then the x’s.'],
+    [`slope = ${fr(0,5)} = 0`,'0 divided by any non-zero number is 0.']],
+   check:'Horizontal lines always have slope 0.',
+   answer:'Slope of l = <b>0</b>.'},
+  plot:{xr:[-3,3],yr:[-3,3],equal:true,lines:[{m:0,d:1.5,label:'l',at:2.4}],tri:{a:[-2,1.5],b:[3,1.5]}}},
+ {nav:'Q3 (ii)',tag:'SOLVE',title:'Q3 (ii) · Line through the origin, going down',body:[TRY],
+  key:'Count big grid squares from one marked point to the other: across first (run), then up or down (rise).',
+  solve:{q:'Line l goes down from left to right through the origin and the marked points (−2, 2) and (2, −2). Find its slope.',
+   simple:'Count the squares between the two marked points.',
+   given:['points (−2, 2) and (2, −2)'], find:'slope of l',
+   lines:[
+    ['run = 2 − (−2) = 4','From x = −2 to x = 2, moving right.'],
+    ['rise = −2 − 2 = −4','From y = 2 down to y = −2.'],
+    [`slope = ${fr(-4,4)} = −1`,'rise ÷ run.']],
+   check:'The line falls left to right, so the slope must be negative. ✓',
+   answer:'Slope of l = <b>−1</b>.'},
+  plot:{xr:[-3,3],yr:[-3,3],equal:true,lines:[{m:-1,d:0,label:'l',at:-2.6}],tri:{a:[-2,2],b:[2,-2]},points:[{x:-2,y:2},{x:2,y:-2}]}},
+ {nav:'Q3 (iii)',tag:'SOLVE',title:'Q3 (iii) · Line going up',body:[TRY],
+  solve:{q:'Line l goes up from left to right through the marked points (−2, −1) and (1, 1). Find its slope.',
+   simple:'Count squares from the lower point to the upper point.',
+   given:['points (−2, −1) and (1, 1)'], find:'slope of l',
+   lines:[
+    ['run = 1 − (−2) = 3','Three squares to the right.'],
+    ['rise = 1 − (−1) = 2','Two squares up.'],
+    [`slope = ${fr(2,3)}`,'rise ÷ run.']],
+   check:'The line rises left to right, so the slope is positive, and it is less steep than 45°, so it is less than 1. ✓',
+   answer:'Slope of l = <b>2/3</b>.'},
+  plot:{xr:[-3,3],yr:[-2.5,2.5],equal:true,lines:[{m:2/3,d:1/3,label:'l',at:2.5}],tri:{a:[-2,-1],b:[1,1]},points:[{x:-2,y:-1},{x:1,y:1}]}},
+ {nav:'Q3 (iv)',tag:'SOLVE',title:'Q3 (iv) · Vertical line',body:[TRY],
+  solve:{q:'Line l is parallel to the y-axis (vertical). Find its slope.',
+   simple:'A vertical line does not move left or right at all.',
+   given:['l is vertical, e.g. x = −1'], find:'slope of l',
+   lines:[
+    ['Take (−1, 0) and (−1, 2) on l','Every point has the same x.'],
+    ['run = −1 − (−1) = 0,  rise = 2 − 0 = 2','The run is zero.'],
+    [`slope = ${fr(2,0)}  →  cannot divide by 0`,'Division by zero is not defined.']],
+   check:'Vertical lines always have undefined slope.',
+   answer:'The slope of l is <b>undefined</b>.'},
+  plot:{xr:[-3,3],yr:[-2.5,2.5],equal:true,lines:[{x:-1,label:'l',at:2,color:'var(--warn)'}]}},
+ {nav:'Q4',tag:'SOLVE',title:'Q4 · Wheelchair ramp',body:[TRY],
+  key:'Slope = rise ÷ run, so run = rise ÷ slope.',
+  solve:{q:'The guideline for a wheelchair ramp is 1 cm rise for every 12 cm of horizontal length. If the stairs are 18 cm high, what horizontal length should the ramp have?',
+   simple:'Every 1 cm up needs 12 cm along. We need to go 18 cm up.',
+   given:[`slope = ${fr(1,12)}`,'rise = 18 cm'], find:'run (horizontal length)',
+   lines:[
+    [`${fr('rise','run')} = ${fr(1,12)}`,'Write the rule as an equation.'],
+    [`${fr(18,'run')} = ${fr(1,12)}`,'Put rise = 18.'],
+    ['run = 18 × 12','Cross-multiply.'],
+    ['run = 216 cm','18 × 12 = 216.']],
+   check:'216 ÷ 18 = 12, so the ratio is 1 : 12 ✓',
+   answer:'The ramp needs a horizontal length of <b>216 cm</b> (2.16 m).'}},
+ {nav:'Tips',tag:'RECAP',title:'Exam checklist for 13.3',body:['Slope questions need only one formula.'],
+  points:['slope = rise ÷ run = (y₂ − y₁) ÷ (x₂ − x₁)','Rises left to right: positive. Falls: negative.','Horizontal: 0. Vertical: undefined.','For lengths: run = rise ÷ slope, or rise = slope × run.']}
+]);
+
+const EX134 = PL('ex-13-4','Exercise 13.4 · Framing pairs',8,
+ 'Turn each story into two equations. We solve them too, so you can check.',
+ ['Choose what x and y stand for','Write one equation per sentence','Solve the pair to check your equations'],
+ 'Exercise 13.5 — solving pairs from word problems.',
+[
+ {nav:'Q1',tag:'SOLVE',title:'Q1 · Movie tickets and snacks',body:[TRY],
+  key:'One sentence with a total → one equation. Two sentences → a pair.',
+  solve:{q:'One movie ticket costs ₹x and one snack box ₹y. (i) Day 1: 2 tickets and 3 snack boxes for ₹850. (ii) Day 2: 4 tickets and 1 snack box for ₹1100. Frame the pair of equations.',
+   simple:'Cost = number × price. Add the two costs to get each day’s total.',
+   given:['ticket = ₹x, snack = ₹y','Day 1: 2 tickets + 3 snacks = ₹850','Day 2: 4 tickets + 1 snack = ₹1100'], find:'Two equations in x and y',
+   lines:[
+    ['Day 1: 2x + 3y = 850','2 tickets cost 2x, 3 snacks cost 3y.'],
+    ['Day 2: 4x + y = 1100','4 tickets cost 4x, 1 snack costs y.'],
+    ['Extra (to check): from Day 2, y = 1100 − 4x','Substitution.'],
+    ['2x + 3(1100 − 4x) = 850  →  2x + 3300 − 12x = 850','Put y into Day 1.'],
+    ['−10x = −2450  →  x = 245,  y = 1100 − 980 = 120','Solve for x, then y.']],
+   check:'2(245) + 3(120) = 490 + 360 = 850 ✓   4(245) + 120 = 1100 ✓',
+   answer:'The pair is <b>2x + 3y = 850</b> and <b>4x + y = 1100</b>. (Ticket ₹245, snack ₹120.)'}},
+ {nav:'Q2',tag:'SOLVE',title:'Q2 · Taxi fares',body:[TRY],
+  solve:{q:'A taxi charges a fixed ₹x per trip plus ₹y per km. Sahil travelled 6 km and paid ₹122. Meena travelled 8 km and paid ₹160. Frame the pair of equations.',
+   simple:'Fare = fixed charge + (km × charge per km).',
+   given:['fixed = ₹x, per km = ₹y','6 km → ₹122','8 km → ₹160'], find:'Two equations in x and y',
+   lines:[
+    ['Sahil: x + 6y = 122','Fixed charge plus 6 km.'],
+    ['Meena: x + 8y = 160','Fixed charge plus 8 km.'],
+    ['Extra: subtract: (x + 8y) − (x + 6y) = 160 − 122','The x cancels out (elimination).'],
+    ['2y = 38  →  y = 19,  x = 122 − 114 = 8','Solve.']],
+   check:'8 + 6(19) = 122 ✓   8 + 8(19) = 160 ✓',
+   answer:'The pair is <b>x + 6y = 122</b> and <b>x + 8y = 160</b>. (Fixed ₹8, ₹19 per km.)'}},
+ {nav:'Q3',tag:'SOLVE',title:'Q3 · Sports meet tickets',body:[TRY],
+  key:'Two different totals here: a count of people and an amount of money. Each gives one equation.',
+  solve:{q:'Adult tickets cost ₹150 and child tickets ₹100. 200 people attended and ₹25,000 was collected. Let x = adult tickets and y = child tickets. Frame the pair.',
+   simple:'Count of people: x + y. Money: 150x + 100y.',
+   given:['x adults, y children','200 people in total','₹25,000 collected'], find:'Two equations in x and y',
+   lines:[
+    ['People: x + y = 200','Adults plus children.'],
+    ['Money: 150x + 100y = 25000','Each adult pays 150, each child 100.'],
+    ['Simplify: divide by 50 → 3x + 2y = 500','Smaller numbers are easier (optional).'],
+    ['Extra: y = 200 − x → 3x + 400 − 2x = 500 → x = 100, y = 100','Solve to check.']],
+   check:'100 + 100 = 200 ✓   150(100) + 100(100) = 25000 ✓',
+   answer:'The pair is <b>x + y = 200</b> and <b>150x + 100y = 25000</b>. (100 adults, 100 children.)'}},
+ {nav:'Tips',tag:'RECAP',title:'Exam checklist for 13.4',body:['Framing is half the marks in word problems.'],
+  points:['Write “Let x = … and y = …” first, with units.','Each sentence with a total gives one equation.','Number × price = cost; add the costs.','Solve and substitute back to check your equations make sense.']}
+]);
+
+const EX135A = PL('ex-13-5a','Exercise 13.5 · Word problems (Q1)',22,
+ 'All ten word problems from Q1, each with: let, frame, solve, check, answer.',
+ ['A fixed 5-step routine for every word problem','When to use elimination and when to use substitution','How to set up fractions, ages and two-digit numbers'],
+ 'Exercise 13.5 Part B — graphs, ratios and more.',
+[
+ {nav:'Q1 (i)',tag:'SOLVE',title:'Q1 (i) · Sum and difference',body:[TRY],
+  key:'Sum and difference? Add the two equations and y disappears.',
+  solve:{q:'The sum of two integers is 5 and their difference is −21. Find the two numbers.',
+   simple:'x + y = 5 and x − y = −21.',
+   given:['sum = 5','difference = −21'], find:'the two integers',
+   lines:[
+    ['Let the numbers be x and y.',''],
+    ['x + y = 5  …(1)','Sum.'],
+    ['x − y = −21  …(2)','Difference.'],
+    ['(1) + (2):  2x = 5 + (−21) = −16','Adding cancels y.'],
+    ['x = −8','Divide by 2.'],
+    ['From (1): −8 + y = 5  →  y = 13','Substitute back.']],
+   check:'−8 + 13 = 5 ✓   −8 − 13 = −21 ✓',
+   answer:'The numbers are <b>−8 and 13</b>.'}},
+ {nav:'Q1 (ii)',tag:'SOLVE',title:'Q1 (ii) · Three times the other',body:[TRY],
+  solve:{q:'The difference between two numbers is 26 and one number is three times the other. Find the numbers.',
+   simple:'Let the bigger be x and the smaller y. Then x − y = 26 and x = 3y.',
+   given:['difference = 26','one is 3 × the other'], find:'the two numbers',
+   lines:[
+    ['Let the larger number be x and the smaller be y.',''],
+    ['x − y = 26  …(1)','Difference.'],
+    ['x = 3y  …(2)','Three times.'],
+    ['Put (2) in (1):  3y − y = 26','Substitution.'],
+    ['2y = 26  →  y = 13','Divide by 2.'],
+    ['x = 3 × 13 = 39','Use (2).']],
+   check:'39 − 13 = 26 ✓   39 = 3 × 13 ✓',
+   answer:'The numbers are <b>39 and 13</b>.'}},
+ {nav:'Q1 (iii)',tag:'SOLVE',title:'Q1 (iii) · Bats and balls',body:[TRY],
+  key:'To remove y, make its coefficient the same in both equations: multiply by the other equation’s y-number.',
+  solve:{q:'A coach buys 7 bats and 6 balls for ₹8880. Later she buys 3 bats and 5 balls for ₹4000. Find the cost of each bat and each ball.',
+   simple:'Bat = ₹x, ball = ₹y. Write the two bills.',
+   given:['7 bats + 6 balls = ₹8880','3 bats + 5 balls = ₹4000'], find:'price of a bat and of a ball',
+   lines:[
+    ['Let one bat cost ₹x and one ball ₹y.',''],
+    ['7x + 6y = 8880  …(1)','First bill.'],
+    ['3x + 5y = 4000  …(2)','Second bill.'],
+    ['(1) × 5:  35x + 30y = 44400','Make the y-coefficient 30.'],
+    ['(2) × 6:  18x + 30y = 24000','Now both have 30y.'],
+    ['Subtract:  17x = 20400  →  x = 1200','30y cancels. 20400 ÷ 17 = 1200.'],
+    ['In (2):  3600 + 5y = 4000  →  5y = 400  →  y = 80','Substitute x = 1200.']],
+   check:'7(1200) + 6(80) = 8400 + 480 = 8880 ✓   3(1200) + 5(80) = 3600 + 400 = 4000 ✓',
+   answer:'A bat costs <b>₹1200</b> and a ball costs <b>₹80</b>.'}},
+ {nav:'Q1 (iv)',tag:'SOLVE',title:'Q1 (iv) · Taxi charges',body:[TRY],
+  solve:{q:'Taxi fare = fixed charge + charge per km. 10 km costs ₹155 and 15 km costs ₹220. Find the fixed charge and the charge per km. How much for 25 km?',
+   simple:'Fixed = ₹x, per km = ₹y.',
+   given:['10 km → ₹155','15 km → ₹220'], find:'x, y, and the fare for 25 km',
+   lines:[
+    ['Let the fixed charge be ₹x and the charge per km be ₹y.',''],
+    ['x + 10y = 155  …(1)',''],
+    ['x + 15y = 220  …(2)',''],
+    ['(2) − (1):  5y = 65  →  y = 13','x cancels.'],
+    ['In (1):  x + 130 = 155  →  x = 25',''],
+    ['25 km: x + 25y = 25 + 25 × 13 = 25 + 325 = 350','Use the same rule.']],
+   check:'25 + 10(13) = 155 ✓   25 + 15(13) = 220 ✓',
+   answer:'Fixed charge <b>₹25</b>, <b>₹13 per km</b>. A 25 km trip costs <b>₹350</b>.'}},
+ {nav:'Q1 (v)',tag:'SOLVE',title:'Q1 (v) · Find the fraction',body:[TRY],
+  key:'For fractions: let the fraction be x/y, then cross-multiply to remove the fractions.',
+  solve:{q:'A fraction becomes 9/11 if 2 is added to both numerator and denominator. If 3 is added to both, it becomes 5/6. Find the fraction.',
+   simple:'Fraction = x/y. Add 2 to top and bottom → 9/11. Add 3 → 5/6.',
+   given:[`${fr('x + 2','y + 2')} = ${fr(9,11)}`,`${fr('x + 3','y + 3')} = ${fr(5,6)}`], find:'x/y',
+   lines:[
+    ['11(x + 2) = 9(y + 2)  →  11x + 22 = 9y + 18','Cross-multiply the first.'],
+    ['11x − 9y = −4  …(1)','Move terms: 18 − 22 = −4.'],
+    ['6(x + 3) = 5(y + 3)  →  6x + 18 = 5y + 15','Cross-multiply the second.'],
+    ['6x − 5y = −3  …(2)','15 − 18 = −3.'],
+    ['(1) × 5: 55x − 45y = −20;   (2) × 9: 54x − 45y = −27','Make the y-terms equal.'],
+    ['Subtract:  x = −20 − (−27) = 7','−45y cancels.'],
+    ['In (1):  77 − 9y = −4  →  9y = 81  →  y = 9','Substitute x = 7.']],
+   check:'(7+2)/(9+2) = 9/11 ✓   (7+3)/(9+3) = 10/12 = 5/6 ✓',
+   answer:'The fraction is <b>7/9</b>.'}},
+ {nav:'Q1 (vi)',tag:'SOLVE',title:'Q1 (vi) · Another fraction',body:[TRY],
+  solve:{q:'If we add 1 to the numerator and subtract 1 from the denominator, a fraction becomes 1. It becomes 1/2 if we add 1 only to the denominator. Find the fraction.',
+   simple:'Fraction = x/y.',
+   given:[`${fr('x + 1','y − 1')} = 1`,`${fr('x','y + 1')} = ${fr(1,2)}`], find:'x/y',
+   lines:[
+    ['x + 1 = y − 1  →  x − y = −2  …(1)','Cross-multiply the first.'],
+    ['2x = y + 1  →  2x − y = 1  …(2)','Cross-multiply the second.'],
+    ['(2) − (1):  x = 1 − (−2) = 3','y cancels.'],
+    ['In (1):  3 − y = −2  →  y = 5','']],
+   check:'(3+1)/(5−1) = 4/4 = 1 ✓   3/(5+1) = 3/6 = 1/2 ✓',
+   answer:'The fraction is <b>3/5</b>.'}},
+ {nav:'Q1 (vii)',tag:'SOLVE',title:'Q1 (vii) · Ages',body:[TRY],
+  key:'Ages: use the ages now as x and y. Five years ago, subtract 5 from both. Ten years later, add 10 to both.',
+  solve:{q:'Five years ago, Nuri was thrice as old as Sonu. Ten years later, Nuri will be twice as old as Sonu. How old are they now?',
+   simple:'Nuri now = x, Sonu now = y.',
+   given:['5 years ago: Nuri = 3 × Sonu','10 years later: Nuri = 2 × Sonu'], find:'present ages',
+   lines:[
+    ['Let Nuri’s age now be x and Sonu’s age now be y.',''],
+    ['x − 5 = 3(y − 5)  →  x − 3y = −10  …(1)','Five years ago. Expand: x − 5 = 3y − 15.'],
+    ['x + 10 = 2(y + 10)  →  x − 2y = 10  …(2)','Ten years later. Expand: x + 10 = 2y + 20.'],
+    ['(2) − (1):  y = 10 − (−10) = 20','x cancels.'],
+    ['In (2):  x − 40 = 10  →  x = 50','']],
+   check:'5 years ago: 45 and 15, and 45 = 3 × 15 ✓   10 years later: 60 and 30, and 60 = 2 × 30 ✓',
+   answer:'Nuri is <b>50 years</b> old and Sonu is <b>20 years</b> old.'}},
+ {nav:'Q1 (viii)',tag:'SOLVE',title:'Q1 (viii) · Two-digit number',body:[TRY],
+  key:'A two-digit number with tens digit x and units digit y equals 10x + y. Reversed, it is 10y + x.',
+  solve:{q:'The sum of the digits of a two-digit number is 9. Nine times the number is twice the number with its digits reversed. Find the number.',
+   simple:'Tens digit = x, units digit = y. Number = 10x + y.',
+   given:['x + y = 9','9 × number = 2 × reversed'], find:'the number',
+   lines:[
+    ['x + y = 9  …(1)','Sum of digits.'],
+    ['9(10x + y) = 2(10y + x)','Nine times the number = twice the reverse.'],
+    ['90x + 9y = 20y + 2x  →  88x = 11y  →  y = 8x  …(2)','Collect terms, then divide by 11.'],
+    ['Put (2) in (1):  x + 8x = 9  →  x = 1','Substitution.'],
+    ['y = 8 × 1 = 8','Number = 10(1) + 8 = 18.']],
+   check:'1 + 8 = 9 ✓   9 × 18 = 162 and 2 × 81 = 162 ✓',
+   answer:'The number is <b>18</b>.'}},
+ {nav:'Q1 (ix)',tag:'SOLVE',title:'Q1 (ix) · ₹50 and ₹100 notes',body:[TRY],
+  solve:{q:'Meena withdrew ₹2000 in ₹50 and ₹100 notes only. She got 25 notes in all. How many of each did she get?',
+   simple:'x notes of ₹50, y notes of ₹100. Count the notes, then count the money.',
+   given:['25 notes','total ₹2000'], find:'number of each note',
+   lines:[
+    ['Let x = number of ₹50 notes, y = number of ₹100 notes.',''],
+    ['x + y = 25  …(1)','Number of notes.'],
+    ['50x + 100y = 2000  →  x + 2y = 40  …(2)','Money. Divide by 50 to simplify.'],
+    ['(2) − (1):  y = 15','x cancels.'],
+    ['x = 25 − 15 = 10','From (1).']],
+   check:'10 + 15 = 25 notes ✓   10 × 50 + 15 × 100 = 500 + 1500 = 2000 ✓',
+   answer:'<b>10 notes of ₹50</b> and <b>15 notes of ₹100</b>.'}},
+ {nav:'Q1 (x)',tag:'SOLVE',title:'Q1 (x) · Library charges',body:[TRY],
+  key:'“Fixed charge for the first 3 days” → the extra days are total days − 3.',
+  solve:{q:'A library has a fixed charge for the first 3 days and an extra charge for each day after that. Saritha paid ₹27 for 7 days and Susy paid ₹21 for 5 days. Find both charges.',
+   simple:'Fixed = ₹x, per extra day = ₹y. 7 days = 4 extra days; 5 days = 2 extra days.',
+   given:['7 days → ₹27','5 days → ₹21'], find:'fixed charge and extra charge per day',
+   lines:[
+    ['Let the fixed charge be ₹x and the charge per extra day be ₹y.',''],
+    ['Saritha: 7 − 3 = 4 extra days  →  x + 4y = 27  …(1)',''],
+    ['Susy: 5 − 3 = 2 extra days  →  x + 2y = 21  …(2)',''],
+    ['(1) − (2):  2y = 6  →  y = 3','x cancels.'],
+    ['In (2):  x + 6 = 21  →  x = 15','']],
+   check:'15 + 4(3) = 27 ✓   15 + 2(3) = 21 ✓',
+   answer:'Fixed charge <b>₹15</b>, and <b>₹3</b> for each extra day.'}},
+ {nav:'Routine',tag:'RECAP',title:'The 5-step routine for word problems',body:['Use this for every word problem in the exam.'],
+  points:['<b>Let</b>: say what x and y stand for.','<b>Frame</b>: one equation per fact. Number them (1) and (2).','<b>Solve</b>: add or subtract if a variable cancels easily; otherwise multiply first, or substitute.','<b>Check</b>: put your answers back into the story.','<b>Answer</b>: a full sentence with units (₹, years, cm).'],
+  table:{title:'Which method?',rows:[['one equation says x = …','substitution'],['same x (or y) number in both','subtract'],['+y in one, −y in other','add'],['anything else','multiply, then eliminate']]}}
+]);
+
+const EX135B = PL('ex-13-5b','Exercise 13.5 · Graphs, ratios and more (Q2–Q9)',20,
+ 'The rest of Exercise 13.5: a graph question, the ratio test, two clever tricks, and the stool puzzle.',
+ ['Solve a pair by drawing both lines','Use a₁/a₂, b₁/b₂, c₁/c₂ to predict the answer','Write your own parallel, intersecting or coincident line','The add-and-subtract trick when coefficients swap places'],
+ 'End-of-chapter exercises — mixed practice using everything so far.',
+[
+ {nav:'Q2',tag:'SOLVE',title:'Q2 · Quiz team (graph)',body:[TRY],
+  key:'Graph method: two points for each line (a table of values), draw both lines, and read where they cross.',
+  solve:{q:'10 students of Grade 9 took part in a quiz. The number of girls is 4 more than the number of boys. Form a pair of equations and solve graphically.',
+   simple:'Boys = x, girls = y.',
+   given:['x + y = 10','y = x + 4'], find:'boys and girls, from the graph',
+   lines:[
+    ['x + y = 10  …(1)   y = x + 4  …(2)','Frame the pair.'],
+    ['Table for (1): x = 0 → y = 10;  x = 10 → y = 0','Two points: (0, 10) and (10, 0).'],
+    ['Table for (2): x = 0 → y = 4;  x = 2 → y = 6','Two points: (0, 4) and (2, 6).'],
+    ['Draw both lines: they cross at (3, 7)','Read the meeting point from the graph.'],
+    ['So x = 3, y = 7','']],
+   check:'3 + 7 = 10 ✓   7 = 3 + 4 ✓',
+   answer:'<b>3 boys</b> and <b>7 girls</b> took part.'},
+  plot:{xr:[-1,11],yr:[-1,11],lines:[{m:-1,d:10,label:'x + y = 10',at:8.4},{m:1,d:4,label:'y = x + 4',at:5.6,color:'var(--req)'}],points:[{x:0,y:10},{x:10,y:0},{x:0,y:4},{x:2,y:6},{x:3,y:7,label:'(3, 7)',ok:true,dx:40,dy:-4}]}},
+ {nav:'Q3',tag:'SOLVE',title:'Q3 · Use the ratios',body:[TRY],
+  key:'a₁/a₂ ≠ b₁/b₂ → intersect.  a₁/a₂ = b₁/b₂ = c₁/c₂ → coincident.  a₁/a₂ = b₁/b₂ ≠ c₁/c₂ → parallel.',
+  solve:{q:'Use the ratios a₁/a₂, b₁/b₂, c₁/c₂ to decide whether each pair intersects, is parallel or is coincident: (i) 5x − 4y + 8 = 0; 7x + 6y − 9 = 0 (ii) 9x + 3y + 12 = 0; 18x + 6y + 24 = 0 (iii) 6x − 3y + 10 = 0; 2x − y + 9 = 0',
+   simple:'Divide matching numbers, then compare.',
+   given:['three pairs'], find:'intersect / parallel / coincident',
+   lines:[
+    [`(i) ${fr('a₁','a₂')} = ${fr(5,7)},  ${fr('b₁','b₂')} = ${fr(-4,6)} = −${fr(2,3)}`,'5/7 is positive and −2/3 is negative, so they are not equal.'],
+    ['    a₁/a₂ ≠ b₁/b₂  →  intersecting lines','One solution.'],
+    [`(ii) ${fr(9,18)} = ${fr(1,2)},  ${fr(3,6)} = ${fr(1,2)},  ${fr(12,24)} = ${fr(1,2)}`,'All three ratios are equal.'],
+    ['    a₁/a₂ = b₁/b₂ = c₁/c₂  →  coincident lines','Infinitely many solutions.'],
+    [`(iii) ${fr(6,2)} = 3,  ${fr(-3,-1)} = 3,  ${fr(10,9)}`,'First two equal, third different.'],
+    ['    a₁/a₂ = b₁/b₂ ≠ c₁/c₂  →  parallel lines','No solution.']],
+   check:'(ii) The second equation is just the first × 2, so they must be the same line ✓',
+   answer:'(i) <b>intersecting</b> (ii) <b>coincident</b> (iii) <b>parallel</b>'}},
+ {nav:'Q4 (i)',tag:'SOLVE',title:'Q4 (i) · x + y = 5, 2x + 2y = 10',body:[TRY],
+  solve:{q:'Does the pair x + y = 5, 2x + 2y = 10 have solutions? If so, find them graphically.',
+   simple:'Check the ratios, then draw.',
+   given:['x + y − 5 = 0','2x + 2y − 10 = 0'], find:'number of solutions',
+   lines:[
+    [`${fr(1,2)},  ${fr(1,2)},  ${fr(-5,-10)} = ${fr(1,2)}`,'All ratios are equal.'],
+    ['Coincident lines → infinitely many solutions','Both equations draw the same line.'],
+    ['Table: (0, 5), (5, 0), (2, 3)','Every point on the line works.']],
+   check:'2x + 2y = 10 is just 2 × (x + y = 5) ✓',
+   answer:'<b>Yes, infinitely many</b> solutions, for example (0, 5), (2, 3), (5, 0): every point on x + y = 5.'},
+  plot:{xr:[-1,6],yr:[-1,6],lines:[{m:-1,d:5,width:8,label:''},{m:-1,d:5,label:'x + y = 5 and 2x + 2y = 10',at:2.2,color:'var(--req)',dash:true}],points:[{x:0,y:5,ok:true},{x:2,y:3,ok:true},{x:5,y:0,ok:true}]}},
+ {nav:'Q4 (ii)',tag:'SOLVE',title:'Q4 (ii) · x − y = 8, 3x − 3y = 16',body:[TRY],
+  solve:{q:'Does the pair x − y = 8, 3x − 3y = 16 have solutions? If so, find them graphically.',
+   simple:'Check the ratios, then draw.',
+   given:['x − y − 8 = 0','3x − 3y − 16 = 0'], find:'number of solutions',
+   lines:[
+    [`${fr(1,3)},  ${fr(-1,-3)} = ${fr(1,3)},  ${fr(-8,-16)} = ${fr(1,2)}`,'First two equal, third different.'],
+    ['Parallel lines → no solution','The lines never meet.'],
+    ['Table (1): (8, 0), (0, −8).  Table (2): (16/3, 0), (0, −16/3)','Both lines have slope 1.']],
+   check:'3 × (x − y = 8) gives 3x − 3y = 24, not 16. Contradiction ✓',
+   answer:'<b>No solution</b>: the lines are parallel.'},
+  plot:{xr:[-2,10],yr:[-9,3],lines:[{m:1,d:-8,label:'x − y = 8',at:8.6},{m:1,d:-16/3,label:'3x − 3y = 16',at:2.4,color:'var(--req)'}]}},
+ {nav:'Q4 (iii)',tag:'SOLVE',title:'Q4 (iii) · 2x + y − 6 = 0, 4x − 2y − 4 = 0',body:[TRY],
+  solve:{q:'Does the pair 2x + y − 6 = 0, 4x − 2y − 4 = 0 have solutions? If so, find them graphically.',
+   simple:'Check the ratios, then draw and read where the lines meet.',
+   given:['2x + y = 6','4x − 2y = 4'], find:'the solution',
+   lines:[
+    [`${fr(2,4)} = ${fr(1,2)},  ${fr(1,-2)} = −${fr(1,2)}`,'Not equal → the lines intersect.'],
+    ['Table (1): (0, 6), (3, 0).  Table (2): (0, −2), (1, 0)','Two points for each line.'],
+    ['The lines cross at (2, 2)','Read from the graph.'],
+    ['Algebra check: 2 × (1) + (2): 8x = 16 → x = 2, y = 2','Same answer.']],
+   check:'2(2) + 2 − 6 = 0 ✓   4(2) − 2(2) − 4 = 0 ✓',
+   answer:'<b>Unique solution: x = 2, y = 2</b>.'},
+  plot:{xr:[-1,4],yr:[-3,7],lines:[{m:-2,d:6,label:'2x + y = 6',at:0.8},{m:2,d:-2,label:'4x − 2y = 4',at:3.2,color:'var(--req)'}],points:[{x:2,y:2,label:'(2, 2)',ok:true,dx:40,dy:-4}]}},
+ {nav:'Q4 (iv)',tag:'SOLVE',title:'Q4 (iv) · 2x − 2y − 2 = 0, 4x − 4y − 5 = 0',body:[TRY],
+  solve:{q:'Does the pair 2x − 2y − 2 = 0, 4x − 4y − 5 = 0 have solutions? If so, find them graphically.',
+   simple:'Check the ratios.',
+   given:['2x − 2y = 2','4x − 4y = 5'], find:'number of solutions',
+   lines:[
+    [`${fr(2,4)} = ${fr(1,2)},  ${fr(-2,-4)} = ${fr(1,2)},  ${fr(-2,-5)} = ${fr(2,5)}`,'First two equal, third different.'],
+    ['Parallel lines → no solution',''],
+    ['Graph: y = x − 1 and y = x − 1.25 have the same slope','They never meet.']],
+   check:'Doubling 2x − 2y = 2 gives 4x − 4y = 4, not 5. Contradiction ✓',
+   answer:'<b>No solution</b>: the lines are parallel.'},
+  plot:{xr:[-1,4],yr:[-3,3],lines:[{m:1,d:-1,label:'2x − 2y = 2',at:1},{m:1,d:-1.25,label:'4x − 4y = 5',at:3,color:'var(--req)'}]}},
+ {nav:'Q5',tag:'SOLVE',title:'Q5 · Garden dimensions',body:[TRY],
+  key:'Half the perimeter of a rectangle = length + width.',
+  solve:{q:'Half the perimeter of a rectangular garden is 36 m. Its length is 4 m more than its width. Find the dimensions.',
+   simple:'Length = l, width = w. Half perimeter = l + w.',
+   given:['l + w = 36','l = w + 4'], find:'length and width',
+   lines:[
+    ['l + w = 36  …(1)','Half the perimeter.'],
+    ['l = w + 4  …(2)','Length is 4 more.'],
+    ['Put (2) in (1):  w + 4 + w = 36','Substitution.'],
+    ['2w = 32  →  w = 16',''],
+    ['l = 16 + 4 = 20','']],
+   check:'20 + 16 = 36 ✓   20 − 16 = 4 ✓',
+   answer:'Length <b>20 m</b>, width <b>16 m</b>.'}},
+ {nav:'Q6',tag:'SOLVE',title:'Q6 · Write your own lines',body:[TRY],
+  key:'Choose the second equation’s numbers so the ratios come out the way you want.',
+  solve:{q:'Given 2x + 3y − 8 = 0, write another linear equation so that the pair forms (i) intersecting lines (ii) parallel lines (iii) coincident lines.',
+   simple:'Use the ratio rules backwards.',
+   given:['a₁ = 2, b₁ = 3, c₁ = −8'], find:'one example equation for each case',
+   lines:[
+    ['(i) Need a₁/a₂ ≠ b₁/b₂. Try x + y − 3 = 0','2/1 = 2 but 3/1 = 3. They are not equal, so the lines intersect.'],
+    ['(ii) Need a₁/a₂ = b₁/b₂ ≠ c₁/c₂. Try 4x + 6y − 5 = 0','2/4 = 1/2, 3/6 = 1/2, −8/−5 = 8/5. So the lines are parallel.'],
+    ['(iii) Need all three equal. Try 4x + 6y − 16 = 0','2/4 = 3/6 = −8/−16 = 1/2. So the lines are coincident (the equation is doubled).']],
+   check:'Many answers are correct. Just show the ratios to prove yours works.',
+   answer:'(i) <b>x + y − 3 = 0</b> (ii) <b>4x + 6y − 5 = 0</b> (iii) <b>4x + 6y − 16 = 0</b>'}},
+ {nav:'Q7',tag:'SOLVE',title:'Q7 · Mahāvīrāchārya’s fruit puzzle',body:[TRY],
+  key:'When the x and y numbers swap places, adding and subtracting the equations gives two very easy equations.',
+  solve:{q:'9 citrons and 7 wood-apples cost 107. 7 citrons and 9 wood-apples cost 101. Find the price of each. (9x + 7y = 107, 7x + 9y = 101)',
+   simple:'Citron = x, wood-apple = y. Add the equations, then subtract them.',
+   given:['9x + 7y = 107  …(1)','7x + 9y = 101  …(2)'], find:'x and y',
+   lines:[
+    ['(1) + (2):  16x + 16y = 208','Add the left sides and the right sides.'],
+    ['x + y = 13  …(3)','Divide by 16.'],
+    ['(1) − (2):  2x − 2y = 6','Subtract.'],
+    ['x − y = 3  …(4)','Divide by 2.'],
+    ['(3) + (4):  2x = 16  →  x = 8','Add again: y cancels.'],
+    ['y = 13 − 8 = 5','From (3).']],
+   check:'9(8) + 7(5) = 72 + 35 = 107 ✓   7(8) + 9(5) = 56 + 45 = 101 ✓',
+   answer:'A citron costs <b>8</b> and a wood-apple costs <b>5</b>.'}},
+ {nav:'Q8',tag:'SOLVE',title:'Q8 · Pencils and pens',body:[TRY],
+  solve:{q:'5 pencils and 7 pens cost ₹50, whereas 7 pencils and 5 pens cost ₹46. Find the cost of each pencil and pen.',
+   simple:'Same trick as Q7: the 5 and 7 swap places.',
+   given:['5x + 7y = 50  …(1)','7x + 5y = 46  …(2)'], find:'price of a pencil (x) and a pen (y)',
+   lines:[
+    ['(1) + (2):  12x + 12y = 96  →  x + y = 8  …(3)','Add, then divide by 12.'],
+    ['(2) − (1):  2x − 2y = −4  →  x − y = −2  …(4)','Subtract, then divide by 2.'],
+    ['(3) + (4):  2x = 6  →  x = 3',''],
+    ['y = 8 − 3 = 5','From (3).']],
+   check:'5(3) + 7(5) = 15 + 35 = 50 ✓   7(3) + 5(5) = 21 + 25 = 46 ✓',
+   answer:'A pencil costs <b>₹3</b> and a pen costs <b>₹5</b>.'}},
+ {nav:'Q9',tag:'SOLVE',title:'Q9 · Height of the stool',body:[TRY],
+  key:'Picture 1: cat on top of the stool. Picture 2: cat on the floor under the stool. Each picture gives one equation.',
+  solve:{q:'Find the height of the stool. Picture 1: a cat sits on the stool; floor to top of cat = 85 cm. Picture 2: the cat stands on the floor beside the stool; top of cat to top of stool = 25 cm.',
+   simple:'Stool height = s, cat height = c.',
+   given:['stool + cat = 85 cm','stool − cat = 25 cm'], find:'height of the stool',
+   lines:[
+    ['Let the stool be s cm high and the cat c cm tall.',''],
+    ['s + c = 85  …(1)','Picture 1: cat on top, heights add.'],
+    ['s − c = 25  …(2)','Picture 2: the gap above the cat is stool minus cat.'],
+    ['(1) + (2):  2s = 110  →  s = 55','c cancels.'],
+    ['c = 85 − 55 = 30','From (1).']],
+   check:'55 + 30 = 85 ✓   55 − 30 = 25 ✓',
+   answer:'The stool is <b>55 cm</b> high (and the cat is 30 cm tall).'}},
+ {nav:'Tips',tag:'RECAP',title:'Exam checklist for 13.5',body:['Write the ratios before solving. They tell you what to expect.'],
+  points:['Graph method: make a table of 2 points per line, draw carefully, and read the crossing point.','Ratio test first: it tells you if there is one, none or infinitely many solutions.','Coefficients swapped (9x + 7y, 7x + 9y)? Add, then subtract.','Always check your answer in both equations.'],
+  table:{title:'Ratio test',rows:[['a₁/a₂ ≠ b₁/b₂','intersect · one'],['a₁/a₂ = b₁/b₂ = c₁/c₂','coincident · ∞'],['a₁/a₂ = b₁/b₂ ≠ c₁/c₂','parallel · none']]}}
+]);
+
+COURSE.modules.push({ name:'Exam Practice: Solve Step by Step', color:'#9ccf8f', lessons:[EX131,EX132,EX133,EX134,EX135A,EX135B] });
+COURSE.modules[1].lessons[0].nextTeaser = 'Exam Practice — every question of Exercises 13.1–13.5, solved one line at a time.';
+
 /* COURSE-DATA:END */
 
 /* ENGINE:START — reusable; do not edit per lesson */
@@ -435,6 +1132,33 @@ function drawPlot(svg,step){
 }
 function fmtN(v){v=+(+v).toFixed(2);return (v<0?'−':v>0?'+':'')+Math.abs(v);}
 function fmtM(v){if(typeof v==='string')return v;const r=Math.round(v*10)/10;return (r<0?'−':'')+(L.unitPrefix||'')+Math.abs(r)+(L.unit?' '+L.unit:'');}
+let R=0;
+const isPractice=()=>L.steps.some(s=>s.solve);
+function renderBoard(step,scroll){
+  const b=$('#board');const P=step.solve;
+  if(!P){
+    if(isPractice()&&!step.plot&&step.points){b.style.display='';b.innerHTML=`<div class="qbox"><span class="kicker">REMEMBER FOR THE EXAM</span><ul class="points big">${step.points.map(p=>`<li>${p}</li>`).join('')}</ul></div>`;}
+    else{b.style.display='none';b.innerHTML='';}
+    return;}
+  b.style.display='';const n=P.lines.length;
+  let h=`<div class="qbox"><span class="kicker">QUESTION</span><div>${P.q}</div></div>`;
+  if(P.simple)h+=`<div class="simple"><span class="kicker">IN SIMPLE WORDS</span>${P.simple}</div>`;
+  h+=`<div class="gf"><div><span class="kicker">GIVEN</span><ul>${(P.given||[]).map(g=>`<li>${g}</li>`).join('')}</ul></div><div><span class="kicker">TO FIND</span><div>${P.find||''}</div></div></div>`;
+  h+=`<span class="kicker sol">SOLUTION · ${R} of ${n} lines shown</span><ol class="lines">`;
+  P.lines.forEach((l,i)=>{if(i<R)h+=`<li class="${i===R-1?'new':''}"><span class="n">${i+1}</span><div><div class="w">${l[0]}</div>${l[1]?`<div class="why">${l[1]}</div>`:''}</div></li>`;});
+  h+='</ol>';
+  if(R<n)h+=`<div class="more">${n-R} more line${n-R>1?'s':''}. Try the next step yourself, then press <b>Next line</b>.</div>`;
+  else{if(P.check)h+=`<div class="check"><span class="kicker">CHECK YOUR ANSWER</span>${P.check}</div>`;h+=`<div class="ans"><span class="kicker">WRITE IN EXAM</span>${P.answer}</div>`;}
+  b.innerHTML=h;
+  if(scroll){const el=R<n?b.querySelector('li.new'):b.querySelector('.ans');if(el)el.scrollIntoView({block:'nearest',behavior:reduce?'auto':'smooth'});}
+}
+function setNext(){
+  const step=L.steps[S];
+  if(step.solve&&R<step.solve.lines.length){$('#nextTxt').textContent=`Next line (${R+1}/${step.solve.lines.length})`;return;}
+  const nxt=L.steps[S+1];const nl=ALL[ALL.indexOf(L)+1];
+  $('#nextTxt').textContent=nxt?`Next: ${nxt.nav}`:(nl?`Next lesson: ${nl.title}`:'Finish lesson');
+}
+function reveal(k){const st=L.steps[S];if(!st.solve)return;R=Math.max(0,Math.min(st.solve.lines.length,k));renderBoard(st,true);setNext();const p=$('#revTxt');if(p)p.textContent=`${R} / ${st.solve.lines.length} lines`;}
 function render(){
   const step=L.steps[S];const svg=$('#scene');svg.innerHTML='';
   if(step.plot){drawPlot(svg,step);}else{layout();
@@ -454,8 +1178,9 @@ function render(){
   renderMetrics(step);renderPanel(step);renderNav();
   $('#stepCount').textContent=`Step ${S+1} of ${L.steps.length}`;
   $('#backBtn').disabled=S===0&&ALL.indexOf(L)===0;
-  const nxt=L.steps[S+1];const nl=ALL[ALL.indexOf(L)+1];
-  $('#nextTxt').textContent=nxt?`Next: ${nxt.nav}`:(nl?`Next lesson: ${nl.title}`:'Finish lesson');
+  $('#scene').style.display=(step.plot||!isPractice())?'':'none';
+  $('#metrics').style.display=L.metrics.length?'':'none';
+  renderBoard(step,false);setNext();
   if(location.hash!==`#${L.slug}-${S+1}`)history.replaceState(null,'',`#${L.slug}-${S+1}`);
 }
 function tick(t){
@@ -485,8 +1210,10 @@ function renderPanel(step){
   if(step.changes)h+=`<div class="box changes"><span class="kicker">WHAT CHANGED</span>${step.changes.map(([o,t])=>`<div><i>${o}</i><span>${t}</span></div>`).join('')}</div>`;
   if(step.table){const T=step.table;h+=`<div class="box"><span class="kicker">${T.title.toUpperCase()}</span><table class="tbl">${T.rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}${T.sum?`<tr class="sum"><td>${T.sum[0]}</td><td>${T.sum[1]}</td></tr>`:''}</table>${T.foot?`<div class="fb">${T.foot}</div>`:''}</div>`;}
   if(step.quiz){const Q=step.quiz;h+=`<div class="box quiz"><span class="kicker">QUICK CHECK</span><div>${Q.q}</div>${Q.options.map((o,i)=>`<button data-i="${i}">${o}</button>`).join('')}<div class="fb" id="qfb"></div></div>`;}
+  if(step.solve)h+=`<div class="box"><span class="kicker">YOUR CONTROLS</span><span id="revTxt" class="mono">${R} / ${step.solve.lines.length} lines</span><div class="solvebtns"><button id="revNext">Next line</button><button id="revAll">Show full solution</button><button id="revHide">Hide working</button></div></div>`;
   if(S===L.steps.length-1&&L.nextTeaser)h+=`<div class="box"><span class="kicker">COMING UP</span>Next up: ${L.nextTeaser}</div>`;
   $('#panel').innerHTML=h;
+  if(step.solve){$('#revNext').onclick=()=>reveal(R+1);$('#revAll').onclick=()=>reveal(step.solve.lines.length);$('#revHide').onclick=()=>reveal(0);}
   if(step.quiz)$('#panel').querySelectorAll('.quiz button').forEach(b=>b.onclick=()=>{const i=+b.dataset.i,Q=step.quiz;
     b.classList.add(i===Q.answer?'ok':'bad');$('#qfb').innerHTML=(i===Q.answer?'✓ Right. ':'✗ Not quite. ')+Q.why;});
 }
@@ -512,9 +1239,9 @@ function renderDrawer(){
   $('#courseList').querySelectorAll('a').forEach(a=>a.onclick=()=>toggleDrawer(false));
 }
 function markSeen(){const d=store.get(doneKey,{});d[L.slug+':steps']=Math.max(d[L.slug+':steps']||0,S+1);if(S===L.steps.length-1)d[L.slug]=true;store.set(doneKey,d);}
-function go(i){S=Math.max(0,Math.min(L.steps.length-1,i));markSeen();render();startAnim();}
+function go(i){S=Math.max(0,Math.min(L.steps.length-1,i));R=0;markSeen();render();startAnim();}
 function openLesson(slug,step=0){const l=ALL.find(x=>x.slug===slug)||ALL[0];const changed=l!==L;L=l;if(changed)$('#metrics').dataset.lesson='';renderHead();go(step);window.scrollTo({top:0});}
-function next(){if(S<L.steps.length-1)return go(S+1);const nl=ALL[ALL.indexOf(L)+1];if(nl)openLesson(nl.slug,0);else{markSeen();renderDrawer();}}
+function next(){const st=L.steps[S];if(st.solve&&R<st.solve.lines.length)return reveal(R+1);if(S<L.steps.length-1)return go(S+1);const nl=ALL[ALL.indexOf(L)+1];if(nl)openLesson(nl.slug,0);else{markSeen();renderDrawer();}}
 function back(){if(S>0)return go(S-1);const pl=ALL[ALL.indexOf(L)-1];if(pl)openLesson(pl.slug,pl.steps.length-1);}
 function route(){const m=location.hash.match(/^#([\w-]+?)-(\d+)$/);if(m)openLesson(m[1],+m[2]-1);else openLesson(ALL[0].slug,0);}
 function toggleDrawer(o){$('#drawer').classList.toggle('open',o);$('#scrim').classList.toggle('open',o);}
