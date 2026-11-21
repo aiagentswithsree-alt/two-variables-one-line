@@ -32,6 +32,16 @@ The page opens on **Today**, a 5–7 minute routine that keeps the chapter in lo
 
 Progress syncs to your claude.ai account when the page is opened from claude.ai. Opened from GitHub Pages or a local file, it is saved in that browser only; use **Copy backup code** to move it.
 
+## Lesson tabs: Before, Understand, After
+
+Every lesson has three tabs:
+
+1. **Before:** a 3-question warm-up. The first time, you guess before learning (guessing first helps the lesson stick); later, it asks what you remember. It never changes the review schedule.
+2. **Understand:** the step-by-step lesson.
+3. **After:** 5 practice questions on that lesson, picked from what's due, then weak spots, then new questions. These count towards the spaced-repetition schedule.
+
+From the menu, a lesson you haven't finished opens on **Before**; a finished one opens on **After**. Finishing the last step of a lesson leads to After.
+
 ## Exam practice
 
 Each exercise question shows **In simple words**, **Given** and **To find**. Pressing **Next line** then reveals the working one line at a time, each with a short reason. After the last line come a **Check** and the final answer to **write in the exam**. Try each step in your notebook before revealing it.

@@ -128,7 +128,7 @@ ol.lines li.new .why{color:var(--accent-ink)}
 body.homeon .home{display:block}body.homeon .wrap,body.homeon .bottombar{display:none}
 .todaybtn{width:auto;padding:0 10px;font-family:var(--mono);font-size:12px;font-weight:600;text-decoration:none;color:var(--ink)}
 .bottombar{justify-content:space-between;padding:10px 16px}
-.bottombar button{padding:9px 14px;font-size:14px}
+.bottombar button{padding:9px 14px;font-size:14px;white-space:nowrap}
 .bottombar .next{flex:0 1 360px;margin-left:auto}
 .hhead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
 .hhead h1{margin:4px 0 6px}.crumb a{color:var(--muted)}
@@ -177,6 +177,15 @@ ol.seq li.ok{background:var(--chip2);border-style:solid;color:#2a2620}ol.seq li.
 .pool{margin-top:6px}
 .kp{padding:10px 0;border-bottom:1px dashed var(--soft)}.kp .qtext{font-size:16px;margin:4px 0 8px}
 label.chk{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--soft);line-height:1.45;cursor:pointer}label.chk input{width:20px;height:20px;margin-top:2px;flex:none}
+.ltabs{display:none;max-width:1180px;margin:14px auto 0;padding:0 16px}body.lessonctx .ltabs{display:block}
+body.lessonctx.homeon .home{max-width:1180px}
+.lt-in{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between}
+.lt-title{font-family:var(--mono);font-weight:800;font-size:14px;color:var(--muted)}
+.lt-btns{display:flex;border:2px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:2px 2px 0 var(--line);background:var(--paper)}
+.lt-btns a{padding:8px 14px;font-family:var(--mono);font-size:13px;font-weight:600;color:var(--ink);text-decoration:none;border-left:2px solid var(--line)}
+.lt-btns a:first-child{border-left:none}.lt-btns a.on{background:var(--ink);color:var(--paper)}
+@media(max-width:480px){.lt-btns{width:100%}.lt-btns a{flex:1;text-align:center;padding:8px 4px;font-size:12px}}
+.wrap{padding-top:10px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -187,6 +196,7 @@ label.chk{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bott
   <a class="iconbtn todaybtn" href="#today" aria-label="Today: daily review and tracker">Today</a>
   <button class="iconbtn" id="themeBtn" aria-label="Toggle dark mode">◐</button>
 </header>
+<nav class="ltabs" id="ltabs" aria-label="Lesson parts"><div class="lt-in"><span class="lt-title"></span><div class="lt-btns"><a data-t="before" href="#">1 Before</a><a data-t="understand" href="#">2 Understand</a><a data-t="after" href="#">3 After</a></div></div></nav>
 <div class="scrim" id="scrim"></div>
 <nav class="drawer" id="drawer" aria-label="Course">
   <div class="dh"><span style="flex:1">Course</span><span class="mono" id="lessonCount" style="font-size:11px;font-weight:400"></span><button class="iconbtn" id="closeDrawer" aria-label="Close menu">✕</button></div>
@@ -1328,7 +1338,7 @@ function setNext(){
   const step=L.steps[S];
   if(step.solve&&R<step.solve.lines.length){$('#nextTxt').textContent=`Next line (${R+1}/${step.solve.lines.length})`;return;}
   const nxt=L.steps[S+1];const nl=ALL[ALL.indexOf(L)+1];
-  $('#nextTxt').textContent=nxt?`Next: ${nxt.nav}`:(nl?`Next lesson: ${nl.title}`:'Finish lesson');
+  $('#nextTxt').textContent=nxt?`Next: ${nxt.nav}`:'Next: After · practise';
 }
 function reveal(k){const st=L.steps[S];if(!st.solve)return;R=Math.max(0,Math.min(st.solve.lines.length,k));renderBoard(st,true);setNext();const p=$('#revTxt');if(p)p.textContent=`${R} / ${st.solve.lines.length} lines`;}
 function render(){
@@ -1349,7 +1359,7 @@ function render(){
   }
   renderMetrics(step);renderPanel(step);renderNav();
   $('#stepCount').textContent=`Step ${S+1} of ${L.steps.length}`;
-  $('#backBtn').disabled=S===0&&ALL.indexOf(L)===0;
+  $('#backBtn').disabled=false;$('#backBtn').textContent=S===0?'← Before':'← Back';
   $('#scene').style.display=(step.plot||!isPractice())?'':'none';
   $('#metrics').style.display=L.metrics.length?'':'none';
   renderBoard(step,false);setNext();
@@ -1401,20 +1411,20 @@ function renderHead(){
   $('#chips').innerHTML=`<span class="chip">⏱ ${L.minutes} min</span><span class="chip">▮ ${L.level}</span><span class="chip">☰ ${L.steps.length} steps</span>`;
   if(L.legend){const lg=$('#legend');lg.querySelectorAll(':scope>span').forEach(s=>s.remove());lg.insertAdjacentHTML('afterbegin',L.legend.map(([c,t])=>`<span><i class="dot" style="background:${c}"></i>${t}</span>`).join(''));}
   $('#learn').innerHTML=`<span class="kicker">YOU’LL LEARN</span><ul>${L.learn.map(x=>`<li>${x}</li>`).join('')}</ul>`;
-  renderDrawer();
+  renderDrawer();paintTabs(HOME_ON?curTab:'understand');
 }
 function renderDrawer(){
   const done=store.get(doneKey,{});const total=ALL.length;const n=ALL.filter(l=>done[l.slug]).length;
   $('#lessonCount').textContent=`${total} lessons`;$('#progTxt').textContent=`${n} / ${total}`;
-  $('#courseList').innerHTML=PRACTICE_LINKS()+COURSE.modules.map((m,mi)=>`<div class="mod"><button aria-expanded="true"><span class="sw" style="background:${m.color}"></span>${String(mi+1).padStart(2,'0')}. ${m.name}<span class="cnt">${m.lessons.filter(l=>done[l.slug]).length}/${m.lessons.length}</span></button><ul>${m.lessons.map(l=>`<li><a href="#${l.slug}-1" class="${l.slug===L.slug?'cur':''} ${done[l.slug]?'done':''}">${l.title}</a></li>`).join('')}</ul></div>`).join('');
+  $('#courseList').innerHTML=PRACTICE_LINKS()+COURSE.modules.map((m,mi)=>`<div class="mod"><button aria-expanded="true"><span class="sw" style="background:${m.color}"></span>${String(mi+1).padStart(2,'0')}. ${m.name}<span class="cnt">${m.lessons.filter(l=>done[l.slug]).length}/${m.lessons.length}</span></button><ul>${m.lessons.map(l=>`<li><a href="#${lessonEntry(l.slug)}" class="${l.slug===L.slug?'cur':''} ${done[l.slug]?'done':''}">${l.title}</a></li>`).join('')}</ul></div>`).join('');
   $('#courseList').querySelectorAll('.mod>button').forEach(b=>b.onclick=()=>{const ul=b.nextElementSibling;const o=ul.style.display!=='none';ul.style.display=o?'none':'';b.setAttribute('aria-expanded',!o)});
   $('#courseList').querySelectorAll('a').forEach(a=>a.onclick=()=>toggleDrawer(false));
 }
 function markSeen(){const d=store.get(doneKey,{});d[L.slug+':steps']=Math.max(d[L.slug+':steps']||0,S+1);if(S===L.steps.length-1){if(!d[L.slug])logLesson(L.slug);d[L.slug]=true;}store.set(doneKey,d);}
 function go(i){S=Math.max(0,Math.min(L.steps.length-1,i));R=0;markSeen();render();startAnim();}
 function openLesson(slug,step=0){const l=ALL.find(x=>x.slug===slug)||ALL[0];const changed=l!==L;L=l;if(changed)$('#metrics').dataset.lesson='';renderHead();go(step);window.scrollTo({top:0});}
-function next(){const st=L.steps[S];if(st.solve&&R<st.solve.lines.length)return reveal(R+1);if(S<L.steps.length-1)return go(S+1);const nl=ALL[ALL.indexOf(L)+1];if(nl)openLesson(nl.slug,0);else{markSeen();location.hash='#today';}}
-function back(){if(S>0)return go(S-1);const pl=ALL[ALL.indexOf(L)-1];if(pl)openLesson(pl.slug,pl.steps.length-1);}
+function next(){const st=L.steps[S];if(st.solve&&R<st.solve.lines.length)return reveal(R+1);if(S<L.steps.length-1)return go(S+1);markSeen();location.hash='#'+L.slug+'-after';}
+function back(){if(S>0)return go(S-1);location.hash='#'+L.slug+'-before';}
 function route(){if(homeRoute())return;const m=location.hash.match(/^#([\w-]+?)-(\d+)$/);if(m)openLesson(m[1],+m[2]-1);else openLesson(ALL[0].slug,0);}
 function toggleDrawer(o){$('#drawer').classList.toggle('open',o);$('#scrim').classList.toggle('open',o);}
 $('#nextBtn').onclick=next;$('#backBtn').onclick=back;
@@ -1512,16 +1522,15 @@ function dumpWeeks(){let w=weekK(todayK()),n=0;const has=wk=>[0,1,2,3,4,5,6].som
 
 /* ---------- views ---------- */
 let curView='today',SESS=null;
-function homeRoute(){const h=location.hash.slice(1);
-  if(!h||['today','review','kumon','dump'].includes(h)){showHome(h||'today');return true;}
-  hideHome();return false;}
-function showHome(v){HOME_ON=true;curView=v;document.body.classList.add('homeon');$('#brand').innerHTML=COURSE.brand;
+function homeRoute(){const r=parseHash(location.hash.slice(1));if(!r){hideHome();return false;}
+  if(r.kind==='home')showHome(r.v);else showTab(r.slug,r.tab);return true;}
+function showHome(v){HOME_ON=true;curView=v;document.body.classList.add('homeon');document.body.classList.remove('lessonctx');$('#brand').innerHTML=COURSE.brand;
   if(location.hash!=='#'+v)history.replaceState(null,'',`#${v}`);
   document.title=`${{today:'Today',review:'Today’s review',kumon:'Kumon sheet',dump:'Brain dump'}[v]} · ${COURSE.brand.replace(/<[^>]+>/g,'')}`;
   ({today:renderToday,review:startReview,kumon:startKumon,dump:startDump})[v]();window.scrollTo({top:0});
   try{renderDrawer();}catch(e){}}
-function hideHome(){HOME_ON=false;document.body.classList.remove('homeon');}
-addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(!h||['today','review','kumon','dump'].includes(h))showHome(h||'today');else if(HOME_ON){hideHome();route();}});
+function hideHome(){HOME_ON=false;document.body.classList.remove('homeon');document.body.classList.add('lessonctx');}
+addEventListener('hashchange',()=>{const r=parseHash(location.hash.slice(1));if(r){if(r.kind==='home')showHome(r.v);else showTab(r.slug,r.tab);}else if(HOME_ON){hideHome();route();}});
 function PRACTICE_LINKS(){const due=dueList(todayK()).length;
   return `<div class="mod"><button aria-expanded="true"><span class="sw" style="background:#e8833a"></span>Daily practice<span class="cnt">${due} due</span></button><ul>
   <li><a href="#today" class="${HOME_ON&&curView==='today'?'cur':''}">Today · streak and tracker</a></li>
@@ -1699,6 +1708,85 @@ function startDump(pick){
 }
 function logLesson(slug){const d=DAY(todayK());d.nl=[...new Set([...(d.nl||[]),slug])];persist();}
 /* RECALL:END */
+/* TABS:START — Screen 2: Before / Understand / After for every lesson */
+let curTab='understand';
+const LESSON_TOPIC={'ex-13-4':'T4'};
+const lessonDone=slug=>!!store.get(doneKey,{})[slug];
+function lessonEntry(slug){return slug+(lessonDone(slug)?'-after':'-before');}
+function parseHash(h){
+  if(!h||['today','review','kumon','dump'].includes(h))return {kind:'home',v:h||'today'};
+  const m=h.match(/^([\w-]+)-(before|after)$/);
+  if(m&&ALL.some(l=>l.slug===m[1]))return {kind:'tab',slug:m[1],tab:m[2]};
+  return null;}
+function lessonPool(slug){
+  const own=BANK.filter(c=>c.l[0]===slug);const tps=new Set(own.map(c=>c.t));if(!tps.size)tps.add(LESSON_TOPIC[slug]||'T1');
+  return {own,rel:BANK.filter(c=>tps.has(c.t)&&c.l[0]!==slug)};}
+function paintTabs(tab){
+  const el=document.getElementById('ltabs');if(!el||!L)return;
+  el.querySelector('.lt-title').textContent=L.title;
+  const hrefs={before:`#${L.slug}-before`,understand:`#${L.slug}-1`,after:`#${L.slug}-after`};
+  el.querySelectorAll('a[data-t]').forEach(a=>{const t=a.dataset.t;a.href=hrefs[t];a.classList.toggle('on',t===tab);a.setAttribute('aria-current',t===tab?'page':'false');});}
+function showTab(slug,tab){
+  const l=ALL.find(x=>x.slug===slug);if(l!==L){L=l;$('#metrics').dataset.lesson='';}S=0;
+  HOME_ON=true;curView='tab';curTab=tab;document.body.classList.add('homeon','lessonctx');
+  renderHead();paintTabs(tab);
+  if(location.hash!==`#${slug}-${tab}`)history.replaceState(null,'',`#${slug}-${tab}`);
+  document.title=`${tab==='before'?'Before':'After'} · ${L.title}`;
+  (tab==='before'?startBefore:startAfter)();window.scrollTo({top:0});}
+
+/* a short question set inside a tab */
+function runSet(cards,opt){
+  const st={cards:cards.map(inst),i:0,res:{},t0:Date.now()};
+  const draw=()=>{const c=st.cards[st.i];if(!c)return opt.end(st);
+    H().innerHTML=`${opt.head}<div class="pbar"><i style="width:${Math.round(100*st.i/st.cards.length)}%"></i></div>
+     <div class="mono muted small" style="text-align:right">${st.i+1} / ${st.cards.length}</div>
+     <section class="card qcard" id="qcard"></section><div class="row end"><button class="btn primary" id="qNext" hidden>${st.i+1<st.cards.length?'Next question →':'See results'}</button></div>`;
+    renderQ(document.getElementById('qcard'),c,ok=>{st.res[c.id]=ok;if(opt.record)record(c,ok);
+      const nb=document.getElementById('qNext');nb.hidden=false;nb.focus({preventScroll:true});nb.onclick=()=>{st.i++;draw();};});};
+  draw();}
+
+function startBefore(){
+  const done=lessonDone(L.slug),{own,rel}=lessonPool(L.slug);
+  const easy=c=>['mcq','tf','match'].includes(c.type)?0:1;
+  const pick=[...own].sort((a,b)=>easy(a)-easy(b)).slice(0,3);if(pick.length<3)pick.push(...shuffle(rel).slice(0,3-pick.length));
+  const head=`<div class="crumb">${esc(L.module.name)} · warm-up</div><h1>${done?'What do you remember?':'Guess first'}</h1>
+    <p class="tagline">${done?'Answer from memory before you re-read anything. These three don’t change your review schedule.':'You haven’t learned this yet, so wrong guesses are expected. Guessing first makes the lesson stick better. Nothing here changes your schedule.'}</p>`;
+  H().innerHTML=`${head}<section class="card tcard"><span class="kicker">3 QUICK QUESTIONS · ABOUT 1 MINUTE</span>
+    <p>${pick.map(c=>`• ${TOPICS[c.t]}`).filter((x,i,a)=>a.indexOf(x)===i).join('<br>')}</p>
+    <div class="row"><button class="btn primary" id="bStart">Start warm-up</button><a class="btn" href="#${L.slug}-1">Skip to the lesson</a></div></section>`;
+  document.getElementById('bStart').onclick=()=>runSet(pick,{record:false,head,end:st=>{
+    const n=st.cards.length,c=Object.values(st.res).filter(Boolean).length;
+    H().innerHTML=`${head}<section class="card tcard main"><h2>${c} / ${n} ${done?'remembered':'guessed right'}</h2>
+      <p>${done?(c===n?'Strong recall. Head to After for practice that counts towards your schedule.':'Some gaps: the lesson will fill them. Watch for the steps you missed.'):'Keep these questions in mind: the lesson answers each of them.'}</p>
+      <div class="row"><a class="btn primary" href="#${L.slug}-1">${done?'Re-read the lesson':'Start the lesson'} →</a>${done?`<a class="btn" href="#${L.slug}-after">Go to After</a>`:''}</div></section>`;}});
+}
+
+function startAfter(){
+  const t=todayK(),{own,rel}=lessonPool(L.slug),pc=id=>P.cards[id];
+  const pri=c=>{const s=pc(c.id);if(s&&s.due<=t)return 0;if(s&&s.w>s.r)return 1;if(!s)return 2;return 3;};
+  const ranked=[...shuffle(own).map(c=>[c,pri(c),0]),...shuffle(rel).map(c=>[c,pri(c),1])].sort((a,b)=>a[1]-b[1]||a[2]-b[2]).map(x=>x[0]);
+  const pick=ranked.slice(0,5),own2=own.length||1;
+  const mast=()=>{const cs=own.length?own:rel;const m=cs.filter(c=>(pc(c.id)||{}).b>=4).length;return {m,n:cs.length,p:Math.round(100*m/cs.length)};};
+  const nl=ALL[ALL.indexOf(L)+1];
+  const head=`<div class="crumb">${esc(L.module.name)} · practice</div><h1>Practise from memory</h1>
+    <p class="tagline">Five questions on this lesson. These count: right answers move up a box, wrong ones come back tomorrow.</p>`;
+  const M=mast();
+  H().innerHTML=`${head}<section class="card tcard"><span class="kicker">THIS LESSON’S MASTERY · BOX 4 OR HIGHER</span>
+    <div class="mrow"><span>${esc(L.title)}</span><span class="bar"><i style="width:${M.p}%"></i></span><span class="mono">${M.m}/${M.n}</span></div>
+    <p class="muted small">${pick.filter(c=>pri(c)===0).length} due today · ${pick.filter(c=>pri(c)===2).length} new</p>
+    <div class="row"><button class="btn primary" id="aStart">Start 5 questions</button><a class="btn" href="#${L.slug}-1">Re-read the lesson</a></div></section>`;
+  document.getElementById('aStart').onclick=()=>runSet(pick,{record:true,head,end:st=>{
+    const n=st.cards.length,c=Object.values(st.res).filter(Boolean).length,d=DAY(t),prev=d.af||{n:0,c:0};
+    d.af={n:prev.n+n,c:prev.c+c};persist();const M2=mast();
+    const wrong=st.cards.filter(x=>st.res[x.id]===false);
+    H().innerHTML=`${head}<section class="card tcard main"><h2>${c} / ${n} from memory</h2>
+      <div class="mrow"><span>Mastery</span><span class="bar"><i style="width:${M2.p}%"></i></span><span class="mono">${M2.m}/${M2.n}</span></div>
+      ${wrong.length?`<span class="kicker">RE-READ THESE STEPS</span><ul class="weak">${wrong.map(x=>`<li><span>${esc(x.q)}</span><a href="#${x.l[0]}-${x.l[1]}">Open step →</a></li>`).join('')}</ul>`:'<p>All from memory. These come back in a few days to lock them in.</p>'}
+      <div class="row">${nl?`<a class="btn primary" href="#${lessonEntry(nl.slug)}">Next lesson: ${esc(nl.title)} →</a>`:''}<a class="btn" href="#today">Back to Today</a><button class="btn" id="aAgain">5 more</button></div></section>`;
+    document.getElementById('aAgain').onclick=startAfter;}});
+}
+/* TABS:END */
+
 route();
 
 </script>
