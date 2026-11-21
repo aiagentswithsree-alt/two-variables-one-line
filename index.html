@@ -122,6 +122,61 @@ ol.lines li.new .why{color:var(--accent-ink)}
 .tag.SOLVE{background:var(--chip1)}
 .points.big{font-size:16px;line-height:1.7}
 @keyframes pop{from{transform:translateY(6px);opacity:.2}to{transform:none;opacity:1}}
+
+[hidden]{display:none!important}
+.home{display:none;max-width:860px;margin:0 auto;padding:18px 16px 60px}
+body.homeon .home{display:block}body.homeon .wrap,body.homeon .bottombar{display:none}
+.todaybtn{width:auto;padding:0 10px;font-family:var(--mono);font-size:12px;font-weight:600;text-decoration:none;color:var(--ink)}
+.bottombar{justify-content:space-between;padding:10px 16px}
+.bottombar button{padding:9px 14px;font-size:14px}
+.bottombar .next{flex:0 1 360px;margin-left:auto}
+.hhead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.hhead h1{margin:4px 0 6px}.crumb a{color:var(--muted)}
+.streak{border:2px solid var(--line);border-radius:12px;background:var(--chip1);padding:6px 14px;text-align:center;box-shadow:2px 2px 0 var(--line);color:#2a2620}
+.streak b{display:block;font-family:var(--mono);font-size:26px;line-height:1.1}.streak span{font-size:11px;font-family:var(--mono)}
+.tcard{padding:14px 16px;margin:12px 0}.tcard h2{font-family:var(--mono);font-size:19px;margin:6px 0}.tcard h3{font-family:var(--mono);font-size:15px;margin:6px 0}
+.tcard p{line-height:1.6;margin:6px 0}.tcard.main{background:var(--accent);color:var(--accent-ink)}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:12px}.twocol .tcard{margin:0}.twocol{margin:12px 0}
+@media(max-width:640px){.twocol{grid-template-columns:1fr}}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}.row.end{justify-content:flex-end}
+.btn{display:inline-block;border:2px solid var(--line);border-radius:10px;padding:8px 14px;background:var(--paper);color:var(--ink);font-family:var(--mono);font-size:13px;font-weight:600;text-decoration:none;box-shadow:2px 2px 0 var(--line);cursor:pointer}
+.btn.primary{background:var(--ink);color:var(--paper)}.btn.small{font-size:11px;padding:5px 9px}.btn:disabled{opacity:.45;cursor:default}
+.btn:active{transform:translate(2px,2px);box-shadow:none}
+.muted{color:var(--muted)}.small{font-size:13px;margin:4px 0}
+table.trk{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px}
+table.trk th{text-align:left;font-family:var(--mono);font-size:11px;color:var(--muted);font-weight:400;padding:4px 6px}
+table.trk td{padding:8px 6px;border-top:1px dashed var(--soft);vertical-align:top}table.trk small{display:block;color:var(--muted);font-size:12px}
+.heatwrap{margin-top:12px}.heat{display:grid;grid-template-columns:repeat(14,1fr);gap:4px;max-width:420px;margin-top:6px}
+.hc{display:inline-block;aspect-ratio:1;min-width:12px;border-radius:3px;border:1.5px solid var(--line);background:var(--bg)}
+.hc.l1{background:#cfe8b4}.hc.l2{background:#9ccf8f}.hc.l3{background:#5e9e5a}.hc.rest{background:repeating-linear-gradient(45deg,var(--bg),var(--bg) 3px,var(--soft) 3px,var(--soft) 6px)}
+.hc.now{outline:2px solid var(--req);outline-offset:1px}
+.legend2{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px;color:var(--muted);margin-top:8px}.legend2 .hc{width:12px}
+.mrow{display:grid;grid-template-columns:minmax(0,1.3fr) 2fr auto;gap:10px;align-items:center;margin-top:8px;font-size:14px}
+.bar{height:12px;border:2px solid var(--line);border-radius:999px;overflow:hidden;background:var(--bg)}.bar i{display:block;height:100%;background:var(--res)}
+.msub{font-size:11px;color:var(--muted);margin-left:2px}
+ol.weak,ul.weak{padding-left:18px;margin:8px 0}ol.weak li,ul.weak li{margin:6px 0;line-height:1.5}ol.weak li span,ul.weak li span{margin-right:8px}
+ol.weak a,ul.weak a,.lessonlink{font-family:var(--mono);font-size:12px;color:var(--hs)}
+textarea{width:100%;font-family:var(--mono);font-size:12px;border:2px solid var(--line);border-radius:8px;padding:8px;background:var(--bg);color:var(--ink);margin-top:8px}
+.pbar{height:10px;border:2px solid var(--line);border-radius:999px;overflow:hidden;background:var(--paper);margin:8px 0 12px}.pbar i{display:block;height:100%;background:var(--res);transition:width .3s}
+.qcard{padding:16px 18px}.qmeta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center;font-size:12px}
+.qtext{font-size:18px;line-height:1.5;margin:10px 0 12px}
+.opts{display:flex;flex-direction:column;gap:8px}.opts.two{flex-direction:row}.opts.two .opt{flex:1;text-align:center}
+.opt{text-align:left;border:2px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--paper);font-size:15px;line-height:1.4;color:var(--ink)}
+.opt:disabled{cursor:default}.opt.pick{background:var(--chip1);color:#2a2620}.opt.ok{background:var(--chip2);color:#2a2620}.opt.bad{background:#f4c3c3;color:#2a2620}
+.opt .ln,.kp .ln{display:inline-grid;place-items:center;width:22px;height:22px;border:1.5px solid var(--line);border-radius:50%;font-size:11px;margin-right:6px}
+.reasons{margin-top:12px}
+.fillrow{display:flex;gap:8px}.fillrow input{flex:1;min-width:0;font:inherit;font-family:var(--mono);font-size:17px;padding:9px 12px;border:2px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.fillrow input.ok{background:var(--chip2);color:#2a2620}.fillrow input.bad{background:#f4c3c3;color:#2a2620}
+.err{color:var(--warn);font-size:13px;min-height:1em}
+.qfb{margin-top:12px}.fok,.fbad{border:2px solid var(--line);border-radius:10px;padding:10px 12px;line-height:1.55}.fok{background:var(--chip2);color:#2a2620}.fbad{background:#f8dede;color:#2a2620}
+.fok a,.fbad a{color:#245a8a}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.match>div{display:flex;flex-direction:column;gap:8px}.match .opt{font-size:14px}
+.opt.pair{border-width:3px}.p0{border-color:#3c7fb8!important}.p1{border-color:#e8833a!important}.p2{border-color:#8a5fc0!important}.p3{border-color:#c0407a!important}.p4{border-color:#2f8f6f!important}
+ol.seq{margin:8px 0;padding-left:22px;min-height:30px}ol.seq li{padding:6px 8px;margin:4px 0;border:2px dashed var(--line);border-radius:8px;background:var(--bg)}
+ol.seq li.ok{background:var(--chip2);border-style:solid;color:#2a2620}ol.seq li.bad{background:#f4c3c3;border-style:solid;color:#2a2620}ol.seq li.ph{border:none;background:none}
+.pool{margin-top:6px}
+.kp{padding:10px 0;border-bottom:1px dashed var(--soft)}.kp .qtext{font-size:16px;margin:4px 0 8px}
+label.chk{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--soft);line-height:1.45;cursor:pointer}label.chk input{width:20px;height:20px;margin-top:2px;flex:none}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -129,6 +184,7 @@ ol.lines li.new .why{color:var(--accent-ink)}
 <header class="top">
   <button class="iconbtn" id="menuBtn" aria-label="Open course menu">☰</button>
   <div class="brand" id="brand"></div>
+  <a class="iconbtn todaybtn" href="#today" aria-label="Today: daily review and tracker">Today</a>
   <button class="iconbtn" id="themeBtn" aria-label="Toggle dark mode">◐</button>
 </header>
 <div class="scrim" id="scrim"></div>
@@ -170,6 +226,7 @@ ol.lines li.new .why{color:var(--accent-ink)}
   </aside>
 </main>
 
+<main class="home" id="home" aria-live="polite"></main>
 <div class="bottombar">
   <button id="backBtn">← Back</button>
   <button class="next" id="nextBtn"><span id="nextTxt"></span><span>→</span></button>
@@ -1050,6 +1107,121 @@ const EX135B = PL('ex-13-5b','Exercise 13.5 · Graphs, ratios and more (Q2–Q9)
 COURSE.modules.push({ name:'Exam Practice: Solve Step by Step', color:'#9ccf8f', lessons:[EX131,EX132,EX133,EX134,EX135A,EX135B] });
 COURSE.modules[1].lessons[0].nextTeaser = 'Exam Practice — every question of Exercises 13.1–13.5, solved one line at a time.';
 
+/* ---------- Recall question bank: Chapter 13 ---------- */
+const TOPICS = {
+  T1:'Equations & standard form', T2:'Solutions & graphs', T3:'Slope', T4:'Solving pairs', T5:'Ratio test'
+};
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const nz=(a,b)=>{let v;do{v=rnd(a,b)}while(v===0);return v;};
+const ng=v=>v<0?'−'+(-v):String(v);
+const cf=(v,x)=>(v===1?'':v===-1?'−':ng(v))+x;
+const lin=(a,b)=>`${cf(a,'x')} ${b<0?'−':'+'} ${Math.abs(b)===1?'':Math.abs(b)}y`;
+const gcd=(a,b)=>{a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b];}return a||1;};
+const fracS=(n,d)=>{if(d<0){n=-n;d=-d;}const g=gcd(n,d);n/=g;d/=g;return d===1?ng(n):`${ng(n)}/${d}`;};
+
+const BANK = [
+ /* T1 · equations and standard form */
+ {id:'sf-zero',t:'T1',l:['one-bill-many-answers',3],type:'fill',q:'Standard form of a linear equation in two variables: ax + by + c = ___',a:['0'],why:'Everything is moved to the left, so the right side is 0.'},
+ {id:'sf-b',t:'T1',l:['one-bill-many-answers',3],type:'mcq',q:'In 5x − 3y + 7 = 0, what is b?',opts:['3','−3','7','5'],a:1,why:'b is the number with y, and its sign comes with it: −3.'},
+ {id:'sf-x8',t:'T1',l:['ex-13-1',2],type:'fill',q:'Write x = 8 in standard form:  1·x + ___·y − 8 = 0',a:['0'],why:'There is no y, so its coefficient is 0.'},
+ {id:'sf-match',t:'T1',l:['ex-13-1',2],type:'match',q:'Match each equation with its a, b, c.',pairs:[['2x + 3y − 6 = 0','a = 2, b = 3, c = −6'],['3y = 1','a = 0, b = 3, c = −1'],['x − 4 = 0','a = 1, b = 0, c = −4'],['5x = 3y','a = 5, b = −3, c = 0']],why:'Move everything to the left first, then read x, y and the constant in order.'},
+ {id:'sf-x3',t:'T1',l:['ex-13-2',10],type:'tf',q:'“x = 3 is a linear equation in two variables.”',a:true,reasons:['It can be written as 1·x + 0·y − 3 = 0','It has two letters written in it','Any equation with an x is linear'],ra:0,why:'b = 0 is allowed, as long as a and b are not both zero.'},
+ {id:'sf-notlin',t:'T1',l:['one-bill-many-answers',2],type:'mcq',q:'Which is NOT a linear equation in two variables?',opts:['2x + 3y = 5','x² + y = 4','y = 7','x − y = 0'],a:1,why:'x² has power 2. Linear means each variable has power 1 only.'},
+ {id:'sf-order',t:'T1',l:['ex-13-1',2],type:'order',q:'Put the steps in order to write y − 15 = 2x in standard form.',items:['Start: y − 15 = 2x','Subtract 2x from both sides','−2x + y − 15 = 0','Read a = −2, b = 1, c = −15'],why:'Move terms first, then read the coefficients.'},
+ {id:'sf-pen',t:'T1',l:['ex-13-1',3],type:'fill',q:'A notebook (₹t) costs twice a pen (₹p). Equation:  t = ___',a:['2p','2*p','2×p'],why:'Notebook = 2 × pen, so t = 2p.'},
+
+ /* T2 · solutions and graphs */
+ {id:'so-32',t:'T2',l:['one-bill-many-answers',4],type:'mcq',q:'Is (3, 2) a solution of 60x + 50y = 280?',opts:['Yes: 180 + 100 = 280','No: 60 + 50 ≠ 280','Only if x = y'],a:0,why:'Substitute: 60 × 3 + 50 × 2 = 180 + 100 = 280.'},
+ {id:'so-order',t:'T2',l:['one-bill-many-answers',5],type:'mcq',q:'(2, 3) and (3, 2) are…',opts:['the same point','different points: the first number is always x','the same, because addition is in any order'],a:1,why:'An ordered pair is (x, y). Swapping gives a different point.'},
+ {id:'so-many',t:'T2',l:['one-bill-many-answers',6],type:'tf',q:'“A linear equation in two variables has only one solution.”',a:false,reasons:['It has infinitely many: pick any x and work out y','It has exactly two solutions','It has no solution at all'],ra:0,why:'Every choice of x gives a y, so the solutions never run out.'},
+ {id:'so-line',t:'T2',l:['one-bill-many-answers',7],type:'fill',q:'The graph of a linear equation in two variables is always a straight ___.',a:['line'],why:'All its solutions lie on one straight line.'},
+ {id:'so-online',t:'T2',l:['one-bill-many-answers',7],type:'tf',q:'“Every point on the line of an equation is a solution of it.”',a:true,reasons:['Points on the line and solutions are the same set','Only points with whole-number coordinates count','Only the points where it crosses the axes'],ra:0,why:'On the line ⇔ satisfies the equation.'},
+ {id:'so-spot',t:'T2',l:['ex-13-2',1],type:'spot',q:'One line is wrong. Checking (4, 3) in 5x − 6y = 2:',lines:['LHS = 5(4) − 6(3)','= 20 − 18','= 38','LHS = RHS, so it is a solution'],bad:2,why:'20 − 18 = 2, not 38. Subtract, don’t add.'},
+ {id:'so-quad',t:'T2',l:['ex-13-2',5],type:'mcq',q:'The point (−2, 5) lies in which quadrant?',opts:['I','II','III','IV'],a:1,why:'x negative, y positive → Quadrant II.'},
+ {id:'so-origin',t:'T2',l:['ex-13-2',10],type:'mcq',q:'The line ax + by + c = 0 passes through the origin only when…',opts:['c = 0','a = 0','b = 0','a = b'],a:0,why:'Put (0, 0): a·0 + b·0 + c = 0 means c must be 0.'},
+ {id:'so-neg',t:'T2',l:['one-bill-many-answers',8],type:'mcq',q:'(6, −1.6) satisfies 60x + 50y = 280, but it is not a sensible answer for Radha because…',opts:['you cannot buy a negative amount of bananas','6 is too large','decimals are not allowed'],a:0,why:'The maths allows it; the real situation does not.'},
+ {id:'g-findy',t:'T2',l:['ex-13-2',2],gen:'findY'},
+ {id:'g-issol',t:'T2',l:['ex-13-2',1],gen:'isSol'},
+ {id:'g-findk',t:'T2',l:['ex-13-2',4],gen:'findK'},
+
+ /* T3 · slope */
+ {id:'sl-run',t:'T3',l:['how-steep-is-a-line',2],type:'fill',q:'slope = rise ÷ ___',a:['run'],why:'Rise is the up/down change, run is the left/right change.'},
+ {id:'sl-match',t:'T3',l:['how-steep-is-a-line',9],type:'match',q:'Match each line with its slope.',pairs:[['rises left to right','m > 0'],['falls left to right','m < 0'],['horizontal, y = k','m = 0'],['vertical, x = k','undefined']],why:'The sign tells the direction; flat is 0; vertical cannot be divided.'},
+ {id:'sl-ymx',t:'T3',l:['how-steep-is-a-line',5],type:'mcq',q:'What is the slope of y = −2x + 4?',opts:['−2','4','2','−4'],a:0,why:'In y = mx + d, m is the number with x: −2.'},
+ {id:'sl-d',t:'T3',l:['how-steep-is-a-line',5],type:'mcq',q:'In y = mx + d, what does d tell you?',opts:['where the line crosses the y-axis','how steep the line is','where it crosses the x-axis'],a:0,why:'Put x = 0: y = d, so the line passes through (0, d).'},
+ {id:'sl-std',t:'T3',l:['how-steep-is-a-line',7],type:'fill',q:'Slope of 2x + 4y − 12 = 0 is m = −a/b = ___',a:['-1/2','-0.5'],why:'m = −2/4 = −1/2.'},
+ {id:'sl-vert',t:'T3',l:['how-steep-is-a-line',6],type:'tf',q:'“The slope of the line x = 2 is 0.”',a:false,reasons:['The run is 0, so rise ÷ 0 is undefined','Its slope is 2','Vertical lines have slope 1'],ra:0,why:'Horizontal lines have slope 0; vertical lines have undefined slope.'},
+ {id:'sl-ramp',t:'T3',l:['ex-13-3',7],type:'mcq',q:'A ramp must have slope 1/12. The stairs are 18 cm high. How long is the ramp’s run?',opts:['216 cm','1.5 cm','30 cm','180 cm'],a:0,why:'run = rise ÷ slope = 18 × 12 = 216 cm.'},
+ {id:'sl-hills',t:'T3',l:['ex-13-3',1],type:'order',q:'Order the hills from least steep to most steep. A: 60 up / 70 along. B: 60 / 110. C: 80 / 100.',items:['B  (≈ 0.55)','C  (0.80)','A  (≈ 0.86)'],why:'Turn each rise ÷ run into a decimal and compare.'},
+ {id:'sl-swap',t:'T3',l:['how-steep-is-a-line',4],type:'tf',q:'“Swapping the order of the two points changes the slope.”',a:false,reasons:['Rise and run both change sign, so the ratio stays the same','It turns the slope negative','It only matters for negative slopes'],ra:0,why:'(−3)/3 and 3/(−3) are both −1.'},
+ {id:'sl-spot',t:'T3',l:['how-steep-is-a-line',2],type:'spot',q:'One line is wrong. Slope through A(2, 0) and B(4, 3):',lines:['rise = 3 − 0 = 3','run = 4 − 2 = 2','slope = run ÷ rise = 2/3','So the slope is 2/3'],bad:2,why:'Slope is rise ÷ run = 3/2, not run ÷ rise.'},
+ {id:'g-slope2',t:'T3',l:['how-steep-is-a-line',3],gen:'slope2'},
+ {id:'g-slopestd',t:'T3',l:['how-steep-is-a-line',7],gen:'slopeStd'},
+
+ /* T4 · solving pairs */
+ {id:'pr-both',t:'T4',l:['where-two-lines-meet',2],type:'fill',q:'A solution of a pair of equations must lie on ___ lines.',a:['both','both the','the two'],why:'It has to satisfy both equations, so it sits on both lines.'},
+ {id:'pr-subst',t:'T4',l:['where-two-lines-meet',4],type:'order',q:'Order the substitution steps for x + y = 5 and 60x + 50y = 280.',items:['From x + y = 5: y = 5 − x','Substitute: 60x + 50(5 − x) = 280','Simplify: 10x + 250 = 280','x = 3','y = 5 − 3 = 2'],why:'Rewrite one variable, substitute, solve, then work back.'},
+ {id:'pr-elim',t:'T4',l:['where-two-lines-meet',5],type:'mcq',q:'To eliminate y from 60x + 50y = 280 and x + y = 5, multiply the second equation by…',opts:['50','60','5','10'],a:0,why:'50x + 50y = 250 has the same 50y, so subtracting removes y.'},
+ {id:'pr-add',t:'T4',l:['ex-13-5a',1],type:'mcq',q:'x + y = 5 and x − y = 1. What is the quickest first move?',opts:['Add the equations: y cancels','Multiply the first by 5','Draw a graph'],a:0,why:'+y and −y cancel when added: 2x = 6.'},
+ {id:'pr-spot',t:'T4',l:['ex-13-5a',3],type:'spot',q:'One line is wrong. Solving 7x + 6y = 8880 and 3x + 5y = 4000:',lines:['(1) × 5:  35x + 30y = 44400','(2) × 6:  18x + 30y = 24000','Subtract:  17x = 20400','x = 1000'],bad:3,why:'20400 ÷ 17 = 1200, not 1000.'},
+ {id:'pr-digit',t:'T4',l:['ex-13-5a',8],type:'fill',q:'A two-digit number with tens digit x and units digit y equals ___x + y.',a:['10'],why:'Tens digit is worth 10 each: 18 = 10 × 1 + 8.'},
+ {id:'pr-ages',t:'T4',l:['ex-13-5a',7],type:'mcq',q:'Five years ago, Nuri (x now) was three times as old as Sonu (y now). Which equation?',opts:['x − 5 = 3(y − 5)','x − 5 = 3y','x = 3(y − 5)','3(x − 5) = y − 5'],a:0,why:'Subtract 5 from BOTH ages, then Nuri’s = 3 × Sonu’s.'},
+ {id:'pr-swap',t:'T4',l:['ex-13-5b',9],type:'mcq',q:'9x + 7y = 107 and 7x + 9y = 101. Fastest trick?',opts:['Add them, then subtract them','Substitute x from the first','Draw both lines'],a:0,why:'Adding gives x + y = 13, subtracting gives x − y = 3.'},
+ {id:'pr-method',t:'T4',l:['ex-13-5a',11],type:'match',q:'Match the situation with the best method.',pairs:[['one equation already says y = …','substitution'],['same y-number in both equations','subtract'],['+y in one, −y in the other','add'],['no matching numbers','multiply, then eliminate']],why:'Pick the method that makes a variable disappear fastest.'},
+ {id:'pr-stool',t:'T4',l:['ex-13-5b',11],type:'fill',q:'Stool + cat = 85 cm and stool − cat = 25 cm. Stool = ___ cm',a:['55'],why:'Add: 2 × stool = 110, so stool = 55.'},
+ {id:'g-sumdiff',t:'T4',l:['ex-13-5a',1],gen:'sumDiff'},
+ {id:'g-subst',t:'T4',l:['where-two-lines-meet',4],gen:'subst'},
+
+ /* T5 · ratio test */
+ {id:'rt-match',t:'T5',l:['where-two-lines-meet',10],type:'match',q:'Match each ratio condition with what it means.',pairs:[['a₁/a₂ ≠ b₁/b₂','one solution (lines cross)'],['a₁/a₂ = b₁/b₂ = c₁/c₂','infinitely many (same line)'],['a₁/a₂ = b₁/b₂ ≠ c₁/c₂','no solution (parallel)']],why:'Compare the x and y ratios first, then the constants.'},
+ {id:'rt-par',t:'T5',l:['where-two-lines-meet',9],type:'mcq',q:'x + 2y = 4 and 3x + 6y = 15 have…',opts:['one solution','no solution','infinitely many solutions'],a:1,why:'1/3 = 2/6 but 4/15 is different → parallel lines.'},
+ {id:'rt-06',t:'T5',l:['where-two-lines-meet',7],type:'mcq',q:'Elimination ends with 0 = 6. This means…',opts:['no solution: the lines are parallel','x = 6','infinitely many solutions'],a:0,why:'0 = 6 is impossible, so no pair works.'},
+ {id:'rt-00',t:'T5',l:['where-two-lines-meet',8],type:'mcq',q:'Elimination ends with 0 = 0. This means…',opts:['infinitely many solutions: same line','no solution','x = 0 and y = 0'],a:0,why:'0 = 0 is always true, so every point on the line works.'},
+ {id:'rt-slope',t:'T5',l:['where-two-lines-meet',7],type:'tf',q:'“Two lines with the same slope but different y-intercepts never meet.”',a:true,reasons:['They are parallel','They meet at the origin','They are the same line'],ra:0,why:'Same steepness, different starting height → they never cross.'},
+ {id:'rt-coin',t:'T5',l:['ex-13-5b',8],type:'mcq',q:'Which line is coincident with 2x + 3y − 8 = 0?',opts:['4x + 6y − 16 = 0','4x + 6y − 8 = 0','2x + 3y + 8 = 0','3x + 2y − 8 = 0'],a:0,why:'All three ratios are 1/2: it is the same equation doubled.'},
+ {id:'rt-order',t:'T5',l:['where-two-lines-meet',10],type:'order',q:'Order the steps of the ratio test.',items:['Write both as ax + by + c = 0','Work out a₁/a₂ and b₁/b₂','If they differ → one solution','If equal, compare c₁/c₂'],why:'Same form first, then x/y ratios, then constants.'},
+ {id:'g-ratio',t:'T5',l:['where-two-lines-meet',9],gen:'ratio'}
+];
+
+/* Generators: fresh numbers every time. Each returns a card body. */
+const GEN = {
+  findY(){const a=nz(-5,5),b=nz(-5,5),x=rnd(-3,4),y=rnd(-4,5),c=a*x+b*y;
+    return {type:'fill',q:`In ${lin(a,b)} = ${ng(c)}, put x = ${ng(x)}. Find y.`,a:[String(y)],
+      why:`${ng(a)} × ${ng(x)} = ${ng(a*x)}, so ${ng(b)}y = ${ng(c)} − (${ng(a*x)}) = ${ng(b*y)}, and y = ${ng(y)}.`};},
+  isSol(){const a=nz(-5,5),b=nz(-5,5),x=rnd(-3,4),y=rnd(-3,4),ok=Math.random()<.5,c=a*x+b*y+(ok?0:nz(-3,3));
+    return {type:'mcq',q:`Is (${ng(x)}, ${ng(y)}) a solution of ${lin(a,b)} = ${ng(c)}?`,opts:['Yes','No'],a:ok?0:1,
+      why:`LHS = ${ng(a)}(${ng(x)}) + ${ng(b)}(${ng(y)}) = ${ng(a*x+b*y)}; RHS = ${ng(c)}. ${ok?'Equal, so yes.':'Not equal, so no.'}`};},
+  findK(){const k=nz(-4,5),b=nz(-4,4),x=nz(-3,4),y=rnd(-3,3),c=k*x+b*y;
+    return {type:'fill',q:`(${ng(x)}, ${ng(y)}) is a solution of kx ${b<0?'−':'+'} ${Math.abs(b)===1?'':Math.abs(b)}y = ${ng(c)}. Find k.`,a:[String(k)],
+      why:`k(${ng(x)}) + ${ng(b)}(${ng(y)}) = ${ng(c)} → ${ng(x)}k = ${ng(c-b*y)} → k = ${ng(k)}.`};},
+  slope2(){const x1=rnd(-4,3),y1=rnd(-4,3),run=nz(-4,4),rise=nz(-5,5);
+    return {type:'fill',q:`Slope of the line through (${ng(x1)}, ${ng(y1)}) and (${ng(x1+run)}, ${ng(y1+rise)})? A fraction is fine.`,a:[fracS(rise,run).replace('−','-')],
+      why:`rise = ${ng(y1+rise)} − (${ng(y1)}) = ${ng(rise)}, run = ${ng(x1+run)} − (${ng(x1)}) = ${ng(run)}, slope = ${fracS(rise,run)}.`};},
+  slopeStd(){const a=nz(-6,6),b=nz(-6,6),c=rnd(-9,9);
+    return {type:'fill',q:`Slope of ${lin(a,b)} ${c<0?'−':'+'} ${Math.abs(c)} = 0? A fraction is fine.`,a:[fracS(-a,b).replace('−','-')],
+      why:`m = −a/b = −(${ng(a)})/(${ng(b)}) = ${fracS(-a,b)}.`};},
+  sumDiff(){const x=rnd(-6,20),y=rnd(-6,20);
+    return {type:'fill',q:`x + y = ${ng(x+y)} and x − y = ${ng(x-y)}. Find x.`,a:[String(x)],
+      why:`Add the equations: 2x = ${ng(x+y)} + (${ng(x-y)}) = ${ng(2*x)}, so x = ${ng(x)} (and y = ${ng(y)}).`};},
+  subst(){let k,a,b;do{k=nz(-3,3);a=nz(-4,5);b=nz(-4,5);}while(a+b*k===0);const m=rnd(-4,6),x=rnd(-3,5),y=k*x+m,c=a*x+b*y;
+    const yx=`${cf(k,'x')}${m?` ${m<0?'−':'+'} ${Math.abs(m)}`:''}`;
+    return {type:'fill',q:`y = ${yx} and ${lin(a,b)} = ${ng(c)}. Find x.`,a:[String(x)],
+      why:`Substitute: ${ng(a)}x + ${ng(b)}(${yx}) = ${ng(c)} → ${ng(a+b*k)}x = ${ng(c-b*m)} → x = ${ng(x)}.`};},
+  ratio(){const kind=rnd(0,2),a1=nz(1,5),b1=nz(-5,5),c1=nz(-9,9),k=rnd(2,3);let a2,b2,c2;
+    if(kind===0){do{a2=nz(-5,5);b2=nz(-5,5);}while(a1*b2===a2*b1);c2=nz(-9,9);}
+    else if(kind===1){a2=k*a1;b2=k*b1;c2=k*c1+nz(1,3);} else {a2=k*a1;b2=k*b1;c2=k*c1;}
+    return {type:'mcq',q:`${lin(a1,b1)} = ${ng(c1)} and ${lin(a2,b2)} = ${ng(c2)} have…`,opts:['one solution (lines cross)','no solution (parallel)','infinitely many (same line)'],a:kind,
+      why:`a₁/a₂ = ${fracS(a1,a2)}, b₁/b₂ = ${fracS(b1,b2)}, c₁/c₂ = ${fracS(c1,c2)}. ${['The x and y ratios differ.','x and y ratios equal, constants differ.','All three ratios are equal.'][kind]}`};}
+};
+const KUMON_GENS = ['findY','findK','slope2','slopeStd','sumDiff','subst'];
+
+const DUMPS = [
+ {t:'T1',title:'Linear equations and their solutions',pts:['Standard form ax + by + c = 0, with a and b not both 0','A solution is an ordered pair (x, y), x first','Check a pair by substituting: LHS = RHS','There are infinitely many solutions','All solutions lie on one straight line','A missing variable has coefficient 0 (x = 8 → b = 0)']},
+ {t:'T3',title:'Slope',pts:['slope = rise ÷ run = (y₂ − y₁) ÷ (x₂ − x₁)','Same slope between any two points of a line','Positive rises, negative falls (left to right)','Horizontal: slope 0','Vertical: slope undefined','In y = mx + d, m is the slope and d the y-intercept','From standard form, m = −a/b']},
+ {t:'T4',title:'Solving a pair of equations',pts:['The solution lies on both lines','Substitution: rewrite one variable, put it in the other equation','Elimination: match a coefficient, then add or subtract','Graph: the crossing point is the solution','Always check the answer in both equations','Word problems: Let, Frame, Solve, Check, Answer']},
+ {t:'T5',title:'How many solutions? (ratio test)',pts:['a₁/a₂ ≠ b₁/b₂ → one solution, lines cross','a₁/a₂ = b₁/b₂ = c₁/c₂ → infinitely many, same line','a₁/a₂ = b₁/b₂ ≠ c₁/c₂ → none, parallel lines','Elimination giving 0 = 0 means infinitely many','Elimination giving 0 = (non-zero) means no solution','Parallel lines have the same slope']}
+];
+
 /* COURSE-DATA:END */
 
 /* ENGINE:START — reusable; do not edit per lesson */
@@ -1234,16 +1406,16 @@ function renderHead(){
 function renderDrawer(){
   const done=store.get(doneKey,{});const total=ALL.length;const n=ALL.filter(l=>done[l.slug]).length;
   $('#lessonCount').textContent=`${total} lessons`;$('#progTxt').textContent=`${n} / ${total}`;
-  $('#courseList').innerHTML=COURSE.modules.map((m,mi)=>`<div class="mod"><button aria-expanded="true"><span class="sw" style="background:${m.color}"></span>${String(mi+1).padStart(2,'0')}. ${m.name}<span class="cnt">${m.lessons.filter(l=>done[l.slug]).length}/${m.lessons.length}</span></button><ul>${m.lessons.map(l=>`<li><a href="#${l.slug}-1" class="${l.slug===L.slug?'cur':''} ${done[l.slug]?'done':''}">${l.title}</a></li>`).join('')}</ul></div>`).join('');
+  $('#courseList').innerHTML=PRACTICE_LINKS()+COURSE.modules.map((m,mi)=>`<div class="mod"><button aria-expanded="true"><span class="sw" style="background:${m.color}"></span>${String(mi+1).padStart(2,'0')}. ${m.name}<span class="cnt">${m.lessons.filter(l=>done[l.slug]).length}/${m.lessons.length}</span></button><ul>${m.lessons.map(l=>`<li><a href="#${l.slug}-1" class="${l.slug===L.slug?'cur':''} ${done[l.slug]?'done':''}">${l.title}</a></li>`).join('')}</ul></div>`).join('');
   $('#courseList').querySelectorAll('.mod>button').forEach(b=>b.onclick=()=>{const ul=b.nextElementSibling;const o=ul.style.display!=='none';ul.style.display=o?'none':'';b.setAttribute('aria-expanded',!o)});
   $('#courseList').querySelectorAll('a').forEach(a=>a.onclick=()=>toggleDrawer(false));
 }
-function markSeen(){const d=store.get(doneKey,{});d[L.slug+':steps']=Math.max(d[L.slug+':steps']||0,S+1);if(S===L.steps.length-1)d[L.slug]=true;store.set(doneKey,d);}
+function markSeen(){const d=store.get(doneKey,{});d[L.slug+':steps']=Math.max(d[L.slug+':steps']||0,S+1);if(S===L.steps.length-1){if(!d[L.slug])logLesson(L.slug);d[L.slug]=true;}store.set(doneKey,d);}
 function go(i){S=Math.max(0,Math.min(L.steps.length-1,i));R=0;markSeen();render();startAnim();}
 function openLesson(slug,step=0){const l=ALL.find(x=>x.slug===slug)||ALL[0];const changed=l!==L;L=l;if(changed)$('#metrics').dataset.lesson='';renderHead();go(step);window.scrollTo({top:0});}
-function next(){const st=L.steps[S];if(st.solve&&R<st.solve.lines.length)return reveal(R+1);if(S<L.steps.length-1)return go(S+1);const nl=ALL[ALL.indexOf(L)+1];if(nl)openLesson(nl.slug,0);else{markSeen();renderDrawer();}}
+function next(){const st=L.steps[S];if(st.solve&&R<st.solve.lines.length)return reveal(R+1);if(S<L.steps.length-1)return go(S+1);const nl=ALL[ALL.indexOf(L)+1];if(nl)openLesson(nl.slug,0);else{markSeen();location.hash='#today';}}
 function back(){if(S>0)return go(S-1);const pl=ALL[ALL.indexOf(L)-1];if(pl)openLesson(pl.slug,pl.steps.length-1);}
-function route(){const m=location.hash.match(/^#([\w-]+?)-(\d+)$/);if(m)openLesson(m[1],+m[2]-1);else openLesson(ALL[0].slug,0);}
+function route(){if(homeRoute())return;const m=location.hash.match(/^#([\w-]+?)-(\d+)$/);if(m)openLesson(m[1],+m[2]-1);else openLesson(ALL[0].slug,0);}
 function toggleDrawer(o){$('#drawer').classList.toggle('open',o);$('#scrim').classList.toggle('open',o);}
 $('#nextBtn').onclick=next;$('#backBtn').onclick=back;
 $('#restartBtn').onclick=()=>go(0);
@@ -1252,10 +1424,283 @@ $('#fsBtn').onclick=()=>{const s=$('#stage');try{document.fullscreenElement?docu
 $('#menuBtn').onclick=()=>toggleDrawer(true);$('#closeDrawer').onclick=$('#scrim').onclick=()=>toggleDrawer(false);
 $('#themeBtn').onclick=()=>{const d=document.documentElement.dataset.theme==='dark'?'':'dark';document.documentElement.dataset.theme=d;store.set(COURSE.storageKey+'-theme',d)};
 document.documentElement.dataset.theme=store.get(COURSE.storageKey+'-theme','');
-addEventListener('keydown',e=>{if(e.target.closest('input,textarea'))return;if(e.key==='ArrowRight')next();if(e.key==='ArrowLeft')back();if(e.key===' '){e.preventDefault();$('#pauseBtn').click()}if(e.key==='Escape')toggleDrawer(false)});
+addEventListener('keydown',e=>{if(HOME_ON||e.target.closest('input,textarea'))return;if(e.key==='ArrowRight')next();if(e.key==='ArrowLeft')back();if(e.key===' '){e.preventDefault();$('#pauseBtn').click()}if(e.key==='Escape')toggleDrawer(false)});
 addEventListener('hashchange',()=>{const m=location.hash.match(/^#([\w-]+?)-(\d+)$/);if(m&&(m[1]!==L.slug||+m[2]-1!==S))route();});
-route();
 /* ENGINE:END */
+/* RECALL:START — Today screen, spaced review, Kumon sheet, brain dump, tracker */
+var HOME_ON=false,KPROBS=null;
+const RKEY='gm9-ch13-recall-v1';
+const BOX_DAYS=[0,1,3,7,14,30,60];          // box 1..5, then 6 = learned (60-day check)
+const SESSION=10;
+const pad2=n=>String(n).padStart(2,'0');
+const pl=(n,w)=>`${n} ${w}${n===1?'':'s'}`;
+const dkey=d=>`${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+const dparse=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d);};
+const todayK=()=>dkey(new Date());
+const addD=(k,n)=>{const d=dparse(k);d.setDate(d.getDate()+n);return dkey(d);};
+const weekK=k=>{const d=dparse(k);d.setDate(d.getDate()-((d.getDay()+6)%7));return dkey(d);};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const canon=o=>Array.isArray(o)?o.map(canon):(o&&typeof o==='object')?Object.keys(o).sort().reduce((r,k)=>(r[k]=canon(o[k]),r),{}):o;
+
+/* ---------- state + sync ---------- */
+const blankP=()=>({v:1,cards:{},days:{},upd:0});
+let P=(()=>{try{return JSON.parse(localStorage.getItem(RKEY))||blankP();}catch(e){return blankP();}})();
+let dbRef=null,syncSt='local',writing=false,dirty=false,saveT=0;
+const DAY=k=>P.days[k]||(P.days[k]={});
+function persist(){P.upd=Date.now();try{localStorage.setItem(RKEY,JSON.stringify(P));}catch(e){}dirty=true;clearTimeout(saveT);saveT=setTimeout(flush,1200);}
+async function flush(){if(!dbRef||writing||!dirty)return;writing=true;dirty=false;
+  try{await dbRef.set(canon(JSON.parse(JSON.stringify(P))));syncSt='synced';}catch(e){syncSt='error';}
+  writing=false;paintSync();if(dirty)flush();}
+function pickRec(X,Y){if(!X)return Y;if(!Y)return X;if((X.d||0)!==(Y.d||0))return (X.d||0)>(Y.d||0)?X:Y;return (X.n||X.t||0)>=(Y.n||Y.t||0)?X:Y;}
+function mergeP(a,b){const o=blankP();o.upd=Math.max(a.upd||0,b.upd||0);
+  new Set([...Object.keys(a.cards||{}),...Object.keys(b.cards||{})]).forEach(id=>{const x=(a.cards||{})[id],y=(b.cards||{})[id];
+    o.cards[id]=!x?y:!y?x:((x.r+x.w)!==(y.r+y.w)?((x.r+x.w)>(y.r+y.w)?x:y):((x.l||'')>=(y.l||'')?x:y));});
+  new Set([...Object.keys(a.days||{}),...Object.keys(b.days||{})]).forEach(k=>{const x=(a.days||{})[k]||{},y=(b.days||{})[k]||{},d={};
+    ['rv','kn','bd'].forEach(f=>{const r=pickRec(x[f],y[f]);if(r)d[f]=r;});
+    const tp=[...new Set([...(x.tp||[]),...(y.tp||[])])];if(tp.length)d.tp=tp;
+    const nl=[...new Set([...(x.nl||[]),...(y.nl||[])])];if(nl.length)d.nl=nl;
+    o.days[k]=d;});
+  return o;}
+(async()=>{try{
+  if(typeof claude==='undefined'||!claude.use)return;
+  const db=await claude.use('db');if(!db)return;
+  const u=await claude.use('user');const id=u&&await u.id();if(!id)return;
+  dbRef=db.doc('progress/'+id);syncSt='connecting';paintSync();
+  const tm=setTimeout(()=>{if(syncSt==='connecting'){syncSt='offline';paintSync();}},10000);
+  dbRef.onSnapshot(s=>{
+    if(!s.metadata.fromCache)clearTimeout(tm);
+    if(s.metadata.hasPendingWrites)return;
+    const remote=s.exists?s.data():null;
+    const m=remote?mergeP(P,remote):P;
+    const need=!remote||JSON.stringify(canon(m))!==JSON.stringify(canon(remote));
+    P=m;try{localStorage.setItem(RKEY,JSON.stringify(P));}catch(e){}
+    if(!s.metadata.fromCache)syncSt='synced';
+    paintSync();if(need&&Object.keys(P.cards).length+Object.keys(P.days).length){dirty=true;flush();}
+    if(HOME_ON&&curView==='today')renderToday();
+  },e=>{clearTimeout(tm);syncSt='offline';paintSync();});
+}catch(e){syncSt='local';paintSync();}})();
+function paintSync(){const el=document.getElementById('syncTxt');if(!el)return;
+  el.textContent={local:'Saved on this device',connecting:'Connecting to your account…',synced:'Synced to your account',offline:'Offline: saved on this device, will sync later',error:'Could not sync: saved on this device'}[syncSt]||'';}
+
+/* ---------- scheduling ---------- */
+const cardById=id=>BANK.find(c=>c.id===id);
+const inst=c=>c.gen?{...GEN[c.gen](),id:c.id,t:c.t,l:c.l}:c;
+function record(card,ok){const t=todayK(),s=P.cards[card.id]||{b:0,r:0,w:0};
+  if(ok){s.b=s.b?Math.min(6,s.b+1):2;s.r++;}else{s.b=1;s.w++;}
+  s.due=addD(t,BOX_DAYS[s.b]);s.l=t;P.cards[card.id]=s;
+  const d=DAY(t);d.tp=[...new Set([...(d.tp||[]),card.t])];persist();}
+function dueList(day){return BANK.filter(c=>P.cards[c.id]&&P.cards[c.id].due<=day);}
+function buildSession(n,only){
+  const day=todayK();let pool;
+  if(only)pool=only.map(cardById).filter(Boolean);
+  else{pool=dueList(day).sort((a,b)=>(P.cards[a.id].b-P.cards[b.id].b)||(P.cards[a.id].due<P.cards[b.id].due?-1:1)).slice(0,n);
+    if(pool.length<n){const fresh={};BANK.filter(c=>!P.cards[c.id]).forEach(c=>(fresh[c.t]=fresh[c.t]||[]).push(c));
+      const keys=Object.keys(fresh);let i=0;while(pool.length<n&&keys.some(k=>fresh[k].length)){const k=keys[i++%keys.length];if(fresh[k].length)pool.push(fresh[k].shift());}}
+    if(!pool.length)pool=shuffle(BANK).slice(0,5);}
+  pool=shuffle(pool);for(let i=1;i<pool.length;i++){if(pool[i].t===pool[i-1].t){const j=pool.findIndex((c,k)=>k>i&&c.t!==pool[i-1].t);if(j>0)[pool[i],pool[j]]=[pool[j],pool[i]];}}
+  return pool;}
+
+/* ---------- streaks ---------- */
+const did=(k,f)=>{const d=P.days[k];if(!d)return false;if(f==='rv')return !!(d.rv&&d.rv.d);if(f==='kn')return !!(d.kn&&d.kn.n);if(f==='mx')return (d.tp||[]).length>=2;if(f==='nl')return !!(d.nl&&d.nl.length);return false;};
+function mainStreak(){const t=todayK(),rest=new Set(),dd=Object.keys(P.days).filter(k=>did(k,'rv')).sort();if(!dd.length)return {n:0,rest};
+  let k=did(t,'rv')?t:addD(t,-1),n=0;const used={};
+  while(k>=dd[0]){if(did(k,'rv'))n++;else{const w=weekK(k);if(!used[w]&&did(addD(k,-1),'rv')){used[w]=1;rest.add(k);}else break;}k=addD(k,-1);}
+  return {n,rest};}
+function runStreak(f){const t=todayK();let k=did(t,f)?t:addD(t,-1),n=0;while(did(k,f)){n++;k=addD(k,-1);}return n;}
+function dumpWeeks(){let w=weekK(todayK()),n=0;const has=wk=>[0,1,2,3,4,5,6].some(i=>{const d=P.days[addD(wk,i)];return d&&d.bd;});if(!has(w))w=addD(w,-7);while(has(w)){n++;w=addD(w,-7);}return n;}
+
+/* ---------- views ---------- */
+let curView='today',SESS=null;
+function homeRoute(){const h=location.hash.slice(1);
+  if(!h||['today','review','kumon','dump'].includes(h)){showHome(h||'today');return true;}
+  hideHome();return false;}
+function showHome(v){HOME_ON=true;curView=v;document.body.classList.add('homeon');$('#brand').innerHTML=COURSE.brand;
+  if(location.hash!=='#'+v)history.replaceState(null,'',`#${v}`);
+  document.title=`${{today:'Today',review:'Today’s review',kumon:'Kumon sheet',dump:'Brain dump'}[v]} · ${COURSE.brand.replace(/<[^>]+>/g,'')}`;
+  ({today:renderToday,review:startReview,kumon:startKumon,dump:startDump})[v]();window.scrollTo({top:0});
+  try{renderDrawer();}catch(e){}}
+function hideHome(){HOME_ON=false;document.body.classList.remove('homeon');}
+addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(!h||['today','review','kumon','dump'].includes(h))showHome(h||'today');else if(HOME_ON){hideHome();route();}});
+function PRACTICE_LINKS(){const due=dueList(todayK()).length;
+  return `<div class="mod"><button aria-expanded="true"><span class="sw" style="background:#e8833a"></span>Daily practice<span class="cnt">${due} due</span></button><ul>
+  <li><a href="#today" class="${HOME_ON&&curView==='today'?'cur':''}">Today · streak and tracker</a></li>
+  <li><a href="#review" class="${HOME_ON&&curView==='review'?'cur':''}">Today’s review</a></li>
+  <li><a href="#kumon" class="${HOME_ON&&curView==='kumon'?'cur':''}">Kumon sheet</a></li>
+  <li><a href="#dump" class="${HOME_ON&&curView==='dump'?'cur':''}">Brain dump</a></li></ul></div>`;}
+const H=()=>document.getElementById('home');
+function fmtTime(ms){const s=Math.round(ms/1000);return s<60?`${s}s`:`${Math.floor(s/60)}m ${pad2(s%60)}s`;}
+
+function renderToday(){
+  const t=todayK(),d=P.days[t]||{},st=mainStreak(),due=dueList(t),nw=BANK.filter(c=>!P.cards[c.id]).length;
+  const sessN=Math.min(SESSION,due.length+nw)||5,topics=new Set(buildSession(SESSION).map(c=>c.t)).size;
+  const wk=weekK(t),bdWeek=[0,1,2,3,4,5,6].map(i=>(P.days[addD(wk,i)]||{}).bd).find(Boolean);
+  const rows=[
+    ['Active recall','Today’s review',d.rv&&d.rv.d?`✓ ${d.rv.c}/${d.rv.n}`:'not yet',pl(runStreak('rv'),'day')],
+    ['Spaced repetition','questions due today',due.length?`${due.length} due`:'all clear ✓',`${Object.values(P.cards).filter(c=>c.b>=4).length} in box 4+`],
+    ['Kumon sheet','5 fresh problems',d.kn&&d.kn.n?`✓ ${d.kn.c}/${d.kn.n} · ${fmtTime(d.kn.ms)}`:'not yet',pl(runStreak('kn'),'day')],
+    ['Mixed topics','2+ topics in a day',`${(d.tp||[]).length} today`,pl(runStreak('mx'),'day')],
+    ['Brain dump','once a week',bdWeek?`✓ ${bdWeek.g}/${bdWeek.t}`:'due this week',pl(dumpWeeks(),'week')],
+    ['New lesson','Before → Understand → After',d.nl?`✓ ${d.nl.length}`:'—',pl(Object.values(P.days).filter(x=>x.nl).length,'day')+' total']];
+  let heat='';for(let i=27;i>=0;i--){const k=addD(t,-i),x=P.days[k]||{};const lv=['rv','kn','mx'].filter(f=>did(k,f)).length+(x.bd?1:0)+(x.nl?1:0);
+    heat+=`<i class="hc l${Math.min(lv,3)} ${st.rest.has(k)?'rest':''} ${k===t?'now':''}" title="${k}: ${lv} technique${lv===1?'':'s'}${st.rest.has(k)?' (rest day)':''}"></i>`;}
+  const dueTom=BANK.filter(c=>P.cards[c.id]&&P.cards[c.id].due<=addD(t,1)&&P.cards[c.id].due>t).length;
+  const due7=BANK.filter(c=>P.cards[c.id]&&P.cards[c.id].due<=addD(t,7)&&P.cards[c.id].due>t).length;
+  const mastery=Object.keys(TOPICS).map(k=>{const cs=BANK.filter(c=>c.t===k),m=cs.filter(c=>(P.cards[c.id]||{}).b>=4).length,s=cs.filter(c=>P.cards[c.id]).length;
+    return `<div class="mrow"><span>${TOPICS[k]}</span><span class="bar"><i style="width:${Math.round(100*m/cs.length)}%"></i></span><span class="mono">${m}/${cs.length}</span></div><div class="msub">${s} of ${cs.length} started</div>`;}).join('');
+  const weak=BANK.filter(c=>(P.cards[c.id]||{}).w>0).sort((a,b)=>(P.cards[b.id].w-P.cards[b.id].r)-(P.cards[a.id].w-P.cards[a.id].r)).slice(0,5);
+  const wsum=off=>{let n=0,c=0,ms=0,days=0;for(let i=0;i<7;i++){const x=P.days[addD(addD(wk,off),i)];if(!x)continue;let a=0;if(x.rv){n+=x.rv.n;c+=x.rv.c;ms+=x.rv.ms||0;a=1;}if(x.kn){n+=x.kn.n;c+=x.kn.c;ms+=x.kn.ms||0;a=1;}days+=a;}return {acc:n?Math.round(100*c/n):null,min:Math.round(ms/60000),days};};
+  const tw=wsum(0),lw=wsum(-7);
+  H().innerHTML=`
+  <div class="hhead"><div><div class="crumb">${new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'})}</div><h1>Today</h1></div>
+    <div class="streak"><b>${st.n}</b><span>day streak</span></div></div>
+  <p class="tagline">One short review a day keeps Chapter 13 in your memory. Rest day: 1 per week, used automatically if you miss a day. <span id="syncTxt" class="mono"></span></p>
+  <section class="card tcard main">
+    <span class="kicker">TODAY’S REVIEW · ACTIVE RECALL</span>
+    ${d.rv&&d.rv.d?`<h2>Done ✓ ${d.rv.c}/${d.rv.n} correct · ${fmtTime(d.rv.ms)}</h2><p>Your streak is safe. Extra practice still counts towards the schedule.</p><div class="row"><a class="btn" href="#review">Do 5 more</a></div>`
+    :`<h2>${sessN} questions · ${topics} topics mixed · ~${Math.max(3,Math.round(sessN*0.6))} min</h2><p>Answer from memory first. Wrong answers come back tomorrow with a link to the lesson step.</p><div class="row"><a class="btn primary" href="#review">Start review →</a></div>`}
+  </section>
+  <div class="twocol">
+    <section class="card tcard"><span class="kicker">KUMON SHEET · DAILY</span><h3>${d.kn&&d.kn.n?`✓ ${d.kn.c}/${d.kn.n} in ${fmtTime(d.kn.ms)}`:'5 problems, fresh numbers'}</h3><p>Type the answers. Try to get faster each day.</p><a class="btn" href="#kumon">${d.kn&&d.kn.n?'Try another sheet':'Start sheet'}</a></section>
+    <section class="card tcard"><span class="kicker">BRAIN DUMP · WEEKLY</span><h3>${bdWeek?`✓ ${bdWeek.g}/${bdWeek.t} points this week`:'60 seconds, notebook only'}</h3><p>Write all you remember, then tick it against the checklist.</p><a class="btn" href="#dump">${bdWeek?'Do another':'Start'}</a></section>
+  </div>
+  <section class="card tcard"><span class="kicker">TRACKER</span>
+    <table class="trk"><tr><th>Technique</th><th>Today</th><th>Streak</th></tr>
+    ${rows.map(r=>`<tr><td><b>${r[0]}</b><small>${r[1]}</small></td><td>${r[2]}</td><td class="mono">${r[3]}</td></tr>`).join('')}</table>
+    <div class="heatwrap"><span class="kicker">LAST 4 WEEKS</span><div class="heat">${heat}</div>
+    <div class="legend2"><i class="hc l0"></i>none <i class="hc l1"></i>1 <i class="hc l2"></i>2 <i class="hc l3"></i>3+ techniques <i class="hc rest"></i>rest day</div></div>
+  </section>
+  <div class="twocol">
+    <section class="card tcard"><span class="kicker">COMING UP</span><p><b>${dueTom}</b> questions due tomorrow<br><b>${due7}</b> due in the next 7 days<br><b>${nw}</b> questions not started yet</p></section>
+    <section class="card tcard"><span class="kicker">THIS WEEK VS LAST</span><p>Accuracy: <b>${tw.acc==null?'—':tw.acc+'%'}</b> <span class="muted">(last week ${lw.acc==null?'—':lw.acc+'%'})</span><br>Practice: <b>${tw.min} min</b> over <b>${tw.days}</b> days <span class="muted">(last week ${lw.min} min)</span></p></section>
+  </div>
+  <section class="card tcard"><span class="kicker">MASTERY BY TOPIC · BOX 4 OR HIGHER</span>${mastery}</section>
+  <section class="card tcard"><span class="kicker">WEAK SPOTS</span>${weak.length?`<ol class="weak">${weak.map(c=>`<li><span>${esc(c.q||('Fresh-number: '+TOPICS[c.t]))}</span><span class="muted mono">✗${P.cards[c.id].w} ✓${P.cards[c.id].r}</span><a href="#${c.l[0]}-${c.l[1]}">Review step →</a></li>`).join('')}</ol><button class="btn" id="weakGo">Practise these now</button>`:'<p class="muted">No weak spots yet. Questions you get wrong will show here.</p>'}</section>
+  <section class="card tcard"><span class="kicker">BACKUP</span><p class="muted">Progress syncs to your claude.ai account. A backup code also lets you restore it anywhere.</p>
+    <div class="row"><button class="btn" id="bkCopy">Copy backup code</button><button class="btn" id="bkShow">Restore from code</button></div>
+    <div id="bkBox" hidden><textarea id="bkText" rows="3" placeholder="Paste a backup code here"></textarea><div class="row"><button class="btn" id="bkGo">Restore</button><span id="bkMsg" class="muted"></span></div></div></section>`;
+  paintSync();
+  const wg=document.getElementById('weakGo');if(wg)wg.onclick=()=>{SESS_ONLY=weak.map(c=>c.id);location.hash='#review';};
+  document.getElementById('bkCopy').onclick=async e=>{const code=btoa(unescape(encodeURIComponent(JSON.stringify(P))));
+    try{await navigator.clipboard.writeText(code);e.target.textContent='Copied ✓';}catch(err){const b=document.getElementById('bkBox');b.hidden=false;const ta=document.getElementById('bkText');ta.value=code;ta.select();document.getElementById('bkMsg').textContent='Copy the code above.';}};
+  document.getElementById('bkShow').onclick=()=>{document.getElementById('bkBox').hidden=false;};
+  document.getElementById('bkGo').onclick=()=>{const m=document.getElementById('bkMsg');try{const x=JSON.parse(decodeURIComponent(escape(atob(document.getElementById('bkText').value.trim()))));
+    if(!x||!x.cards||!x.days)throw 0;P=mergeP(P,x);persist();m.textContent='Restored ✓';setTimeout(renderToday,600);}catch(err){m.textContent='That code didn’t work. Copy it again and paste the whole thing.';}};
+}
+
+/* ---------- question renderer ---------- */
+const norm=s=>String(s).toLowerCase().replace(/[−–]/g,'-').replace(/×/g,'*').replace(/\s+/g,'').replace(/\.$/,'');
+const numv=s=>{s=norm(s);let m=s.match(/^(-?\d+(?:\.\d+)?)$/);if(m)return +m[1];m=s.match(/^(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)$/);if(m&&+m[2]!==0)return m[1]/m[2];return null;};
+const same=(u,a)=>{if(norm(u)===norm(a))return true;const x=numv(u),y=numv(a);return x!=null&&y!=null&&Math.abs(x-y)<1e-9;};
+function renderQ(box,c,done){
+  const typeName={mcq:'Choose one',fill:'Fill in the blank',tf:'True or false, with a reason',match:'Match the following',order:'Put in order',spot:'Spot the mistake'}[c.type];
+  box.innerHTML=`<div class="qmeta"><span class="tag SOLVE">${typeName}</span><span class="muted">${TOPICS[c.t]}${c.gen||GEN_IDS.has(c.id)?' · fresh numbers':''}</span></div><div class="qtext">${esc(c.q)}</div><div class="qbody"></div><div class="qfb" aria-live="polite"></div>`;
+  const body=box.querySelector('.qbody'),fb=box.querySelector('.qfb');let over=false;
+  const finish=(ok,extra='')=>{if(over)return;over=true;fb.innerHTML=`<div class="${ok?'fok':'fbad'}"><b>${ok?'✓ Correct.':'✗ Not quite.'}</b> ${extra}${esc(c.why||'')}${ok?'':` <a href="#${c.l[0]}-${c.l[1]}" class="lessonlink">Review this in the lesson →</a>`}</div>`;done(ok);};
+  if(c.type==='mcq'){body.innerHTML=`<div class="opts">${c.opts.map((o,i)=>`<button class="opt" data-i="${i}">${esc(o)}</button>`).join('')}</div>`;
+    body.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(over)return;const i=+b.dataset.i;body.querySelectorAll('.opt').forEach(x=>{x.disabled=true;if(+x.dataset.i===c.a)x.classList.add('ok');});if(i!==c.a)b.classList.add('bad');finish(i===c.a);});}
+  else if(c.type==='fill'){body.innerHTML=`<div class="fillrow"><input type="text" inputmode="text" autocomplete="off" aria-label="Your answer" placeholder="Your answer"><button class="btn primary">Check</button></div><div class="err"></div>`;
+    const inp=body.querySelector('input'),err=body.querySelector('.err'),go=()=>{if(over)return;if(!inp.value.trim()){err.textContent='Type an answer first.';return;}err.textContent='';const ok=c.a.some(a=>same(inp.value,a));inp.disabled=true;body.querySelector('button').disabled=true;inp.classList.add(ok?'ok':'bad');finish(ok,ok?'':`Answer: <b>${esc(c.a[0].replace(/^-/,'−'))}</b>. `);};
+    body.querySelector('button').onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go();};inp.oninput=()=>err.textContent='';setTimeout(()=>inp.focus({preventScroll:true}),50);}
+  else if(c.type==='tf'){let tfv=null;body.innerHTML=`<div class="opts two"><button class="opt" data-v="1">True</button><button class="opt" data-v="0">False</button></div><div class="reasons" hidden><div class="muted small">Now pick the reason:</div><div class="opts">${c.reasons.map((r,i)=>`<button class="opt" data-r="${i}">${esc(r)}</button>`).join('')}</div></div>`;
+    body.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{if(over||tfv!==null)return;tfv=b.dataset.v==='1';b.classList.add('pick');body.querySelectorAll('[data-v]').forEach(x=>x.disabled=true);body.querySelector('.reasons').hidden=false;});
+    body.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{if(over)return;const r=+b.dataset.r,ok=tfv===c.a&&r===c.ra;body.querySelectorAll('[data-r]').forEach(x=>{x.disabled=true;if(+x.dataset.r===c.ra)x.classList.add('ok');});if(r!==c.ra)b.classList.add('bad');
+      finish(ok,`It is <b>${c.a?'True':'False'}</b>. `);});}
+  else if(c.type==='match'){const L=c.pairs.map(p=>p[0]),Rr=shuffle(c.pairs.map(p=>p[1]));let sel=null;const link={};
+    body.innerHTML=`<div class="muted small">Tap an item on the left, then its partner on the right.</div><div class="match"><div>${L.map((x,i)=>`<button class="opt ml" data-i="${i}">${esc(x)}</button>`).join('')}</div><div>${Rr.map((x,i)=>`<button class="opt mr" data-j="${i}">${esc(x)}</button>`).join('')}</div></div><div class="row"><button class="btn primary mchk">Check</button><span class="err"></span></div>`;
+    const paint=()=>{body.querySelectorAll('.ml').forEach(b=>{const i=+b.dataset.i;b.className='opt ml'+(sel===i?' pick':'')+(link[i]!=null?' pair p'+i:'');});
+      body.querySelectorAll('.mr').forEach(b=>{const j=+b.dataset.j,i=Object.keys(link).find(k=>link[k]===j);b.className='opt mr'+(i!=null?' pair p'+i:'');});};
+    body.querySelectorAll('.ml').forEach(b=>b.onclick=()=>{if(over)return;const i=+b.dataset.i;if(link[i]!=null){delete link[i];sel=i;}else sel=sel===i?null:i;paint();});
+    body.querySelectorAll('.mr').forEach(b=>b.onclick=()=>{if(over||sel===null)return;const j=+b.dataset.j;Object.keys(link).forEach(k=>{if(link[k]===j)delete link[k];});link[sel]=j;sel=null;paint();body.querySelector('.err').textContent='';});
+    body.querySelector('.mchk').onclick=()=>{if(over)return;if(Object.keys(link).length<L.length){body.querySelector('.err').textContent='Match every item first.';return;}
+      const ok=L.every((x,i)=>Rr[link[i]]===c.pairs[i][1]);body.querySelectorAll('.ml').forEach(b=>{const i=+b.dataset.i;b.classList.add(Rr[link[i]]===c.pairs[i][1]?'ok':'bad');b.disabled=true;});body.querySelectorAll('.mr').forEach(b=>b.disabled=true);body.querySelector('.mchk').disabled=true;
+      finish(ok,ok?'':`Correct pairs: ${c.pairs.map(p=>`<b>${esc(p[0])}</b> → ${esc(p[1])}`).join('; ')}. `);};}
+  else if(c.type==='order'){const pool=shuffle(c.items.map((x,i)=>i));let seq=[];
+    body.innerHTML=`<div class="muted small">Tap the steps in the right order.</div><ol class="seq"></ol><div class="opts pool"></div><div class="row"><button class="btn undo">Undo</button><button class="btn primary ochk">Check</button><span class="err"></span></div>`;
+    const paint=()=>{body.querySelector('.seq').innerHTML=seq.map(i=>`<li>${esc(c.items[i])}</li>`).join('')||'<li class="muted ph">Your order appears here</li>';
+      body.querySelector('.pool').innerHTML=pool.filter(i=>!seq.includes(i)).map(i=>`<button class="opt" data-i="${i}">${esc(c.items[i])}</button>`).join('');
+      body.querySelectorAll('.pool .opt').forEach(b=>b.onclick=()=>{if(over)return;seq.push(+b.dataset.i);body.querySelector('.err').textContent='';paint();});};paint();
+    body.querySelector('.undo').onclick=()=>{if(over)return;seq.pop();paint();};
+    body.querySelector('.ochk').onclick=()=>{if(over)return;if(seq.length<c.items.length){body.querySelector('.err').textContent='Use every step first.';return;}
+      const ok=seq.every((x,i)=>x===i);body.querySelectorAll('.seq li').forEach((li,k)=>li.classList.add(seq[k]===k?'ok':'bad'));body.querySelector('.undo').disabled=true;body.querySelector('.ochk').disabled=true;
+      finish(ok,ok?'':`Right order: ${c.items.map((x,i)=>`${i+1}) ${esc(x)}`).join('  ')}. `);};}
+  else if(c.type==='spot'){body.innerHTML=`<div class="muted small">Tap the line with the mistake.</div><div class="opts">${c.lines.map((x,i)=>`<button class="opt mono" data-i="${i}"><span class="ln">${i+1}</span> ${esc(x)}</button>`).join('')}</div>`;
+    body.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(over)return;const i=+b.dataset.i;body.querySelectorAll('.opt').forEach(x=>{x.disabled=true;if(+x.dataset.i===c.bad)x.classList.add('bad');});if(i!==c.bad)b.classList.add('pick');finish(i===c.bad,`The mistake is in line ${c.bad+1}. `);});}
+}
+const GEN_IDS=new Set(BANK.filter(c=>c.gen).map(c=>c.id));
+
+/* ---------- review session ---------- */
+let SESS_ONLY=null;
+function startReview(){
+  const day=todayK(),dd=P.days[day]||{},extra=!!(dd.rv&&dd.rv.d);
+  const cards=buildSession(extra?5:SESSION,SESS_ONLY);SESS_ONLY=null;
+  SESS={cards:cards.map(inst),i:0,first:{},again:[],t0:Date.now(),retry:false};
+  drawReview();}
+function drawReview(){
+  const S_=SESS,all=S_.cards.length,c=S_.retry?S_.again[S_.i]:S_.cards[S_.i];
+  if(!c)return endReview();
+  const pos=S_.retry?`Second try ${S_.i+1}/${S_.again.length}`:`${S_.i+1} / ${all}`;
+  H().innerHTML=`<div class="hhead"><div><div class="crumb"><a href="#today">← Today</a></div><h1>Today’s review</h1></div><div class="mono muted">${pos}</div></div>
+   <div class="pbar"><i style="width:${S_.retry?100:Math.round(100*S_.i/all)}%"></i></div>
+   <section class="card qcard" id="qcard"></section><div class="row end"><button class="btn primary" id="qNext" hidden>${S_.retry?(S_.i+1<S_.again.length?'Next':'Finish'):(S_.i+1<all?'Next question →':'Finish')}</button></div>`;
+  renderQ(document.getElementById('qcard'),c,ok=>{
+    if(!S_.retry){S_.first[c.id]=ok;record(c,ok);if(!ok)S_.again.push(c.gen||GEN_IDS.has(c.id)?inst(cardById(c.id)):c);}
+    const nb=document.getElementById('qNext');nb.hidden=false;nb.focus({preventScroll:true});nb.onclick=()=>{S_.i++;if(!S_.retry&&S_.i>=all){if(S_.again.length){S_.retry=true;S_.i=0;}else return endReview();}drawReview();};
+  });}
+function endReview(){
+  const S_=SESS,n=Object.keys(S_.first).length,c=Object.values(S_.first).filter(Boolean).length,ms=Date.now()-S_.t0,t=todayK(),d=DAY(t);
+  if(n){const prev=d.rv||{n:0,c:0,ms:0};d.rv={n:prev.n+n,c:prev.c+c,ms:(prev.ms||0)+ms,d:1};persist();}
+  const wrong=S_.cards.filter(x=>S_.first[x.id]===false);
+  H().innerHTML=`<div class="hhead"><div><div class="crumb"><a href="#today">← Today</a></div><h1>Review done ✓</h1></div><div class="streak"><b>${mainStreak().n}</b><span>day streak</span></div></div>
+   <section class="card tcard main"><h2>${c} / ${n} correct first time · ${fmtTime(ms)}</h2>
+   <p>${c===n?'Every answer came from memory. These move up a box and come back later.':'Right answers move up a box. Wrong ones go back to box 1 and return tomorrow.'}</p>
+   ${wrong.length?`<span class="kicker">REVIEW THESE STEPS</span><ul class="weak">${wrong.map(x=>`<li><span>${esc(x.q)}</span><a href="#${x.l[0]}-${x.l[1]}">Open lesson step →</a></li>`).join('')}</ul>`:''}
+   <div class="row"><a class="btn primary" href="#today">Back to Today</a><a class="btn" href="#kumon">Kumon sheet</a></div></section>`;}
+
+/* ---------- Kumon sheet ---------- */
+function startKumon(){
+  const gens=shuffle(KUMON_GENS).slice(0,5),probs=gens.map(g=>({...GEN[g](),g})),t0=Date.now(),res=Array(5).fill(null);KPROBS=probs;
+  const best=Object.values(P.days).filter(x=>x.kn&&x.kn.c===x.kn.n).map(x=>x.kn.ms).sort((a,b)=>a-b)[0];
+  H().innerHTML=`<div class="hhead"><div><div class="crumb"><a href="#today">← Today</a></div><h1>Kumon sheet</h1></div><div class="mono" id="kClock">0s</div></div>
+   <p class="tagline">Five problems, fresh numbers. Work in your notebook, type only the answer. ${best?`Your best full-marks time: <b>${fmtTime(best)}</b>.`:''}</p>
+   <section class="card tcard">${probs.map((p,i)=>`<div class="kp"><div class="qtext"><span class="ln">${i+1}</span> ${esc(p.q)}</div><div class="fillrow"><input type="text" autocomplete="off" aria-label="Answer ${i+1}" data-i="${i}" placeholder="Answer"><button class="btn" data-i="${i}">Check</button></div><div class="qfb" id="kf${i}"></div></div>`).join('')}
+   <div class="row"><button class="btn primary" id="kDone">Finish sheet</button><span class="err" id="kErr"></span></div></section>`;
+  const clock=setInterval(()=>{const el=document.getElementById('kClock');if(!el){clearInterval(clock);return;}el.textContent=fmtTime(Date.now()-t0);},1000);
+  const check=i=>{if(res[i]!==null)return;const inp=H().querySelector(`input[data-i="${i}"]`);if(!inp.value.trim()){document.getElementById('kf'+i).innerHTML='<span class="err">Type an answer first.</span>';return;}
+    const p=probs[i],ok=p.type==='mcq'?false:p.a.some(a=>same(inp.value,a));res[i]=ok;inp.disabled=true;inp.classList.add(ok?'ok':'bad');H().querySelector(`button[data-i="${i}"]`).disabled=true;
+    document.getElementById('kf'+i).innerHTML=`<div class="${ok?'fok':'fbad'}"><b>${ok?'✓':'✗'}</b> ${ok?'':`Answer: <b>${esc(p.a[0].replace(/^-/,'−'))}</b>. `}${esc(p.why)}</div>`;
+    const d=DAY(todayK());d.tp=[...new Set([...(d.tp||[]),cardById('g-'+{findY:'findy',findK:'findk',slope2:'slope2',slopeStd:'slopestd',sumDiff:'sumdiff',subst:'subst'}[p.g]).t])];};
+  H().querySelectorAll('.kp button').forEach(b=>b.onclick=()=>check(+b.dataset.i));
+  H().querySelectorAll('.kp input').forEach(inp=>inp.onkeydown=e=>{if(e.key==='Enter'){check(+inp.dataset.i);const nx=H().querySelector(`input[data-i="${+inp.dataset.i+1}"]`);if(nx)nx.focus();}});
+  document.getElementById('kDone').onclick=()=>{if(res.some(r=>r===null)){document.getElementById('kErr').textContent='Check all five answers first.';return;}
+    clearInterval(clock);const ms=Date.now()-t0,c=res.filter(Boolean).length,d=DAY(todayK());d.kn=(d.kn&&(d.kn.c>c||(d.kn.c===c&&d.kn.ms<=ms)))?d.kn:{n:5,c,ms,d:1};persist();
+    H().querySelector('.tcard').insertAdjacentHTML('afterend',`<section class="card tcard main"><h2>${c}/5 in ${fmtTime(ms)}</h2><p>${c===5?'Full marks. Tomorrow, try to beat this time.':'Look at the ✗ answers above, then try a new sheet.'}</p><div class="row"><a class="btn primary" href="#today">Back to Today</a><button class="btn" id="kAgain">New sheet</button></div></section>`);
+    document.getElementById('kDone').disabled=true;document.getElementById('kAgain').onclick=startKumon;};
+}
+
+/* ---------- brain dump ---------- */
+function startDump(pick){
+  const wk=weekK(todayK()),idx=pick!=null?pick:Math.floor(dparse(wk).getTime()/(7*864e5))%DUMPS.length,D=DUMPS[idx];
+  H().innerHTML=`<div class="hhead"><div><div class="crumb"><a href="#today">← Today</a></div><h1>Brain dump</h1></div><div class="mono" id="bdClock">60s</div></div>
+   <p class="tagline">Close the book. In 60 seconds, write in your notebook <b>everything</b> you remember about the topic. Then tick what you got.</p>
+   <section class="card tcard"><span class="kicker">THIS WEEK’S TOPIC</span><h2>${D.title}</h2>
+     <div class="row">${DUMPS.map((x,i)=>`<button class="btn small ${i===idx?'primary':''}" data-t="${i}">${x.title}</button>`).join('')}</div>
+     <div class="row"><button class="btn primary" id="bdStart">Start 60 seconds</button></div></section>
+   <section class="card tcard" id="bdCheck" hidden><span class="kicker">TICK EVERY POINT YOU WROTE</span>
+     ${D.pts.map((p,i)=>`<label class="chk"><input type="checkbox" data-i="${i}"> ${esc(p)}</label>`).join('')}
+     <div class="row"><button class="btn primary" id="bdSave">Save</button><span id="bdMsg" class="muted"></span></div></section>`;
+  H().querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>startDump(+b.dataset.t));
+  document.getElementById('bdStart').onclick=e=>{e.target.disabled=true;const t0=Date.now();const iv=setInterval(()=>{const el=document.getElementById('bdClock');if(!el){clearInterval(iv);return;}
+    const left=60-Math.floor((Date.now()-t0)/1000);el.textContent=Math.max(0,left)+'s';if(left<=0){clearInterval(iv);el.textContent='Time!';document.getElementById('bdCheck').hidden=false;document.getElementById('bdCheck').scrollIntoView({behavior:'smooth',block:'start'});}},250);
+    setTimeout(()=>{document.getElementById('bdCheck')&&(document.getElementById('bdCheck').hidden=false);},60500);};
+  document.getElementById('bdSave').onclick=()=>{const g=H().querySelectorAll('#bdCheck input:checked').length,d=DAY(todayK());d.bd=(d.bd&&d.bd.g>=g)?d.bd:{g,t:D.pts.length,topic:D.t};
+    d.tp=[...new Set([...(d.tp||[]),D.t])];persist();
+    document.getElementById('bdMsg').innerHTML=`Saved: ${g}/${D.pts.length}. ${g<D.pts.length?'Read the unticked points once, then close the book.':'Everything remembered.'} <a href="#today">Back to Today</a>`;};
+}
+function logLesson(slug){const d=DAY(todayK());d.nl=[...new Set([...(d.nl||[]),slug])];persist();}
+/* RECALL:END */
+route();
+
 </script>
 </body>
 </html>

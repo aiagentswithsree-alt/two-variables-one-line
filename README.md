@@ -20,6 +20,18 @@ Open `index.html` in any browser. It is a single self-contained file with no bui
 
 All three lessons follow one story: Radha pays ₹280 for mangoes (₹60/kg) and bananas (₹50/kg). By the end, a second clue (the bag weighed 5 kg) pins her purchase down to 3 kg of mangoes and 2 kg of bananas.
 
+## Daily practice (the page opens here)
+
+The page opens on **Today**, a 5–7 minute routine that keeps the chapter in long-term memory:
+
+- **Today's review (active recall):** 10 mixed questions from a bank of 52, in six formats: multiple choice, fill in the blank, true/false with a reason, match the following, put in order, and spot the mistake. Eight of them generate fresh numbers every time.
+- **Spaced repetition:** each question sits in a box. A right answer moves it up (1 → 3 → 7 → 14 → 30 days); a wrong one sends it back to tomorrow, with a link to the lesson step that explains it.
+- **Kumon sheet:** 5 fresh-number problems a day, timed.
+- **Brain dump:** once a week, write everything you remember in 60 seconds, then tick it against a checklist.
+- **Tracker:** a main streak (one rest day per week), a streak for each technique, a 4-week heatmap, mastery by topic, weak spots, and this week vs last week.
+
+Progress syncs to your claude.ai account when the page is opened from claude.ai. Opened from GitHub Pages or a local file, it is saved in that browser only; use **Copy backup code** to move it.
+
 ## Exam practice
 
 Each exercise question shows **In simple words**, **Given** and **To find**. Pressing **Next line** then reveals the working one line at a time, each with a short reason. After the last line come a **Check** and the final answer to **write in the exam**. Try each step in your notebook before revealing it.
