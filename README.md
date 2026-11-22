@@ -24,7 +24,7 @@ All three lessons follow one story: Radha pays ₹280 for mangoes (₹60/kg) and
 
 The page opens on **Today**, a 5–7 minute routine that keeps the chapter in long-term memory.
 
-**Learn first, then practise.** Questions, Kumon problems and brain-dump topics unlock only when you finish the lesson that teaches them. A new learner sees a **Quick glance** (5 questions from Lesson 1 with their answers and a one-line reason, just to read) and then "Start here: Lesson 1". Later, an "Up next" card offers the same glance for the next lesson. Questions from a topic you haven't learned yet stay paused.
+**Learn first, then practise.** Questions, Kumon problems and brain-dump topics unlock only when you finish the lesson that teaches them. A new learner sees a **Quick glance** (5 questions from Lesson 1 with their answers and a one-line reason, just to read) and then "Start here: Lesson 1". Later, an "Up next" card shows the same glance, always open, for the next lesson. Questions from a topic you haven't learned yet stay paused.
 
 
 - **Today's review (active recall):** 10 mixed questions from a bank of 52, in six formats: multiple choice, fill in the blank, true/false with a reason, match the following, put in order, and spot the mistake. Eight of them generate fresh numbers every time.

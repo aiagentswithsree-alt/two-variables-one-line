@@ -1633,8 +1633,8 @@ function renderToday(){
     :`<h2>${sessN} questions · ${topics} topics mixed · ~${Math.max(3,Math.round(sessN*0.6))} min</h2><p>Answer from memory first. Wrong answers come back tomorrow with a link to the lesson step.</p><div class="row"><a class="btn primary" href="#review">Start review →</a></div>`}
   </section>
   ${UT.size&&!studiedSet().has(nl0.slug)?`<section class="card tcard"><span class="kicker">UP NEXT</span><h3>${esc(nl0.title)}</h3>
-    <details class="glancedet"><summary>Quick glance: questions and answers you’ll learn</summary>${glanceHTML(nl0,5)}</details>
-    <div class="row"><a class="btn" href="#${lessonEntry(nl0.slug)}">Start ${esc(nl0.title)} →</a></div></section>`:''}
+    <p>Before you start, read these 5 questions with their answers. Just read: nothing here is a test.</p><div class="glancebox"><span class="kicker">QUICK GLANCE · QUESTIONS AND ANSWERS YOU’LL LEARN</span>${glanceHTML(nl0,5)}</div>
+    <div class="row"><a class="btn primary" href="#${lessonEntry(nl0.slug)}">Start ${esc(nl0.title)} →</a></div></section>`:''}
   <div class="twocol">
     <section class="card tcard"><span class="kicker">KUMON SHEET · DAILY</span><h3>${d.kn&&d.kn.n?`✓ ${d.kn.c}/${d.kn.n} in ${fmtTime(d.kn.ms)}`:'5 problems, fresh numbers'}</h3><p>Type the answers. Try to get faster each day.</p>${KUMON_GENS.some(g=>{const bc=BANK.find(x=>x.gen===g);return bc&&UT.has(bc.t);})?`<a class="btn" href="#kumon">${d.kn&&d.kn.n?'Try another sheet':'Start sheet'}</a>`:'<p class="muted small">🔒 Unlocks when you finish a lesson.</p>'}</section>
     <section class="card tcard"><span class="kicker">BRAIN DUMP · WEEKLY</span><h3>${bdWeek?`✓ ${bdWeek.g}/${bdWeek.t} points this week`:'60 seconds, notebook only'}</h3><p>Write all you remember, then tick it against the checklist.</p>${DUMPS.some(x=>UT.has(x.t))?`<a class="btn" href="#dump">${bdWeek?'Do another':'Start'}</a>`:'<p class="muted small">🔒 Unlocks when you finish a lesson.</p>'}</section>
