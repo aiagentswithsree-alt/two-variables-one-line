@@ -124,7 +124,12 @@ ol.lines li.new .why{color:var(--accent-ink)}
 @keyframes pop{from{transform:translateY(6px);opacity:.2}to{transform:none;opacity:1}}
 
 [hidden]{display:none!important}
-.helpbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}.helpbar.done .hbtn{display:none}
+.helpbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}.helpbar.done .hbtn:not([data-h="explain"]):not([data-k="explain"]){display:none}
+.exp{margin-top:10px;border:2px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--bg);line-height:1.6}
+.exp h3{font-family:var(--mono);font-size:16px;margin:6px 0}.exp p{margin:6px 0}.exp .board{display:flex;flex-direction:column;gap:8px}
+svg.mini{width:100%;max-width:520px;height:auto;display:block;margin:8px auto}
+.primer h2{font-size:20px}.ptext{font-size:17px;line-height:1.65}.ptext .points{font-size:16px}
+.dots{display:flex;gap:6px}.dots i{width:10px;height:10px;border-radius:50%;border:2px solid var(--line);background:var(--paper)}.dots i.on{background:var(--ink)}
 .hbtn{border:2px dashed var(--line);border-radius:8px;padding:6px 10px;background:var(--bg);font-family:var(--mono);font-size:12px;font-weight:600;color:var(--ink);cursor:pointer}
 .hint{font-size:14px;line-height:1.45;color:var(--ink);flex-basis:100%}.hint:empty{display:none}
 .hint:not(:empty){border-left:4px solid #e2b44a;padding:6px 10px;background:var(--chip1);border-radius:0;color:#2a2620}
@@ -262,6 +267,12 @@ const COURSE = {
     { name: 'One Equation', color: '#e2b44a', lessons: [
       {
         slug: 'one-bill-many-answers',
+        primer: [
+          {title:'Two unknowns, one fact', text:'Radha buys mangoes at ₹60 a kg and bananas at ₹50 a kg, and pays ₹280. We don’t know how many kg of each, so we call them <b>x</b> and <b>y</b>.'},
+          {title:'One fact becomes an equation', text:'Cost of mangoes + cost of bananas = bill, so <b>60x + 50y = 280</b>. Two letters, each with power 1: a <b>linear equation in two variables</b>. Its tidy form is <b>ax + by + c = 0</b>.'},
+          {title:'Many answers, one line', text:'Many pairs make the bill ₹280, like (3, 2) and (0.5, 5). Plot them all and they sit on <b>one straight line</b>.', plotFrom:7}
+        ],
+        worked: ['ex-13-2', 1],
         title: 'One Bill, Many Answers',
         minutes: 10, level: 'Grade 9',
         tagline: 'Radha paid ₹280 for mangoes and bananas. Follow that one bill until it turns into a straight line.',
@@ -325,6 +336,12 @@ const COURSE = {
       },
       {
         slug: 'how-steep-is-a-line',
+        primer: [
+          {title:'Slope = steepness', text:'Slope is one number that tells you how steep a line is: how much it climbs or falls as you move to the right.', plotFrom:1},
+          {title:'Rise ÷ run', text:'Move right (the <b>run</b>) and up (the <b>rise</b>). <b>Slope = rise ÷ run</b>. From (2, 0) to (4, 3): rise 3, run 2, slope 3/2.', plotFrom:2},
+          {title:'Up, down, flat, straight up', text:'Rising lines have a <b>positive</b> slope and falling lines a <b>negative</b> one. Flat lines have slope <b>0</b>; vertical lines have an <b>undefined</b> slope.', plotFrom:9}
+        ],
+        worked: ['ex-13-3', 2],
         title: 'How Steep Is a Line?',
         minutes: 12, level: 'Grade 9',
         tagline: 'Ride a cyclist up and down straight-line roads and measure steepness with one number.',
@@ -388,6 +405,12 @@ const COURSE = {
     { name: 'Two Equations', color: '#8fb3e0', lessons: [
       {
         slug: 'where-two-lines-meet',
+        primer: [
+          {title:'A second clue', text:'One equation gives a whole line of answers. A second equation, a second clue, narrows it down.', plotFrom:2},
+          {title:'Where the lines meet', text:'The answer to a <b>pair</b> of equations is the point on <b>both</b> lines. For Radha it is (3, 2): 3 kg of mangoes and 2 kg of bananas.', plotFrom:6},
+          {title:'None or endless', text:'<b>Parallel</b> lines never meet: no answer. The <b>same line</b> twice: endless answers. Comparing a₁/a₂, b₁/b₂ and c₁/c₂ tells you which, before you solve.', plotFrom:7}
+        ],
+        worked: ['ex-13-5a', 1],
         title: 'Where Two Lines Meet',
         minutes: 14, level: 'Grade 9',
         tagline: 'A second clue turns Radha’s line of answers into one exact answer. See when that works and when it can’t.',
@@ -1286,15 +1309,16 @@ function drawNode(g,n,step){
   pill(g,x,y+52,n.sub?`${n.label} · ${n.sub}`:n.label);
   const extra=(step.labels||{})[n.id];if(extra)pill(g,x,n.kind==='laptop'?y-66:y-62,extra,warn);
 }
+let PCN=0;
 function drawPlot(svg,step){
   const P=step.plot,[x0,x1]=P.xr||[-1,7],[y0,y1]=P.yr||[-1,7];
   const W=720,H=400,pl=46,pr=20,pt=18,pb=34;
   let sx=(W-pl-pr)/(x1-x0),sy=(H-pt-pb)/(y1-y0);if(P.equal){sx=sy=Math.min(sx,sy);}
   const ox=pl+((W-pl-pr)-(x1-x0)*sx)/2-x0*sx, oy=pt+((H-pt-pb)-(y1-y0)*sy)/2+y1*sy;
   const X=x=>ox+x*sx,Y=y=>oy-y*sy;
-  const defs=el('defs',{},svg);const cp=el('clipPath',{id:'pc'},defs);
+  const defs=el('defs',{},svg);const cp=el('clipPath',{id:'pc'+(++PCN)},defs);
   el('rect',{x:X(x0),y:Y(y1),width:(x1-x0)*sx,height:(y1-y0)*sy},cp);
-  const gg=el('g',{},svg),gl=el('g',{'clip-path':'url(#pc)'},svg),gp=el('g',{},svg);
+  const gg=el('g',{},svg),gl=el('g',{'clip-path':'url(#pc'+PCN+')'},svg),gp=el('g',{},svg);
   el('rect',{x:X(x0),y:Y(y1),width:(x1-x0)*sx,height:(y1-y0)*sy,fill:'var(--paper)',stroke:'var(--line)','stroke-width':2,rx:6},gg);
   const st=(x1-x0)>12||(y1-y0)>12?2:1;
   const tx=v=>{const e=el('text',{'font-family':'JetBrains Mono, monospace','font-size':10,fill:'var(--muted)'},gg);e.textContent=v;return e;};
@@ -1622,12 +1646,12 @@ function autoHint(c,level){
 function renderQ(box,c,done){
   const typeName={mcq:'Choose one',fill:'Fill in the blank',tf:'True or false, with a reason',match:'Match the following',order:'Put in order',spot:'Spot the mistake'}[c.type];
   box.innerHTML=`<div class="qmeta"><span class="tag SOLVE">${typeName}</span><span class="muted">${TOPICS[c.t]}${c.gen||GEN_IDS.has(c.id)?' · fresh numbers':''}</span></div><div class="qtext">${esc(c.q)}</div><div class="qbody"></div>
-   <div class="helpbar"><button class="hbtn" data-h="hint">💡 Hint</button><button class="hbtn" data-h="show">Show answer</button><span class="hint" aria-live="polite"></span></div><div class="qfb" aria-live="polite"></div>`;
+   <div class="helpbar"><button class="hbtn" data-h="explain" aria-expanded="false">📖 Explain</button><button class="hbtn" data-h="hint">💡 Hint</button><button class="hbtn" data-h="show">Show answer</button><span class="hint" aria-live="polite"></span></div><div class="expbox"></div><div class="qfb" aria-live="polite"></div>`;
   const body=box.querySelector('.qbody'),fb=box.querySelector('.qfb'),hintEl=box.querySelector('.hint');let over=false,hinted=false,hints=0;
   const say=t=>{hintEl.textContent=t;};
   const finish=(ok,extra='',revealed=false)=>{if(over)return;over=true;box.querySelector('.helpbar').classList.add('done');
-    const head=revealed?'<b>Here’s the answer.</b>':ok?(hinted?'<b>✓ Correct, with a hint.</b>':'<b>✓ Correct.</b>'):'<b>✗ Not quite.</b>';
-    const tail=revealed?' It comes back tomorrow, and once more at the end of a review session.':(ok&&hinted?' Because you used a hint, it stays in its box and comes back sooner.':'');
+    const head=revealed?'<b>Here’s the answer.</b>':ok?(hinted?'<b>✓ Correct, with help.</b>':'<b>✓ Correct.</b>'):'<b>✗ Not quite.</b>';
+    const tail=revealed?' It comes back tomorrow, and once more at the end of a review session.':(ok&&hinted?' Because you used help, it stays in its box and comes back sooner.':'');
     fb.innerHTML=`<div class="${ok?'fok':'fbad'}">${head} ${extra}${esc(c.why||'')}${tail}${ok?'':` <a href="#${c.l[0]}-${c.l[1]}" class="lessonlink">Review this in the lesson →</a>`}</div>`;done(ok,hinted);};
   let hint=()=>{},reveal=()=>{};
   if(c.type==='mcq'){body.innerHTML=`<div class="opts">${c.opts.map((o,i)=>`<button class="opt" data-i="${i}">${esc(o)}</button>`).join('')}</div>`;
@@ -1685,6 +1709,11 @@ function renderQ(box,c,done){
       else say(c.hint||'Work each step out yourself and compare.');};
     reveal=()=>{lock();finish(false,`The mistake is in line ${c.bad+1}. `,true);};}
   box.querySelector('[data-h="hint"]').onclick=()=>{if(over)return;hinted=true;hint();hints++;};
+  const xb=box.querySelector('[data-h="explain"]'),xbox=box.querySelector('.expbox');
+  xb.onclick=()=>{const open=xb.getAttribute('aria-expanded')==='true';
+    if(open){xbox.innerHTML='';xb.setAttribute('aria-expanded','false');xb.textContent='📖 Explain';return;}
+    if(!over)hinted=true;explainInto(xbox,c.l[0],c.l[1]);xb.setAttribute('aria-expanded','true');xb.textContent='📖 Hide explanation';
+    xbox.scrollIntoView({block:'nearest',behavior:reduce?'auto':'smooth'});};
   box.querySelector('[data-h="show"]').onclick=()=>{if(over)return;reveal();};
 }
 const GEN_IDS=new Set(BANK.filter(c=>c.gen).map(c=>c.id));
@@ -1723,7 +1752,7 @@ function startKumon(){
   const best=Object.values(P.days).filter(x=>x.kn&&x.kn.c===x.kn.n).map(x=>x.kn.ms).sort((a,b)=>a-b)[0];
   H().innerHTML=`<div class="hhead"><div><div class="crumb"><a href="#today">← Today</a></div><h1>Kumon sheet</h1></div><div class="mono" id="kClock">0s</div></div>
    <p class="tagline">Five problems, fresh numbers. Work in your notebook, type only the answer. ${best?`Your best full-marks time: <b>${fmtTime(best)}</b>.`:''}</p>
-   <section class="card tcard">${probs.map((p,i)=>`<div class="kp"><div class="qtext"><span class="ln">${i+1}</span> ${esc(p.q)}</div><div class="fillrow"><input type="text" autocomplete="off" aria-label="Answer ${i+1}" data-i="${i}" placeholder="Answer"><button class="btn" data-i="${i}">Check</button></div><div class="helpbar" id="kb${i}"><button class="hbtn" data-k="hint" data-i="${i}">💡 Hint</button><button class="hbtn" data-k="show" data-i="${i}">Show answer</button><span class="hint" id="kh${i}"></span></div><div class="qfb" id="kf${i}"></div></div>`).join('')}
+   <section class="card tcard">${probs.map((p,i)=>`<div class="kp"><div class="qtext"><span class="ln">${i+1}</span> ${esc(p.q)}</div><div class="fillrow"><input type="text" autocomplete="off" aria-label="Answer ${i+1}" data-i="${i}" placeholder="Answer"><button class="btn" data-i="${i}">Check</button></div><div class="helpbar" id="kb${i}"><button class="hbtn" data-k="explain" data-i="${i}" aria-expanded="false">📖 Explain</button><button class="hbtn" data-k="hint" data-i="${i}">💡 Hint</button><button class="hbtn" data-k="show" data-i="${i}">Show answer</button><span class="hint" id="kh${i}"></span></div><div class="expbox" id="kx${i}"></div><div class="qfb" id="kf${i}"></div></div>`).join('')}
    <div class="row"><button class="btn primary" id="kDone">Finish sheet</button><span class="err" id="kErr"></span></div></section>`;
   const clock=setInterval(()=>{const el=document.getElementById('kClock');if(!el){clearInterval(clock);return;}el.textContent=fmtTime(Date.now()-t0);},1000);
   const check=i=>{if(res[i]!==null)return;const inp=H().querySelector(`input[data-i="${i}"]`);if(!inp.value.trim()){document.getElementById('kf'+i).innerHTML='<span class="err">Type an answer first, or use Hint.</span>';return;}
@@ -1731,6 +1760,9 @@ function startKumon(){
     document.getElementById('kf'+i).innerHTML=`<div class="${ok?'fok':'fbad'}"><b>${ok?'✓':'✗'}</b> ${ok?'':`Answer: <b>${esc(p.a[0].replace(/^-/,'−'))}</b>. `}${esc(p.why)}</div>`;
     const bc=BANK.find(x=>x.gen===p.g),d=DAY(todayK());if(bc)d.tp=[...new Set([...(d.tp||[]),bc.t])];};
   H().querySelectorAll('.kp .fillrow button').forEach(b=>b.onclick=()=>check(+b.dataset.i));
+  H().querySelectorAll('.kp [data-k="explain"]').forEach(b=>b.onclick=()=>{const i=+b.dataset.i,bc=BANK.find(x=>x.gen===probs[i].g),box=document.getElementById('kx'+i);if(!bc)return;
+    if(b.getAttribute('aria-expanded')==='true'){box.innerHTML='';b.setAttribute('aria-expanded','false');b.textContent='📖 Explain';return;}
+    explainInto(box,bc.l[0],bc.l[1]);b.setAttribute('aria-expanded','true');b.textContent='📖 Hide explanation';});
   const hl={};H().querySelectorAll('.kp [data-k="hint"]').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(res[i]!==null)return;hl[i]=(hl[i]||0);document.getElementById('kh'+i).textContent=autoHint(probs[i],hl[i]);hl[i]++;});
   H().querySelectorAll('.kp [data-k="show"]').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(res[i]!==null)return;const p=probs[i],inp=H().querySelector(`input[data-i="${i}"]`),ans=p.a[0].replace(/^-/,'−');
     res[i]=false;inp.value=ans;inp.disabled=true;inp.classList.add('shown');H().querySelector(`.fillrow button[data-i="${i}"]`).disabled=true;document.getElementById('kb'+i).classList.add('done');
@@ -1800,23 +1832,78 @@ function runSet(cards,opt){
       const nb=document.getElementById('qNext');nb.hidden=false;nb.focus({preventScroll:true});nb.onclick=()=>{st.i++;draw();};});};
   draw();}
 
+function solveHTML(P,upto){const n=P.lines.length;upto=Math.min(upto,n);
+  let h=`<div class="qbox"><span class="kicker">QUESTION</span><div>${P.q}</div></div>`;
+  if(P.simple)h+=`<div class="simple"><span class="kicker">IN SIMPLE WORDS</span>${P.simple}</div>`;
+  h+=`<div class="gf"><div><span class="kicker">GIVEN</span><ul>${(P.given||[]).map(g=>`<li>${g}</li>`).join('')}</ul></div><div><span class="kicker">TO FIND</span><div>${P.find||''}</div></div></div>`;
+  h+=`<ol class="lines">${P.lines.slice(0,upto).map((l,i)=>`<li class="${i===upto-1&&upto<n?'new':''}"><span class="n">${i+1}</span><div><div class="w">${l[0]}</div>${l[1]?`<div class="why">${l[1]}</div>`:''}</div></li>`).join('')}</ol>`;
+  if(upto>=n){if(P.check)h+=`<div class="check"><span class="kicker">CHECK</span>${P.check}</div>`;h+=`<div class="ans"><span class="kicker">ANSWER</span>${P.answer}</div>`;}
+  return h;}
+function explainInto(el,slug,n){
+  const l=ALL.find(x=>x.slug===slug),st=l&&l.steps[n-1];if(!st){el.innerHTML='';return;}
+  let h=`<div class="exp"><span class="kicker">FROM THE LESSON · ${esc(l.title)} · STEP ${n}</span><h3>${st.title}</h3>`;
+  if(st.solve)h+=`<div class="board">${solveHTML(st.solve,st.solve.lines.length)}</div>`;
+  else{(st.body||[]).forEach(p=>h+=`<p>${p}</p>`);if(st.points)h+=`<ul class="points">${st.points.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+    if(st.key)h+=`<div class="box"><span class="kicker">KEY IDEA</span>${st.key}</div>`;
+    if(st.table)h+=`<div class="box"><span class="kicker">${esc(st.table.title.toUpperCase())}</span><table class="tbl">${st.table.rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}${st.table.sum?`<tr class="sum"><td>${st.table.sum[0]}</td><td>${st.table.sum[1]}</td></tr>`:''}</table></div>`;}
+  if(st.plot)h+=`<svg class="mini" viewBox="0 0 720 400" role="img" aria-label="Graph for this step"></svg>`;
+  h+=`<a class="lessonlink" href="#${slug}-${n}">Open this step in the lesson →</a></div>`;
+  el.innerHTML=h;const sv=el.querySelector('svg.mini');if(sv)drawPlot(sv,st);}
+function primerCards(){
+  if(L.primer&&L.primer.length)return L.primer;
+  const rc=[...L.steps].reverse().find(s=>s.tag==='RECAP'&&s.points);const first=L.steps.findIndex(s=>s.solve)+1;
+  const cards=[{title:'What this practice covers',text:esc(L.tagline)+'<ul class="points">'+L.learn.map(x=>`<li>${x}</li>`).join('')+'</ul>'}];
+  if(rc)cards.push({title:'Remember these while you work',text:'<ul class="points">'+rc.points.map(x=>`<li>${x}</li>`).join('')+'</ul>'});
+  if(first)cards.push({title:'Then solve it step by step',text:'Each question in this lesson is shown one line at a time with a reason. Try every line in your notebook first.'});
+  return cards;}
 function startBefore(){
-  const done=lessonDone(L.slug),{own,rel}=lessonPool(L.slug);
+  const done=lessonDone(L.slug);
+  if(!done)return showPrimer(0);
+  startWarmup(true);}
+function showPrimer(i){
+  const cards=primerCards(),c=cards[i],last=i===cards.length-1;
+  H().innerHTML=`<div class="crumb">${esc(L.module.name)} · before you start</div><h1>The big idea in 60 seconds</h1>
+   <p class="tagline">Read these ${cards.length} short cards first. The lesson then shows each idea in action.</p>
+   <section class="card tcard primer"><div class="row" style="margin-top:0;justify-content:space-between"><span class="kicker">CARD ${i+1} / ${cards.length}</span><span class="dots">${cards.map((x,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</span></div>
+     <h2>${c.title}</h2><div class="ptext">${c.text}</div>${c.plotFrom?'<svg class="mini" viewBox="0 0 720 400" role="img" aria-label="Picture of the idea"></svg>':''}
+     <div class="row">${i>0?'<button class="btn" id="pBack">← Back</button>':''}${last?`<a class="btn primary" href="#${L.slug}-1">Start the lesson →</a><button class="btn" id="pPredict">Try 2 predict questions first (optional)</button>`:'<button class="btn primary" id="pNext">Next card →</button>'}
+     ${!last?`<a class="btn" href="#${L.slug}-1">Skip to the lesson</a>`:''}</div></section>`;
+  if(c.plotFrom){const st=L.steps[c.plotFrom-1];if(st&&st.plot)drawPlot(H().querySelector('svg.mini'),st);}
+  const nb=document.getElementById('pNext');if(nb)nb.onclick=()=>showPrimer(i+1);
+  const bb=document.getElementById('pBack');if(bb)bb.onclick=()=>showPrimer(i-1);
+  const pp=document.getElementById('pPredict');if(pp)pp.onclick=()=>startWarmup(false);}
+function startWarmup(done){
+  const {own,rel}=lessonPool(L.slug),n=done?3:2;
   const easy=c=>['mcq','tf','match'].includes(c.type)?0:1;
-  const pick=[...own].sort((a,b)=>easy(a)-easy(b)).slice(0,3);if(pick.length<3)pick.push(...shuffle(rel).slice(0,3-pick.length));
-  const head=`<div class="crumb">${esc(L.module.name)} · warm-up</div><h1>${done?'What do you remember?':'Guess first'}</h1>
-    <p class="tagline">${done?'Answer from memory before you re-read anything. These three don’t change your review schedule.':'You haven’t learned this yet, so wrong guesses are expected. Guessing first makes the lesson stick better. Nothing here changes your schedule.'}</p>`;
-  H().innerHTML=`${head}<section class="card tcard"><span class="kicker">3 QUICK QUESTIONS · ABOUT 1 MINUTE</span>
-    <p>${pick.map(c=>`• ${TOPICS[c.t]}`).filter((x,i,a)=>a.indexOf(x)===i).join('<br>')}</p>
-    <div class="row"><button class="btn primary" id="bStart">Start warm-up</button><a class="btn" href="#${L.slug}-1">Skip to the lesson</a></div></section>`;
-  document.getElementById('bStart').onclick=()=>runSet(pick,{record:false,head,end:st=>{
-    const n=st.cards.length,c=Object.values(st.res).filter(Boolean).length;
-    H().innerHTML=`${head}<section class="card tcard main"><h2>${c} / ${n} ${done?'remembered':'guessed right'}</h2>
-      <p>${done?(c===n?'Strong recall. Head to After for practice that counts towards your schedule.':'Some gaps: the lesson will fill them. Watch for the steps you missed.'):'Keep these questions in mind: the lesson answers each of them.'}</p>
+  const pick=[...own].sort((a,b)=>easy(a)-easy(b)).slice(0,n);if(pick.length<n)pick.push(...shuffle(rel).slice(0,n-pick.length));
+  const head=`<div class="crumb">${esc(L.module.name)} · warm-up</div><h1>${done?'What do you remember?':'Predict'}</h1>
+    <p class="tagline">${done?'Answer from memory before you re-read anything. Use 📖 Explain if you’re stuck. These don’t change your review schedule.':'Use the big idea to make a guess. Wrong guesses are fine: the lesson explains each one. Nothing here changes your schedule.'}</p>`;
+  const go=()=>runSet(pick,{record:false,head,end:st=>{
+    const c=Object.values(st.res).filter(Boolean).length;
+    H().innerHTML=`${head}<section class="card tcard main"><h2>${c} / ${st.cards.length} ${done?'remembered':'predicted right'}</h2>
+      <p>${done?(c===st.cards.length?'Strong recall. Head to After for practice that counts.':'Some gaps: the lesson fills them.'):'Keep these in mind: the lesson answers each of them.'}</p>
       <div class="row"><a class="btn primary" href="#${L.slug}-1">${done?'Re-read the lesson':'Start the lesson'} →</a>${done?`<a class="btn" href="#${L.slug}-after">Go to After</a>`:''}</div></section>`;}});
-}
-
+  if(!done)return go();
+  H().innerHTML=`${head}<section class="card tcard"><span class="kicker">${n} QUICK QUESTIONS · ABOUT 1 MINUTE</span>
+    <div class="row"><button class="btn primary" id="bStart">Start warm-up</button><button class="btn" id="bPrimer">See the big idea again</button><a class="btn" href="#${L.slug}-1">Skip to the lesson</a></div></section>`;
+  document.getElementById('bStart').onclick=go;document.getElementById('bPrimer').onclick=()=>showPrimer(0);}
+function workedFor(){
+  if(L.worked){const l=ALL.find(x=>x.slug===L.worked[0]);const st=l&&l.steps[L.worked[1]-1];if(st&&st.solve)return {st,l,n:L.worked[1]};}
+  const ss=L.steps.map((st,i)=>({st,n:i+1})).filter(x=>x.st.solve);if(!ss.length)return null;const x=ss[Math.floor(Math.random()*ss.length)];return {st:x.st,l:L,n:x.n};}
 function startAfter(){
+  const W=workedFor();if(!W)return startPractice();
+  let up=1;const n=W.st.solve.lines.length;
+  const draw=()=>{H().innerHTML=`<div class="crumb">${esc(L.module.name)} · practice</div><h1>First, a worked example</h1>
+    <p class="tagline">Watch one question solved line by line. Then you solve five on your own.</p>
+    <section class="card tcard"><span class="kicker">WORKED EXAMPLE · ${esc(W.st.title)}</span><div class="board">${solveHTML(W.st.solve,up)}</div>
+    <div class="row">${up<n?`<button class="btn primary" id="wNext">Next line (${up+1}/${n})</button><button class="btn" id="wAll">Show all</button>`:'<button class="btn primary" id="wGo">Now you try: 5 questions →</button>'}<button class="btn" id="wSkip">${up<n?'Skip example':'Back to Today'}</button></div></section>`;
+    const q=id=>document.getElementById(id);
+    if(q('wNext'))q('wNext').onclick=()=>{up++;draw();const nw=H().querySelector('li.new')||H().querySelector('.ans');if(nw)nw.scrollIntoView({block:'nearest',behavior:reduce?'auto':'smooth'});};
+    if(q('wAll'))q('wAll').onclick=()=>{up=n;draw();};
+    if(q('wGo'))q('wGo').onclick=()=>startPractice(true);
+    q('wSkip').onclick=()=>{if(up<n)startPractice();else location.hash='#today';};};
+  draw();}
+function startPractice(auto){
   const t=todayK(),{own,rel}=lessonPool(L.slug),pc=id=>P.cards[id];
   const pri=c=>{const s=pc(c.id);if(s&&s.due<=t)return 0;if(s&&s.w>s.r)return 1;if(!s)return 2;return 3;};
   const ranked=[...shuffle(own).map(c=>[c,pri(c),0]),...shuffle(rel).map(c=>[c,pri(c),1])].sort((a,b)=>a[1]-b[1]||a[2]-b[2]).map(x=>x[0]);
@@ -1838,7 +1925,8 @@ function startAfter(){
       <div class="mrow"><span>Mastery</span><span class="bar"><i style="width:${M2.p}%"></i></span><span class="mono">${M2.m}/${M2.n}</span></div>
       ${wrong.length?`<span class="kicker">RE-READ THESE STEPS</span><ul class="weak">${wrong.map(x=>`<li><span>${esc(x.q)}</span><a href="#${x.l[0]}-${x.l[1]}">Open step →</a></li>`).join('')}</ul>`:'<p>All from memory. These come back in a few days to lock them in.</p>'}
       <div class="row">${nl?`<a class="btn primary" href="#${lessonEntry(nl.slug)}">Next lesson: ${esc(nl.title)} →</a>`:''}<a class="btn" href="#today">Back to Today</a><button class="btn" id="aAgain">5 more</button></div></section>`;
-    document.getElementById('aAgain').onclick=startAfter;}});
+    document.getElementById('aAgain').onclick=()=>startPractice(true);}});
+  if(auto)document.getElementById('aStart').click();
 }
 /* TABS:END */
 

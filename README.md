@@ -25,7 +25,7 @@ All three lessons follow one story: Radha pays ₹280 for mangoes (₹60/kg) and
 The page opens on **Today**, a 5–7 minute routine that keeps the chapter in long-term memory:
 
 - **Today's review (active recall):** 10 mixed questions from a bank of 52, in six formats: multiple choice, fill in the blank, true/false with a reason, match the following, put in order, and spot the mistake. Eight of them generate fresh numbers every time.
-- **Never stuck:** every question has **Hint** (fill-in: a method clue, then the first letter or digit; match: places a pair; order: places the next step; choose-one and true/false: removes a wrong option; spot-the-mistake: narrows to two lines) and **Show answer** (shows the answer and explanation; the question returns tomorrow and once more at the end of the session). A correct answer after a hint stays in its box, so it comes back sooner.
+- **Never stuck:** every question has **📖 Explain** (opens the lesson step that teaches it, with its graph or worked solution, right inside the question), **Hint** (fill-in: a method clue, then the first letter or digit; match: places a pair; order: places the next step; choose-one and true/false: removes a wrong option; spot-the-mistake: narrows to two lines) and **Show answer** (shows the answer and explanation; the question returns tomorrow and once more at the end of the session). A correct answer after Explain or Hint stays in its box, so it comes back sooner.
 - **Spaced repetition:** each question sits in a box. A right answer moves it up (1 → 3 → 7 → 14 → 30 days); a wrong one sends it back to tomorrow, with a link to the lesson step that explains it.
 - **Kumon sheet:** 5 fresh-number problems a day, timed.
 - **Brain dump:** once a week, write everything you remember in 60 seconds, then tick it against a checklist.
@@ -37,9 +37,9 @@ Progress syncs to your claude.ai account when the page is opened from claude.ai.
 
 Every lesson has three tabs:
 
-1. **Before:** a 3-question warm-up. The first time, you guess before learning (guessing first helps the lesson stick); later, it asks what you remember. It never changes the review schedule.
+1. **Before:** on the first visit, **the big idea in 60 seconds**: three short concept cards with a picture, then 2 optional "predict" questions. On later visits, 3 "what do you remember?" questions. Before never changes the review schedule.
 2. **Understand:** the step-by-step lesson.
-3. **After:** 5 practice questions on that lesson, picked from what's due, then weak spots, then new questions. These count towards the spaced-repetition schedule.
+3. **After:** **one worked example first**, solved line by line with reasons, then 5 practice questions on that lesson. These count towards the spaced-repetition schedule.
 
 From the menu, a lesson you haven't finished opens on **Before**; a finished one opens on **After**. Finishing the last step of a lesson leads to After.
 
