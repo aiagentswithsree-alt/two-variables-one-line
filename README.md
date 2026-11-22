@@ -32,6 +32,8 @@ The page opens on **Today**, a 5–7 minute routine that keeps the chapter in lo
 - **Spaced repetition:** each question sits in a box. A right answer moves it up (1 → 3 → 7 → 14 → 30 days); a wrong one sends it back to tomorrow, with a link to the lesson step that explains it.
 - **Kumon sheet:** 5 fresh-number problems a day, timed.
 - **Brain dump:** once a week, write everything you remember in 60 seconds, then tick it against a checklist.
+- **Stopwatch:** a ⏱ chip at the top shows today's learning time (and, on wider screens, time on the current activity). It counts only while you're active, pausing after 2 minutes without a tap or key, and adds up across laptop and phone.
+- **Calendar:** a month view with the minutes spent each day, ✓ for streak days and rest days marked. Tap a day for time per lesson and activity, plus what you learnt: lessons finished, topics practised and scores.
 - **Tracker:** a main streak (one rest day per week), a streak for each technique, a 4-week heatmap, mastery by topic, weak spots, and this week vs last week.
 
 Progress syncs to your claude.ai account when the page is opened from claude.ai. Opened from GitHub Pages or a local file, it is saved in that browser only; use **Copy backup code** to move it.

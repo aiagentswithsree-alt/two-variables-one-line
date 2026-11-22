@@ -124,6 +124,20 @@ ol.lines li.new .why{color:var(--accent-ink)}
 @keyframes pop{from{transform:translateY(6px);opacity:.2}to{transform:none;opacity:1}}
 
 [hidden]{display:none!important}
+.watch{font-family:var(--mono);font-size:12px;border:2px solid var(--line);border-radius:10px;padding:6px 9px;background:var(--chip2);color:#2a2620;white-space:nowrap;box-shadow:2px 2px 0 var(--line)}
+.watch b{font-size:13px}.watch.paused{background:var(--bg);color:var(--muted)}
+@media(max-width:720px){.watch .wsub{display:none}.brand{font-size:15px}}
+.calhead{display:flex;align-items:center;gap:10px;margin:8px 0}.calhead b{font-family:var(--mono);font-size:15px}.calhead .muted{flex:1}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.cw{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:center}
+.cd{position:relative;min-height:54px;border:2px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);padding:4px;display:flex;flex-direction:column;align-items:flex-start;cursor:pointer;font:inherit;text-align:left}
+.cd.empty{border:none;background:none;cursor:default}.cd.future{opacity:.35;cursor:default}
+.cd.l1{background:#e6f2d9;color:#2a2620}.cd.l2{background:#b8dca6;color:#2a2620}.cd.l3{background:#7dbb6f;color:#14260f}
+.cd.now{outline:2px solid var(--req);outline-offset:1px}.cd.sel{box-shadow:inset 0 0 0 2px var(--ink)}
+.cd .dn{font-family:var(--mono);font-size:12px;font-weight:800}.cd .dm{font-family:var(--mono);font-size:11px;margin-top:auto}
+.cd i{position:absolute;top:3px;right:4px;font-style:normal;font-size:11px;font-weight:800}.cd i.ok{color:#2f5b1f}.cd i.rs{font-size:9px;color:var(--muted)}
+@media(max-width:480px){.cd{min-height:46px;padding:3px}.cd .dm{font-size:10px}.cd i.rs{display:none}}
+.dayd{margin-top:12px;border-top:2px dashed var(--soft);padding-top:10px}.dayd h3{font-family:var(--mono);font-size:15px;margin:4px 0 8px}.dayd .kicker{display:block;margin-top:8px}
 .glancebox{background:var(--paper);color:var(--ink);border:2px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0}
 ol.glance{margin:6px 0 0;padding-left:22px}ol.glance li{padding:8px 0;border-bottom:1px dashed var(--soft)}ol.glance li:last-child{border-bottom:none}
 .gq{font-weight:600;line-height:1.45}.ga{margin-top:4px;padding:4px 10px;border-left:4px solid var(--res);background:var(--chip2);color:#2a2620;line-height:1.5;font-size:14px}
@@ -209,6 +223,7 @@ body.lessonctx.homeon .home{max-width:1180px}
 <header class="top">
   <button class="iconbtn" id="menuBtn" aria-label="Open course menu">☰</button>
   <div class="brand" id="brand"></div>
+  <span class="watch" id="watch" role="timer" aria-live="off">⏱ 0:00</span>
   <a class="iconbtn todaybtn" href="#today" aria-label="Today: daily review and tracker">Today</a>
   <button class="iconbtn" id="themeBtn" aria-label="Toggle dark mode">◐</button>
 </header>
@@ -1507,7 +1522,9 @@ function mergeP(a,b){const o=blankP();o.upd=Math.max(a.upd||0,b.upd||0);
   new Set([...Object.keys(a.cards||{}),...Object.keys(b.cards||{})]).forEach(id=>{const x=(a.cards||{})[id],y=(b.cards||{})[id];
     o.cards[id]=!x?y:!y?x:((x.r+x.w)!==(y.r+y.w)?((x.r+x.w)>(y.r+y.w)?x:y):((x.l||'')>=(y.l||'')?x:y));});
   new Set([...Object.keys(a.days||{}),...Object.keys(b.days||{})]).forEach(k=>{const x=(a.days||{})[k]||{},y=(b.days||{})[k]||{},d={};
-    ['rv','kn','bd'].forEach(f=>{const r=pickRec(x[f],y[f]);if(r)d[f]=r;});
+    ['rv','kn','bd','af'].forEach(f=>{const r=pickRec(x[f],y[f]);if(r)d[f]=r;});
+    if(x.tm||y.tm){d.tm={};new Set([...Object.keys(x.tm||{}),...Object.keys(y.tm||{})]).forEach(dv=>{const a=(x.tm||{})[dv]||{},b=(y.tm||{})[dv]||{},o={};
+      new Set([...Object.keys(a),...Object.keys(b)]).forEach(k=>{o[k]=Math.max(a[k]||0,b[k]||0);});d.tm[dv]=o;});}
     const tp=[...new Set([...(x.tp||[]),...(y.tp||[])])];if(tp.length)d.tp=tp;
     const nl=[...new Set([...(x.nl||[]),...(y.nl||[])])];if(nl.length)d.nl=nl;
     o.days[k]=d;});
@@ -1541,6 +1558,66 @@ function record(card,ok,hinted){const t=todayK(),s=P.cards[card.id]||{b:0,r:0,w:
   s.due=addD(t,BOX_DAYS[s.b]);s.l=t;P.cards[card.id]=s;
   const d=DAY(t);d.tp=[...new Set([...(d.tp||[]),card.t])];persist();}
 function dueList(day){const ut=unlockedTopics();return BANK.filter(c=>P.cards[c.id]&&P.cards[c.id].due<=day&&ut.has(c.t));}
+/* ---------- stopwatch: active time per day, per activity, per device ---------- */
+const DEV=(()=>{try{let d=localStorage.getItem(RKEY+'-dev');if(!d){d='d'+Math.random().toString(36).slice(2,8);localStorage.setItem(RKEY+'-dev',d);}return d;}catch(e){return 'd0';}})();
+const IDLE_MS=120000;let lastInput=Date.now(),ACT={k:null,ms:0},WT=0;
+['pointerdown','keydown','wheel','touchstart','scroll'].forEach(ev=>addEventListener(ev,()=>{lastInput=Date.now();},{passive:true}));
+function curBucket(){if(HOME_ON&&curView!=='tab')return curView;return 'L:'+L.slug;}
+function dayBuckets(k){const t=(P.days[k]||{}).tm||{},o={};Object.values(t).forEach(dv=>Object.entries(dv).forEach(([b,v])=>{o[b]=(o[b]||0)+v;}));return o;}
+function dayMs(k){return Object.values(dayBuckets(k)).reduce((a,b)=>a+b,0);}
+const clock=ms=>{const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h?`${h}:${pad2(m)}:${pad2(s%60)}`:`${m}:${pad2(s%60)}`;};
+const short=ms=>{const m=Math.round(ms/60000);return ms<60000?(ms?`${Math.round(ms/1000)}s`:'—'):m<60?`${m}m`:`${Math.floor(m/60)}h ${m%60}m`;};
+function tickWatch(){
+  const vis=document.visibilityState!=='hidden',active=Date.now()-lastInput<IDLE_MS,b=curBucket();
+  if(b!==ACT.k)ACT={k:b,ms:0};
+  if(vis&&active){const d=DAY(todayK());d.tm=d.tm||{};const me=d.tm[DEV]=d.tm[DEV]||{};me[b]=(me[b]||0)+1000;ACT.ms+=1000;
+    if(++WT%15===0){try{localStorage.setItem(RKEY,JSON.stringify(P));}catch(e){}}}
+  paintWatch(vis&&active);}
+function paintWatch(running){const el=document.getElementById('watch');if(!el)return;
+  el.classList.toggle('paused',!running);
+  el.innerHTML=`${running?'⏱':'⏸'} <b>${clock(dayMs(todayK()))}</b><span class="wsub"> today · ${clock(ACT.ms)} here</span>${running?'':'<span class="wsub"> · paused</span>'}`;
+  el.title=running?'Time spent learning today, and on this activity. Pauses after 2 minutes with no taps or keys.':'Paused: no activity for 2 minutes. Tap anywhere to continue.';}
+setInterval(tickWatch,1000);
+addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){persist();clearTimeout(saveT);flush();}});
+function savePoint(){if(Object.keys(P.days).length)persist();}
+
+/* ---------- calendar: time and what was learnt ---------- */
+let CAL=null;
+function bucketName(b){if(b.startsWith('L:')){const l=ALL.find(x=>x.slug===b.slice(2));return l?l.title:'Lesson';}
+  return {today:'Today screen',review:'Today’s review',kumon:'Kumon sheet',dump:'Brain dump'}[b]||b;}
+function calendarHTML(){
+  const t=todayK();if(!CAL)CAL={y:dparse(t).getFullYear(),m:dparse(t).getMonth(),sel:t};
+  const first=new Date(CAL.y,CAL.m,1),days=new Date(CAL.y,CAL.m+1,0).getDate(),off=(first.getDay()+6)%7,st=mainStreak();
+  let cells='';for(let i=0;i<off;i++)cells+='<span class="cd empty"></span>';
+  for(let n=1;n<=days;n++){const k=dkey(new Date(CAL.y,CAL.m,n)),ms=dayMs(k),lv=ms<=0?0:ms<10*60000?1:ms<20*60000?2:3;
+    const mark=did(k,'rv')?'<i class="ok">✓</i>':st.rest.has(k)?'<i class="rs">rest</i>':'';
+    cells+=`<button class="cd l${lv} ${k===t?'now':''} ${k===CAL.sel?'sel':''} ${k>t?'future':''}" data-k="${k}" ${k>t?'disabled':''} aria-label="${k}: ${short(ms)}"><span class="dn">${n}</span><span class="dm">${ms?short(ms):''}</span>${mark}</button>`;}
+  const mName=first.toLocaleDateString(undefined,{month:'long',year:'numeric'});
+  const monthMs=Array.from({length:days},(_,i)=>dayMs(dkey(new Date(CAL.y,CAL.m,i+1)))).reduce((a,b)=>a+b,0);
+  return `<div class="calhead"><button class="btn small" id="calPrev" aria-label="Previous month">←</button><b>${mName}</b><span class="muted small">${short(monthMs)} this month</span><button class="btn small" id="calNext" aria-label="Next month">→</button></div>
+    <div class="cal"><span class="cw">Mon</span><span class="cw">Tue</span><span class="cw">Wed</span><span class="cw">Thu</span><span class="cw">Fri</span><span class="cw">Sat</span><span class="cw">Sun</span>${cells}</div>
+    <div class="legend2"><i class="hc l0"></i>no time <i class="hc l1"></i>under 10m <i class="hc l2"></i>10–20m <i class="hc l3"></i>20m+ · ✓ review done (streak day) · rest = rest day used</div>
+    <div class="dayd" id="dayDetail">${dayDetailHTML(CAL.sel)}</div>`;}
+function dayDetailHTML(k){
+  const d=P.days[k]||{},bk=dayBuckets(k),tot=dayMs(k);
+  const rows=Object.entries(bk).sort((a,b)=>b[1]-a[1]).map(([b,v])=>`<tr><td>${esc(bucketName(b))}</td><td class="mono">${clock(v)}</td></tr>`).join('');
+  const learnt=[];
+  (d.nl||[]).forEach(sl=>{const l=ALL.find(x=>x.slug===sl);if(l)learnt.push(`Finished lesson: <b>${esc(l.title)}</b>`);});
+  Object.keys(bk).filter(b=>b.startsWith('L:')&&!(d.nl||[]).includes(b.slice(2))).forEach(b=>learnt.push(`Studied: ${esc(bucketName(b))}`));
+  if(d.tp&&d.tp.length)learnt.push(`Topics practised: ${d.tp.map(x=>esc(TOPICS[x]||x)).join(', ')}`);
+  if(d.rv)learnt.push(`Today’s review: ${d.rv.c}/${d.rv.n} correct${d.rv.d?' ✓':''}`);
+  if(d.af)learnt.push(`After practice: ${d.af.c}/${d.af.n} from memory`);
+  if(d.kn)learnt.push(`Kumon sheet: ${d.kn.c}/${d.kn.n} in ${fmtTime(d.kn.ms)}`);
+  if(d.bd){const D=DUMPS.find(x=>x.t===d.bd.topic);learnt.push(`Brain dump${D?` (${esc(D.title)})`:''}: ${d.bd.g}/${d.bd.t} points`);}
+  return `<h3>${dparse(k).toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'})} · ${tot?clock(tot):'no time recorded'}</h3>
+    ${rows?`<span class="kicker">TIME SPENT</span><table class="tbl">${rows}<tr class="sum"><td>Total</td><td class="mono">${clock(tot)}</td></tr></table>`:''}
+    <span class="kicker">WHAT YOU LEARNT</span>${learnt.length?`<ul class="points">${learnt.map(x=>`<li>${x}</li>`).join('')}</ul>`:'<p class="muted">Nothing recorded on this day.</p>'}`;}
+function wireCalendar(){const box=document.getElementById('calBox');if(!box)return;
+  const redraw=()=>{box.innerHTML=calendarHTML();wireCalendar();};
+  document.getElementById('calPrev').onclick=()=>{CAL.m--;if(CAL.m<0){CAL.m=11;CAL.y--;}redraw();};
+  document.getElementById('calNext').onclick=()=>{CAL.m++;if(CAL.m>11){CAL.m=0;CAL.y++;}redraw();};
+  box.querySelectorAll('.cd[data-k]').forEach(b=>b.onclick=()=>{CAL.sel=b.dataset.k;redraw();document.getElementById('dayDetail').scrollIntoView({block:'nearest',behavior:reduce?'auto':'smooth'});});}
+
 /* ---------- unlocking: only practise what has been taught ---------- */
 function studiedSet(){const st=new Set();Object.values(P.days).forEach(d=>(d.nl||[]).forEach(x=>st.add(x)));const d=store.get(doneKey,{});ALL.forEach(l=>{if(d[l.slug])st.add(l.slug);});return st;}
 function unlockedTopics(){const st=studiedSet(),t=new Set();BANK.forEach(c=>{if(st.has(c.l[0]))t.add(c.t);});const lt=COURSE.lessonTopic||{};st.forEach(x=>{if(lt[x])t.add(lt[x]);});return t;}
@@ -1583,12 +1660,12 @@ function dumpWeeks(){let w=weekK(todayK()),n=0;const has=wk=>[0,1,2,3,4,5,6].som
 let curView='today',SESS=null;
 function homeRoute(){const r=parseHash(location.hash.slice(1));if(!r){hideHome();return false;}
   if(r.kind==='home')showHome(r.v);else showTab(r.slug,r.tab);return true;}
-function showHome(v){HOME_ON=true;curView=v;document.body.classList.add('homeon');document.body.classList.remove('lessonctx');$('#brand').innerHTML=COURSE.brand;
+function showHome(v){savePoint();HOME_ON=true;curView=v;document.body.classList.add('homeon');document.body.classList.remove('lessonctx');$('#brand').innerHTML=COURSE.brand;
   if(location.hash!=='#'+v)history.replaceState(null,'',`#${v}`);
   document.title=`${{today:'Today',review:'Today’s review',kumon:'Kumon sheet',dump:'Brain dump'}[v]} · ${COURSE.brand.replace(/<[^>]+>/g,'')}`;
   ({today:renderToday,review:startReview,kumon:startKumon,dump:startDump})[v]();window.scrollTo({top:0});
   try{renderDrawer();}catch(e){}}
-function hideHome(){HOME_ON=false;document.body.classList.remove('homeon');document.body.classList.add('lessonctx');}
+function hideHome(){savePoint();HOME_ON=false;document.body.classList.remove('homeon');document.body.classList.add('lessonctx');}
 addEventListener('hashchange',()=>{const r=parseHash(location.hash.slice(1));if(r){if(r.kind==='home')showHome(r.v);else showTab(r.slug,r.tab);}else if(HOME_ON){hideHome();route();}});
 function PRACTICE_LINKS(){const due=dueList(todayK()).length;
   return `<div class="mod"><button aria-expanded="true"><span class="sw" style="background:#e8833a"></span>Daily practice<span class="cnt">${due} due</span></button><ul>
@@ -1604,6 +1681,7 @@ function renderToday(){
   const sessN=Math.min(SESSION,due.length+nw)||Math.min(5,BANK.filter(c=>isUnlocked(c,UT)).length),topics=new Set(buildSession(SESSION).map(c=>c.t)).size;
   const wk=weekK(t),bdWeek=[0,1,2,3,4,5,6].map(i=>(P.days[addD(wk,i)]||{}).bd).find(Boolean);
   const rows=[
+    ['Time learning','stopwatch, active time only',`${clock(dayMs(t))}`,`${short(Object.keys(P.days).filter(k=>k>=addD(t,-6)).reduce((a,k)=>a+dayMs(k),0))} this week`],
     ['Active recall','Today’s review',d.rv&&d.rv.d?`✓ ${d.rv.c}/${d.rv.n}`:'not yet',pl(runStreak('rv'),'day')],
     ['Spaced repetition','questions due today',due.length?`${due.length} due`:'all clear ✓',`${Object.values(P.cards).filter(c=>c.b>=4).length} in box 4+`],
     ['Kumon sheet','5 fresh problems',d.kn&&d.kn.n?`✓ ${d.kn.c}/${d.kn.n} · ${fmtTime(d.kn.ms)}`:'not yet',pl(runStreak('kn'),'day')],
@@ -1642,9 +1720,8 @@ function renderToday(){
   <section class="card tcard"><span class="kicker">TRACKER</span>
     <table class="trk"><tr><th>Technique</th><th>Today</th><th>Streak</th></tr>
     ${rows.map(r=>`<tr><td><b>${r[0]}</b><small>${r[1]}</small></td><td>${r[2]}</td><td class="mono">${r[3]}</td></tr>`).join('')}</table>
-    <div class="heatwrap"><span class="kicker">LAST 4 WEEKS</span><div class="heat">${heat}</div>
-    <div class="legend2"><i class="hc l0"></i>none <i class="hc l1"></i>1 <i class="hc l2"></i>2 <i class="hc l3"></i>3+ techniques <i class="hc rest"></i>rest day</div></div>
   </section>
+  <section class="card tcard"><span class="kicker">CALENDAR · TIME AND WHAT YOU LEARNT</span><div id="calBox">${calendarHTML()}</div></section>
   <div class="twocol">
     <section class="card tcard"><span class="kicker">COMING UP</span><p><b>${dueTom}</b> questions due tomorrow<br><b>${due7}</b> due in the next 7 days<br><b>${nw}</b> new questions ready${locked?`<br><b>${locked}</b> more unlock as you finish lessons`:''}${paused?`<br><b>${paused}</b> paused until you learn their lesson`:''}</p></section>
     <section class="card tcard"><span class="kicker">THIS WEEK VS LAST</span><p>Accuracy: <b>${tw.acc==null?'—':tw.acc+'%'}</b> <span class="muted">(last week ${lw.acc==null?'—':lw.acc+'%'})</span><br>Practice: <b>${tw.min} min</b> over <b>${tw.days}</b> days <span class="muted">(last week ${lw.min} min)</span></p></section>
@@ -1654,7 +1731,7 @@ function renderToday(){
   <section class="card tcard"><span class="kicker">BACKUP</span><p class="muted">Progress syncs to your claude.ai account. A backup code also lets you restore it anywhere.</p>
     <div class="row"><button class="btn" id="bkCopy">Copy backup code</button><button class="btn" id="bkShow">Restore from code</button></div>
     <div id="bkBox" hidden><textarea id="bkText" rows="3" placeholder="Paste a backup code here"></textarea><div class="row"><button class="btn" id="bkGo">Restore</button><span id="bkMsg" class="muted"></span></div></div></section>`;
-  paintSync();
+  paintSync();wireCalendar();
   const wg=document.getElementById('weakGo');if(wg)wg.onclick=()=>{SESS_ONLY=weak.map(c=>c.id);location.hash='#review';};
   document.getElementById('bkCopy').onclick=async e=>{const code=btoa(unescape(encodeURIComponent(JSON.stringify(P))));
     try{await navigator.clipboard.writeText(code);e.target.textContent='Copied ✓';}catch(err){const b=document.getElementById('bkBox');b.hidden=false;const ta=document.getElementById('bkText');ta.value=code;ta.select();document.getElementById('bkMsg').textContent='Copy the code above.';}};
@@ -1850,7 +1927,7 @@ function paintTabs(tab){
   el.querySelector('.lt-title').textContent=L.title;
   const hrefs={before:`#${L.slug}-before`,understand:`#${L.slug}-1`,after:`#${L.slug}-after`};
   el.querySelectorAll('a[data-t]').forEach(a=>{const t=a.dataset.t;a.href=hrefs[t];a.classList.toggle('on',t===tab);a.setAttribute('aria-current',t===tab?'page':'false');});}
-function showTab(slug,tab){
+function showTab(slug,tab){savePoint();
   const l=ALL.find(x=>x.slug===slug);if(l!==L){L=l;$('#metrics').dataset.lesson='';}S=0;
   HOME_ON=true;curView='tab';curTab=tab;document.body.classList.add('homeon','lessonctx');
   renderHead();paintTabs(tab);
