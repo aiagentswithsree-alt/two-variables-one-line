@@ -124,6 +124,12 @@ ol.lines li.new .why{color:var(--accent-ink)}
 @keyframes pop{from{transform:translateY(6px);opacity:.2}to{transform:none;opacity:1}}
 
 [hidden]{display:none!important}
+.helpbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}.helpbar.done .hbtn{display:none}
+.hbtn{border:2px dashed var(--line);border-radius:8px;padding:6px 10px;background:var(--bg);font-family:var(--mono);font-size:12px;font-weight:600;color:var(--ink);cursor:pointer}
+.hint{font-size:14px;line-height:1.45;color:var(--ink);flex-basis:100%}.hint:empty{display:none}
+.hint:not(:empty){border-left:4px solid #e2b44a;padding:6px 10px;background:var(--chip1);border-radius:0;color:#2a2620}
+.opt.gone{opacity:.35;text-decoration:line-through}.opt.fixed{border-style:double}
+.fillrow input.shown{background:var(--chip1);color:#2a2620}
 .home{display:none;max-width:860px;margin:0 auto;padding:18px 16px 60px}
 body.homeon .home{display:block}body.homeon .wrap,body.homeon .bottombar{display:none}
 .todaybtn{width:auto;padding:0 10px;font-family:var(--mono);font-size:12px;font-weight:600;text-decoration:none;color:var(--ink)}
@@ -1131,20 +1137,20 @@ const fracS=(n,d)=>{if(d<0){n=-n;d=-d;}const g=gcd(n,d);n/=g;d/=g;return d===1?n
 
 const BANK = [
  /* T1 · equations and standard form */
- {id:'sf-zero',t:'T1',l:['one-bill-many-answers',3],type:'fill',q:'Standard form of a linear equation in two variables: ax + by + c = ___',a:['0'],why:'Everything is moved to the left, so the right side is 0.'},
+ {id:'sf-zero',hint:'Everything is moved to the left side. What is left on the right?',t:'T1',l:['one-bill-many-answers',3],type:'fill',q:'Standard form of a linear equation in two variables: ax + by + c = ___',a:['0'],why:'Everything is moved to the left, so the right side is 0.'},
  {id:'sf-b',t:'T1',l:['one-bill-many-answers',3],type:'mcq',q:'In 5x − 3y + 7 = 0, what is b?',opts:['3','−3','7','5'],a:1,why:'b is the number with y, and its sign comes with it: −3.'},
- {id:'sf-x8',t:'T1',l:['ex-13-1',2],type:'fill',q:'Write x = 8 in standard form:  1·x + ___·y − 8 = 0',a:['0'],why:'There is no y, so its coefficient is 0.'},
+ {id:'sf-x8',hint:'Is there any y in x = 8? Then what number sits with y?',t:'T1',l:['ex-13-1',2],type:'fill',q:'Write x = 8 in standard form:  1·x + ___·y − 8 = 0',a:['0'],why:'There is no y, so its coefficient is 0.'},
  {id:'sf-match',t:'T1',l:['ex-13-1',2],type:'match',q:'Match each equation with its a, b, c.',pairs:[['2x + 3y − 6 = 0','a = 2, b = 3, c = −6'],['3y = 1','a = 0, b = 3, c = −1'],['x − 4 = 0','a = 1, b = 0, c = −4'],['5x = 3y','a = 5, b = −3, c = 0']],why:'Move everything to the left first, then read x, y and the constant in order.'},
  {id:'sf-x3',t:'T1',l:['ex-13-2',10],type:'tf',q:'“x = 3 is a linear equation in two variables.”',a:true,reasons:['It can be written as 1·x + 0·y − 3 = 0','It has two letters written in it','Any equation with an x is linear'],ra:0,why:'b = 0 is allowed, as long as a and b are not both zero.'},
  {id:'sf-notlin',t:'T1',l:['one-bill-many-answers',2],type:'mcq',q:'Which is NOT a linear equation in two variables?',opts:['2x + 3y = 5','x² + y = 4','y = 7','x − y = 0'],a:1,why:'x² has power 2. Linear means each variable has power 1 only.'},
  {id:'sf-order',t:'T1',l:['ex-13-1',2],type:'order',q:'Put the steps in order to write y − 15 = 2x in standard form.',items:['Start: y − 15 = 2x','Subtract 2x from both sides','−2x + y − 15 = 0','Read a = −2, b = 1, c = −15'],why:'Move terms first, then read the coefficients.'},
- {id:'sf-pen',t:'T1',l:['ex-13-1',3],type:'fill',q:'A notebook (₹t) costs twice a pen (₹p). Equation:  t = ___',a:['2p','2*p','2×p'],why:'Notebook = 2 × pen, so t = 2p.'},
+ {id:'sf-pen',hint:'The notebook is double the pen: notebook = 2 × pen. Use t and p.',t:'T1',l:['ex-13-1',3],type:'fill',q:'A notebook (₹t) costs twice a pen (₹p). Equation:  t = ___',a:['2p','2*p','2×p'],why:'Notebook = 2 × pen, so t = 2p.'},
 
  /* T2 · solutions and graphs */
  {id:'so-32',t:'T2',l:['one-bill-many-answers',4],type:'mcq',q:'Is (3, 2) a solution of 60x + 50y = 280?',opts:['Yes: 180 + 100 = 280','No: 60 + 50 ≠ 280','Only if x = y'],a:0,why:'Substitute: 60 × 3 + 50 × 2 = 180 + 100 = 280.'},
  {id:'so-order',t:'T2',l:['one-bill-many-answers',5],type:'mcq',q:'(2, 3) and (3, 2) are…',opts:['the same point','different points: the first number is always x','the same, because addition is in any order'],a:1,why:'An ordered pair is (x, y). Swapping gives a different point.'},
  {id:'so-many',t:'T2',l:['one-bill-many-answers',6],type:'tf',q:'“A linear equation in two variables has only one solution.”',a:false,reasons:['It has infinitely many: pick any x and work out y','It has exactly two solutions','It has no solution at all'],ra:0,why:'Every choice of x gives a y, so the solutions never run out.'},
- {id:'so-line',t:'T2',l:['one-bill-many-answers',7],type:'fill',q:'The graph of a linear equation in two variables is always a straight ___.',a:['line'],why:'All its solutions lie on one straight line.'},
+ {id:'so-line',hint:'Plot a few solutions. What shape do the points make?',t:'T2',l:['one-bill-many-answers',7],type:'fill',q:'The graph of a linear equation in two variables is always a straight ___.',a:['line'],why:'All its solutions lie on one straight line.'},
  {id:'so-online',t:'T2',l:['one-bill-many-answers',7],type:'tf',q:'“Every point on the line of an equation is a solution of it.”',a:true,reasons:['Points on the line and solutions are the same set','Only points with whole-number coordinates count','Only the points where it crosses the axes'],ra:0,why:'On the line ⇔ satisfies the equation.'},
  {id:'so-spot',t:'T2',l:['ex-13-2',1],type:'spot',q:'One line is wrong. Checking (4, 3) in 5x − 6y = 2:',lines:['LHS = 5(4) − 6(3)','= 20 − 18','= 38','LHS = RHS, so it is a solution'],bad:2,why:'20 − 18 = 2, not 38. Subtract, don’t add.'},
  {id:'so-quad',t:'T2',l:['ex-13-2',5],type:'mcq',q:'The point (−2, 5) lies in which quadrant?',opts:['I','II','III','IV'],a:1,why:'x negative, y positive → Quadrant II.'},
@@ -1155,11 +1161,11 @@ const BANK = [
  {id:'g-findk',t:'T2',l:['ex-13-2',4],gen:'findK'},
 
  /* T3 · slope */
- {id:'sl-run',t:'T3',l:['how-steep-is-a-line',2],type:'fill',q:'slope = rise ÷ ___',a:['run'],why:'Rise is the up/down change, run is the left/right change.'},
+ {id:'sl-run',hint:'Rise is the up/down change. What is the left/right change called?',t:'T3',l:['how-steep-is-a-line',2],type:'fill',q:'slope = rise ÷ ___',a:['run'],why:'Rise is the up/down change, run is the left/right change.'},
  {id:'sl-match',t:'T3',l:['how-steep-is-a-line',9],type:'match',q:'Match each line with its slope.',pairs:[['rises left to right','m > 0'],['falls left to right','m < 0'],['horizontal, y = k','m = 0'],['vertical, x = k','undefined']],why:'The sign tells the direction; flat is 0; vertical cannot be divided.'},
  {id:'sl-ymx',t:'T3',l:['how-steep-is-a-line',5],type:'mcq',q:'What is the slope of y = −2x + 4?',opts:['−2','4','2','−4'],a:0,why:'In y = mx + d, m is the number with x: −2.'},
  {id:'sl-d',t:'T3',l:['how-steep-is-a-line',5],type:'mcq',q:'In y = mx + d, what does d tell you?',opts:['where the line crosses the y-axis','how steep the line is','where it crosses the x-axis'],a:0,why:'Put x = 0: y = d, so the line passes through (0, d).'},
- {id:'sl-std',t:'T3',l:['how-steep-is-a-line',7],type:'fill',q:'Slope of 2x + 4y − 12 = 0 is m = −a/b = ___',a:['-1/2','-0.5'],why:'m = −2/4 = −1/2.'},
+ {id:'sl-std',hint:'Here a = 2 (with x) and b = 4 (with y). Work out −a ÷ b.',t:'T3',l:['how-steep-is-a-line',7],type:'fill',q:'Slope of 2x + 4y − 12 = 0 is m = −a/b = ___',a:['-1/2','-0.5'],why:'m = −2/4 = −1/2.'},
  {id:'sl-vert',t:'T3',l:['how-steep-is-a-line',6],type:'tf',q:'“The slope of the line x = 2 is 0.”',a:false,reasons:['The run is 0, so rise ÷ 0 is undefined','Its slope is 2','Vertical lines have slope 1'],ra:0,why:'Horizontal lines have slope 0; vertical lines have undefined slope.'},
  {id:'sl-ramp',t:'T3',l:['ex-13-3',7],type:'mcq',q:'A ramp must have slope 1/12. The stairs are 18 cm high. How long is the ramp’s run?',opts:['216 cm','1.5 cm','30 cm','180 cm'],a:0,why:'run = rise ÷ slope = 18 × 12 = 216 cm.'},
  {id:'sl-hills',t:'T3',l:['ex-13-3',1],type:'order',q:'Order the hills from least steep to most steep. A: 60 up / 70 along. B: 60 / 110. C: 80 / 100.',items:['B  (≈ 0.55)','C  (0.80)','A  (≈ 0.86)'],why:'Turn each rise ÷ run into a decimal and compare.'},
@@ -1169,16 +1175,16 @@ const BANK = [
  {id:'g-slopestd',t:'T3',l:['how-steep-is-a-line',7],gen:'slopeStd'},
 
  /* T4 · solving pairs */
- {id:'pr-both',t:'T4',l:['where-two-lines-meet',2],type:'fill',q:'A solution of a pair of equations must lie on ___ lines.',a:['both','both the','the two'],why:'It has to satisfy both equations, so it sits on both lines.'},
+ {id:'pr-both',hint:'The answer must satisfy each of the two equations.',t:'T4',l:['where-two-lines-meet',2],type:'fill',q:'A solution of a pair of equations must lie on ___ lines.',a:['both','both the','the two'],why:'It has to satisfy both equations, so it sits on both lines.'},
  {id:'pr-subst',t:'T4',l:['where-two-lines-meet',4],type:'order',q:'Order the substitution steps for x + y = 5 and 60x + 50y = 280.',items:['From x + y = 5: y = 5 − x','Substitute: 60x + 50(5 − x) = 280','Simplify: 10x + 250 = 280','x = 3','y = 5 − 3 = 2'],why:'Rewrite one variable, substitute, solve, then work back.'},
  {id:'pr-elim',t:'T4',l:['where-two-lines-meet',5],type:'mcq',q:'To eliminate y from 60x + 50y = 280 and x + y = 5, multiply the second equation by…',opts:['50','60','5','10'],a:0,why:'50x + 50y = 250 has the same 50y, so subtracting removes y.'},
  {id:'pr-add',t:'T4',l:['ex-13-5a',1],type:'mcq',q:'x + y = 5 and x − y = 1. What is the quickest first move?',opts:['Add the equations: y cancels','Multiply the first by 5','Draw a graph'],a:0,why:'+y and −y cancel when added: 2x = 6.'},
  {id:'pr-spot',t:'T4',l:['ex-13-5a',3],type:'spot',q:'One line is wrong. Solving 7x + 6y = 8880 and 3x + 5y = 4000:',lines:['(1) × 5:  35x + 30y = 44400','(2) × 6:  18x + 30y = 24000','Subtract:  17x = 20400','x = 1000'],bad:3,why:'20400 ÷ 17 = 1200, not 1000.'},
- {id:'pr-digit',t:'T4',l:['ex-13-5a',8],type:'fill',q:'A two-digit number with tens digit x and units digit y equals ___x + y.',a:['10'],why:'Tens digit is worth 10 each: 18 = 10 × 1 + 8.'},
+ {id:'pr-digit',hint:'18 = __ × 1 + 8. What is each tens digit worth?',t:'T4',l:['ex-13-5a',8],type:'fill',q:'A two-digit number with tens digit x and units digit y equals ___x + y.',a:['10'],why:'Tens digit is worth 10 each: 18 = 10 × 1 + 8.'},
  {id:'pr-ages',t:'T4',l:['ex-13-5a',7],type:'mcq',q:'Five years ago, Nuri (x now) was three times as old as Sonu (y now). Which equation?',opts:['x − 5 = 3(y − 5)','x − 5 = 3y','x = 3(y − 5)','3(x − 5) = y − 5'],a:0,why:'Subtract 5 from BOTH ages, then Nuri’s = 3 × Sonu’s.'},
  {id:'pr-swap',t:'T4',l:['ex-13-5b',9],type:'mcq',q:'9x + 7y = 107 and 7x + 9y = 101. Fastest trick?',opts:['Add them, then subtract them','Substitute x from the first','Draw both lines'],a:0,why:'Adding gives x + y = 13, subtracting gives x − y = 3.'},
  {id:'pr-method',t:'T4',l:['ex-13-5a',11],type:'match',q:'Match the situation with the best method.',pairs:[['one equation already says y = …','substitution'],['same y-number in both equations','subtract'],['+y in one, −y in the other','add'],['no matching numbers','multiply, then eliminate']],why:'Pick the method that makes a variable disappear fastest.'},
- {id:'pr-stool',t:'T4',l:['ex-13-5b',11],type:'fill',q:'Stool + cat = 85 cm and stool − cat = 25 cm. Stool = ___ cm',a:['55'],why:'Add: 2 × stool = 110, so stool = 55.'},
+ {id:'pr-stool',hint:'Add the two equations: the cat cancels out.',t:'T4',l:['ex-13-5b',11],type:'fill',q:'Stool + cat = 85 cm and stool − cat = 25 cm. Stool = ___ cm',a:['55'],why:'Add: 2 × stool = 110, so stool = 55.'},
  {id:'g-sumdiff',t:'T4',l:['ex-13-5a',1],gen:'sumDiff'},
  {id:'g-subst',t:'T4',l:['where-two-lines-meet',4],gen:'subst'},
 
@@ -1196,31 +1202,31 @@ const BANK = [
 /* Generators: fresh numbers every time. Each returns a card body. */
 const GEN = {
   findY(){const a=nz(-5,5),b=nz(-5,5),x=rnd(-3,4),y=rnd(-4,5),c=a*x+b*y;
-    return {type:'fill',q:`In ${lin(a,b)} = ${ng(c)}, put x = ${ng(x)}. Find y.`,a:[String(y)],
+    return {hint:`Put x = ${ng(x)} in, move that number to the right side, then divide by the number with y.`,type:'fill',q:`In ${lin(a,b)} = ${ng(c)}, put x = ${ng(x)}. Find y.`,a:[String(y)],
       why:`${ng(a)} × ${ng(x)} = ${ng(a*x)}, so ${ng(b)}y = ${ng(c)} − (${ng(a*x)}) = ${ng(b*y)}, and y = ${ng(y)}.`};},
   isSol(){const a=nz(-5,5),b=nz(-5,5),x=rnd(-3,4),y=rnd(-3,4),ok=Math.random()<.5,c=a*x+b*y+(ok?0:nz(-3,3));
-    return {type:'mcq',q:`Is (${ng(x)}, ${ng(y)}) a solution of ${lin(a,b)} = ${ng(c)}?`,opts:['Yes','No'],a:ok?0:1,
+    return {hint:'Put the x and y values in, work out the left side, and compare it with the right side.',type:'mcq',q:`Is (${ng(x)}, ${ng(y)}) a solution of ${lin(a,b)} = ${ng(c)}?`,opts:['Yes','No'],a:ok?0:1,
       why:`LHS = ${ng(a)}(${ng(x)}) + ${ng(b)}(${ng(y)}) = ${ng(a*x+b*y)}; RHS = ${ng(c)}. ${ok?'Equal, so yes.':'Not equal, so no.'}`};},
   findK(){const k=nz(-4,5),b=nz(-4,4),x=nz(-3,4),y=rnd(-3,3),c=k*x+b*y;
-    return {type:'fill',q:`(${ng(x)}, ${ng(y)}) is a solution of kx ${b<0?'−':'+'} ${Math.abs(b)===1?'':Math.abs(b)}y = ${ng(c)}. Find k.`,a:[String(k)],
+    return {hint:'Put the given x and y into the equation. Only k is left, so solve for it.',type:'fill',q:`(${ng(x)}, ${ng(y)}) is a solution of kx ${b<0?'−':'+'} ${Math.abs(b)===1?'':Math.abs(b)}y = ${ng(c)}. Find k.`,a:[String(k)],
       why:`k(${ng(x)}) + ${ng(b)}(${ng(y)}) = ${ng(c)} → ${ng(x)}k = ${ng(c-b*y)} → k = ${ng(k)}.`};},
   slope2(){const x1=rnd(-4,3),y1=rnd(-4,3),run=nz(-4,4),rise=nz(-5,5);
-    return {type:'fill',q:`Slope of the line through (${ng(x1)}, ${ng(y1)}) and (${ng(x1+run)}, ${ng(y1+rise)})? A fraction is fine.`,a:[fracS(rise,run).replace('−','-')],
+    return {hint:'slope = (y₂ − y₁) ÷ (x₂ − x₁). Keep the points in the same order on top and bottom.',type:'fill',q:`Slope of the line through (${ng(x1)}, ${ng(y1)}) and (${ng(x1+run)}, ${ng(y1+rise)})? A fraction is fine.`,a:[fracS(rise,run).replace('−','-')],
       why:`rise = ${ng(y1+rise)} − (${ng(y1)}) = ${ng(rise)}, run = ${ng(x1+run)} − (${ng(x1)}) = ${ng(run)}, slope = ${fracS(rise,run)}.`};},
   slopeStd(){const a=nz(-6,6),b=nz(-6,6),c=rnd(-9,9);
-    return {type:'fill',q:`Slope of ${lin(a,b)} ${c<0?'−':'+'} ${Math.abs(c)} = 0? A fraction is fine.`,a:[fracS(-a,b).replace('−','-')],
+    return {hint:'m = −a ÷ b, where a is the number with x and b is the number with y.',type:'fill',q:`Slope of ${lin(a,b)} ${c<0?'−':'+'} ${Math.abs(c)} = 0? A fraction is fine.`,a:[fracS(-a,b).replace('−','-')],
       why:`m = −a/b = −(${ng(a)})/(${ng(b)}) = ${fracS(-a,b)}.`};},
   sumDiff(){const x=rnd(-6,20),y=rnd(-6,20);
-    return {type:'fill',q:`x + y = ${ng(x+y)} and x − y = ${ng(x-y)}. Find x.`,a:[String(x)],
+    return {hint:'Add the two equations: y cancels. Then divide by 2.',type:'fill',q:`x + y = ${ng(x+y)} and x − y = ${ng(x-y)}. Find x.`,a:[String(x)],
       why:`Add the equations: 2x = ${ng(x+y)} + (${ng(x-y)}) = ${ng(2*x)}, so x = ${ng(x)} (and y = ${ng(y)}).`};},
   subst(){let k,a,b;do{k=nz(-3,3);a=nz(-4,5);b=nz(-4,5);}while(a+b*k===0);const m=rnd(-4,6),x=rnd(-3,5),y=k*x+m,c=a*x+b*y;
     const yx=`${cf(k,'x')}${m?` ${m<0?'−':'+'} ${Math.abs(m)}`:''}`;
-    return {type:'fill',q:`y = ${yx} and ${lin(a,b)} = ${ng(c)}. Find x.`,a:[String(x)],
+    return {hint:'Replace y in the second equation with the expression for y, then solve for x.',type:'fill',q:`y = ${yx} and ${lin(a,b)} = ${ng(c)}. Find x.`,a:[String(x)],
       why:`Substitute: ${ng(a)}x + ${ng(b)}(${yx}) = ${ng(c)} → ${ng(a+b*k)}x = ${ng(c-b*m)} → x = ${ng(x)}.`};},
   ratio(){const kind=rnd(0,2),a1=nz(1,5),b1=nz(-5,5),c1=nz(-9,9),k=rnd(2,3);let a2,b2,c2;
     if(kind===0){do{a2=nz(-5,5);b2=nz(-5,5);}while(a1*b2===a2*b1);c2=nz(-9,9);}
     else if(kind===1){a2=k*a1;b2=k*b1;c2=k*c1+nz(1,3);} else {a2=k*a1;b2=k*b1;c2=k*c1;}
-    return {type:'mcq',q:`${lin(a1,b1)} = ${ng(c1)} and ${lin(a2,b2)} = ${ng(c2)} have…`,opts:['one solution (lines cross)','no solution (parallel)','infinitely many (same line)'],a:kind,
+    return {hint:'Work out a₁/a₂ and b₁/b₂ first. Only if they are equal, compare c₁/c₂.',type:'mcq',q:`${lin(a1,b1)} = ${ng(c1)} and ${lin(a2,b2)} = ${ng(c2)} have…`,opts:['one solution (lines cross)','no solution (parallel)','infinitely many (same line)'],a:kind,
       why:`a₁/a₂ = ${fracS(a1,a2)}, b₁/b₂ = ${fracS(b1,b2)}, c₁/c₂ = ${fracS(c1,c2)}. ${['The x and y ratios differ.','x and y ratios equal, constants differ.','All three ratios are equal.'][kind]}`};}
 };
 const KUMON_GENS = ['findY','findK','slope2','slopeStd','sumDiff','subst'];
@@ -1501,8 +1507,8 @@ function paintSync(){const el=document.getElementById('syncTxt');if(!el)return;
 /* ---------- scheduling ---------- */
 const cardById=id=>BANK.find(c=>c.id===id);
 const inst=c=>c.gen?{...GEN[c.gen](),id:c.id,t:c.t,l:c.l}:c;
-function record(card,ok){const t=todayK(),s=P.cards[card.id]||{b:0,r:0,w:0};
-  if(ok){s.b=s.b?Math.min(6,s.b+1):2;s.r++;}else{s.b=1;s.w++;}
+function record(card,ok,hinted){const t=todayK(),s=P.cards[card.id]||{b:0,r:0,w:0};
+  if(ok&&hinted){s.b=Math.max(1,s.b||1);s.r++;s.h=(s.h||0)+1;}else if(ok){s.b=s.b?Math.min(6,s.b+1):2;s.r++;}else{s.b=1;s.w++;}
   s.due=addD(t,BOX_DAYS[s.b]);s.l=t;P.cards[card.id]=s;
   const d=DAY(t);d.tp=[...new Set([...(d.tp||[]),card.t])];persist();}
 function dueList(day){return BANK.filter(c=>P.cards[c.id]&&P.cards[c.id].due<=day);}
@@ -1606,40 +1612,80 @@ function renderToday(){
 const norm=s=>String(s).toLowerCase().replace(/[−–]/g,'-').replace(/×/g,'*').replace(/\s+/g,'').replace(/\.$/,'');
 const numv=s=>{s=norm(s);let m=s.match(/^(-?\d+(?:\.\d+)?)$/);if(m)return +m[1];m=s.match(/^(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)$/);if(m&&+m[2]!==0)return m[1]/m[2];return null;};
 const same=(u,a)=>{if(norm(u)===norm(a))return true;const x=numv(u),y=numv(a);return x!=null&&y!=null&&Math.abs(x-y)<1e-9;};
+function autoHint(c,level){
+  const a=String((c.a||[])[0]||'');
+  if(level>=1){const ch=a.replace(/^-/,'');return `${a.startsWith('-')?'It is negative, and it ':'It '}starts with “${ch[0]}”${/^[a-z]/i.test(ch)?` and has ${ch.replace(/\s/g,'').length} letters`:''}.`;}
+  if(c.hint)return c.hint;
+  if(/^-?\d+(\.\d+)?$/.test(a))return `The answer is a ${a.includes('.')?'decimal':'whole'} number${a.startsWith('-')?' (negative)':''}.`;
+  if(/^-?\d+\/\d+$/.test(a))return `The answer is a fraction${a.startsWith('-')?' (negative)':''}.`;
+  return `It is a word with ${a.replace(/\s/g,'').length} letters.`;}
 function renderQ(box,c,done){
   const typeName={mcq:'Choose one',fill:'Fill in the blank',tf:'True or false, with a reason',match:'Match the following',order:'Put in order',spot:'Spot the mistake'}[c.type];
-  box.innerHTML=`<div class="qmeta"><span class="tag SOLVE">${typeName}</span><span class="muted">${TOPICS[c.t]}${c.gen||GEN_IDS.has(c.id)?' · fresh numbers':''}</span></div><div class="qtext">${esc(c.q)}</div><div class="qbody"></div><div class="qfb" aria-live="polite"></div>`;
-  const body=box.querySelector('.qbody'),fb=box.querySelector('.qfb');let over=false;
-  const finish=(ok,extra='')=>{if(over)return;over=true;fb.innerHTML=`<div class="${ok?'fok':'fbad'}"><b>${ok?'✓ Correct.':'✗ Not quite.'}</b> ${extra}${esc(c.why||'')}${ok?'':` <a href="#${c.l[0]}-${c.l[1]}" class="lessonlink">Review this in the lesson →</a>`}</div>`;done(ok);};
+  box.innerHTML=`<div class="qmeta"><span class="tag SOLVE">${typeName}</span><span class="muted">${TOPICS[c.t]}${c.gen||GEN_IDS.has(c.id)?' · fresh numbers':''}</span></div><div class="qtext">${esc(c.q)}</div><div class="qbody"></div>
+   <div class="helpbar"><button class="hbtn" data-h="hint">💡 Hint</button><button class="hbtn" data-h="show">Show answer</button><span class="hint" aria-live="polite"></span></div><div class="qfb" aria-live="polite"></div>`;
+  const body=box.querySelector('.qbody'),fb=box.querySelector('.qfb'),hintEl=box.querySelector('.hint');let over=false,hinted=false,hints=0;
+  const say=t=>{hintEl.textContent=t;};
+  const finish=(ok,extra='',revealed=false)=>{if(over)return;over=true;box.querySelector('.helpbar').classList.add('done');
+    const head=revealed?'<b>Here’s the answer.</b>':ok?(hinted?'<b>✓ Correct, with a hint.</b>':'<b>✓ Correct.</b>'):'<b>✗ Not quite.</b>';
+    const tail=revealed?' It comes back tomorrow, and once more at the end of a review session.':(ok&&hinted?' Because you used a hint, it stays in its box and comes back sooner.':'');
+    fb.innerHTML=`<div class="${ok?'fok':'fbad'}">${head} ${extra}${esc(c.why||'')}${tail}${ok?'':` <a href="#${c.l[0]}-${c.l[1]}" class="lessonlink">Review this in the lesson →</a>`}</div>`;done(ok,hinted);};
+  let hint=()=>{},reveal=()=>{};
   if(c.type==='mcq'){body.innerHTML=`<div class="opts">${c.opts.map((o,i)=>`<button class="opt" data-i="${i}">${esc(o)}</button>`).join('')}</div>`;
-    body.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(over)return;const i=+b.dataset.i;body.querySelectorAll('.opt').forEach(x=>{x.disabled=true;if(+x.dataset.i===c.a)x.classList.add('ok');});if(i!==c.a)b.classList.add('bad');finish(i===c.a);});}
+    const opts=()=>[...body.querySelectorAll('.opt')];
+    const lock=()=>opts().forEach(x=>{x.disabled=true;if(+x.dataset.i===c.a)x.classList.add('ok');});
+    opts().forEach(b=>b.onclick=()=>{if(over)return;const i=+b.dataset.i;lock();if(i!==c.a)b.classList.add('bad');finish(i===c.a);});
+    hint=()=>{const wrong=opts().filter(x=>+x.dataset.i!==c.a&&!x.disabled);
+      if(c.opts.length>2&&wrong.length>1){const g=wrong[Math.floor(Math.random()*wrong.length)];g.disabled=true;g.classList.add('gone');say(c.hint?`One wrong option removed. ${c.hint}`:'One wrong option removed.');}
+      else say(c.hint||'Read the question again and test each option.');};
+    reveal=()=>{lock();finish(false,'',true);};}
   else if(c.type==='fill'){body.innerHTML=`<div class="fillrow"><input type="text" inputmode="text" autocomplete="off" aria-label="Your answer" placeholder="Your answer"><button class="btn primary">Check</button></div><div class="err"></div>`;
-    const inp=body.querySelector('input'),err=body.querySelector('.err'),go=()=>{if(over)return;if(!inp.value.trim()){err.textContent='Type an answer first.';return;}err.textContent='';const ok=c.a.some(a=>same(inp.value,a));inp.disabled=true;body.querySelector('button').disabled=true;inp.classList.add(ok?'ok':'bad');finish(ok,ok?'':`Answer: <b>${esc(c.a[0].replace(/^-/,'−'))}</b>. `);};
-    body.querySelector('button').onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go();};inp.oninput=()=>err.textContent='';setTimeout(()=>inp.focus({preventScroll:true}),50);}
+    const inp=body.querySelector('input'),err=body.querySelector('.err'),ans=c.a[0].replace(/^-/,'−');
+    const lock=cls=>{inp.disabled=true;body.querySelector('button').disabled=true;inp.classList.add(cls);};
+    const go=()=>{if(over)return;if(!inp.value.trim()){err.textContent='Type an answer first, or use Hint.';return;}err.textContent='';const ok=c.a.some(a=>same(inp.value,a));lock(ok?'ok':'bad');finish(ok,ok?'':`Answer: <b>${esc(ans)}</b>. `);};
+    body.querySelector('button').onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go();};inp.oninput=()=>err.textContent='';setTimeout(()=>inp.focus({preventScroll:true}),50);
+    hint=()=>say(autoHint(c,hints));
+    reveal=()=>{inp.value=ans;lock('shown');finish(false,`It is <b>${esc(ans)}</b>. `,true);};}
   else if(c.type==='tf'){let tfv=null;body.innerHTML=`<div class="opts two"><button class="opt" data-v="1">True</button><button class="opt" data-v="0">False</button></div><div class="reasons" hidden><div class="muted small">Now pick the reason:</div><div class="opts">${c.reasons.map((r,i)=>`<button class="opt" data-r="${i}">${esc(r)}</button>`).join('')}</div></div>`;
+    const rs=()=>[...body.querySelectorAll('[data-r]')];
     body.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{if(over||tfv!==null)return;tfv=b.dataset.v==='1';b.classList.add('pick');body.querySelectorAll('[data-v]').forEach(x=>x.disabled=true);body.querySelector('.reasons').hidden=false;});
-    body.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{if(over)return;const r=+b.dataset.r,ok=tfv===c.a&&r===c.ra;body.querySelectorAll('[data-r]').forEach(x=>{x.disabled=true;if(+x.dataset.r===c.ra)x.classList.add('ok');});if(r!==c.ra)b.classList.add('bad');
-      finish(ok,`It is <b>${c.a?'True':'False'}</b>. `);});}
-  else if(c.type==='match'){const L=c.pairs.map(p=>p[0]),Rr=shuffle(c.pairs.map(p=>p[1]));let sel=null;const link={};
+    const lockR=()=>rs().forEach(x=>{x.disabled=true;if(+x.dataset.r===c.ra)x.classList.add('ok');});
+    rs().forEach(b=>b.onclick=()=>{if(over)return;const r=+b.dataset.r,ok=tfv===c.a&&r===c.ra;lockR();if(r!==c.ra)b.classList.add('bad');finish(ok,`It is <b>${c.a?'True':'False'}</b>. `);});
+    hint=()=>{if(tfv===null){say(c.hint||'Test the statement with a simple example. Does it always hold?');return;}
+      const wrong=rs().filter(x=>+x.dataset.r!==c.ra&&!x.disabled);if(wrong.length>1){const g=wrong[0];g.disabled=true;g.classList.add('gone');say('One wrong reason removed.');}else say('Only one reason fits the statement. Read each one against it.');};
+    reveal=()=>{body.querySelectorAll('[data-v]').forEach(x=>{x.disabled=true;if((x.dataset.v==='1')===c.a)x.classList.add('ok');});body.querySelector('.reasons').hidden=false;lockR();finish(false,`It is <b>${c.a?'True':'False'}</b>. `,true);};}
+  else if(c.type==='match'){const L=c.pairs.map(p=>p[0]),Rr=shuffle(c.pairs.map(p=>p[1]));let sel=null;const link={},fixed=new Set();
     body.innerHTML=`<div class="muted small">Tap an item on the left, then its partner on the right.</div><div class="match"><div>${L.map((x,i)=>`<button class="opt ml" data-i="${i}">${esc(x)}</button>`).join('')}</div><div>${Rr.map((x,i)=>`<button class="opt mr" data-j="${i}">${esc(x)}</button>`).join('')}</div></div><div class="row"><button class="btn primary mchk">Check</button><span class="err"></span></div>`;
-    const paint=()=>{body.querySelectorAll('.ml').forEach(b=>{const i=+b.dataset.i;b.className='opt ml'+(sel===i?' pick':'')+(link[i]!=null?' pair p'+i:'');});
-      body.querySelectorAll('.mr').forEach(b=>{const j=+b.dataset.j,i=Object.keys(link).find(k=>link[k]===j);b.className='opt mr'+(i!=null?' pair p'+i:'');});};
-    body.querySelectorAll('.ml').forEach(b=>b.onclick=()=>{if(over)return;const i=+b.dataset.i;if(link[i]!=null){delete link[i];sel=i;}else sel=sel===i?null:i;paint();});
-    body.querySelectorAll('.mr').forEach(b=>b.onclick=()=>{if(over||sel===null)return;const j=+b.dataset.j;Object.keys(link).forEach(k=>{if(link[k]===j)delete link[k];});link[sel]=j;sel=null;paint();body.querySelector('.err').textContent='';});
-    body.querySelector('.mchk').onclick=()=>{if(over)return;if(Object.keys(link).length<L.length){body.querySelector('.err').textContent='Match every item first.';return;}
-      const ok=L.every((x,i)=>Rr[link[i]]===c.pairs[i][1]);body.querySelectorAll('.ml').forEach(b=>{const i=+b.dataset.i;b.classList.add(Rr[link[i]]===c.pairs[i][1]?'ok':'bad');b.disabled=true;});body.querySelectorAll('.mr').forEach(b=>b.disabled=true);body.querySelector('.mchk').disabled=true;
-      finish(ok,ok?'':`Correct pairs: ${c.pairs.map(p=>`<b>${esc(p[0])}</b> → ${esc(p[1])}`).join('; ')}. `);};}
+    const right=i=>Rr.indexOf(c.pairs[i][1]);
+    const paint=()=>{body.querySelectorAll('.ml').forEach(b=>{const i=+b.dataset.i;b.className='opt ml'+(sel===i?' pick':'')+(link[i]!=null?' pair p'+i:'')+(fixed.has(i)?' fixed':'');});
+      body.querySelectorAll('.mr').forEach(b=>{const j=+b.dataset.j,i=Object.keys(link).find(k=>link[k]===j);b.className='opt mr'+(i!=null?' pair p'+i:'')+(i!=null&&fixed.has(+i)?' fixed':'');});};
+    body.querySelectorAll('.ml').forEach(b=>b.onclick=()=>{if(over)return;const i=+b.dataset.i;if(fixed.has(i))return;if(link[i]!=null){delete link[i];sel=i;}else sel=sel===i?null:i;paint();});
+    body.querySelectorAll('.mr').forEach(b=>b.onclick=()=>{if(over||sel===null)return;const j=+b.dataset.j;const owner=Object.keys(link).find(k=>link[k]===j);if(owner!=null&&fixed.has(+owner))return;if(owner!=null)delete link[owner];link[sel]=j;sel=null;paint();body.querySelector('.err').textContent='';});
+    const lock=()=>{body.querySelectorAll('.ml').forEach(b=>{const i=+b.dataset.i;b.classList.add(link[i]===right(i)?'ok':'bad');b.disabled=true;});body.querySelectorAll('.mr').forEach(b=>b.disabled=true);body.querySelector('.mchk').disabled=true;};
+    body.querySelector('.mchk').onclick=()=>{if(over)return;if(Object.keys(link).length<L.length){body.querySelector('.err').textContent='Match every item first, or use Hint.';return;}
+      const ok=L.every((x,i)=>link[i]===right(i));lock();finish(ok,ok?'':`Correct pairs: ${c.pairs.map(p=>`<b>${esc(p[0])}</b> → ${esc(p[1])}`).join('; ')}. `);};
+    hint=()=>{const i=L.findIndex((x,k)=>link[k]!==right(k));if(i<0){say('Every pair is right. Press Check.');return;}
+      const j=right(i);Object.keys(link).forEach(k=>{if(link[k]===j)delete link[k];});link[i]=j;fixed.add(i);sel=null;paint();
+      const left=L.filter((x,k)=>link[k]!==right(k)).length;say(left?`Placed: “${L[i]}” → “${c.pairs[i][1]}”. ${left} left to match.`:'All pairs placed. Press Check.');};
+    reveal=()=>{L.forEach((x,i)=>{link[i]=right(i);});paint();lock();finish(false,'',true);};}
   else if(c.type==='order'){const pool=shuffle(c.items.map((x,i)=>i));let seq=[];
     body.innerHTML=`<div class="muted small">Tap the steps in the right order.</div><ol class="seq"></ol><div class="opts pool"></div><div class="row"><button class="btn undo">Undo</button><button class="btn primary ochk">Check</button><span class="err"></span></div>`;
     const paint=()=>{body.querySelector('.seq').innerHTML=seq.map(i=>`<li>${esc(c.items[i])}</li>`).join('')||'<li class="muted ph">Your order appears here</li>';
       body.querySelector('.pool').innerHTML=pool.filter(i=>!seq.includes(i)).map(i=>`<button class="opt" data-i="${i}">${esc(c.items[i])}</button>`).join('');
       body.querySelectorAll('.pool .opt').forEach(b=>b.onclick=()=>{if(over)return;seq.push(+b.dataset.i);body.querySelector('.err').textContent='';paint();});};paint();
     body.querySelector('.undo').onclick=()=>{if(over)return;seq.pop();paint();};
-    body.querySelector('.ochk').onclick=()=>{if(over)return;if(seq.length<c.items.length){body.querySelector('.err').textContent='Use every step first.';return;}
-      const ok=seq.every((x,i)=>x===i);body.querySelectorAll('.seq li').forEach((li,k)=>li.classList.add(seq[k]===k?'ok':'bad'));body.querySelector('.undo').disabled=true;body.querySelector('.ochk').disabled=true;
-      finish(ok,ok?'':`Right order: ${c.items.map((x,i)=>`${i+1}) ${esc(x)}`).join('  ')}. `);};}
+    const lock=()=>{body.querySelectorAll('.seq li').forEach((li,k)=>li.classList.add(seq[k]===k?'ok':'bad'));body.querySelector('.undo').disabled=true;body.querySelector('.ochk').disabled=true;body.querySelectorAll('.pool .opt').forEach(x=>x.disabled=true);};
+    body.querySelector('.ochk').onclick=()=>{if(over)return;if(seq.length<c.items.length){body.querySelector('.err').textContent='Use every step first, or use Hint.';return;}
+      const ok=seq.every((x,i)=>x===i);lock();finish(ok,ok?'':`Right order: ${c.items.map((x,i)=>`${i+1}) ${esc(x)}`).join('  ')}. `);};
+    hint=()=>{let k=0;while(k<seq.length&&seq[k]===k)k++;seq=seq.slice(0,k);if(k<c.items.length){seq.push(k);paint();say(k+1<c.items.length?`Step ${k+1} placed for you. Choose what comes next.`:'Last step placed. Press Check.');}else say('The order is right. Press Check.');};
+    reveal=()=>{seq=c.items.map((x,i)=>i);paint();lock();finish(false,'',true);};}
   else if(c.type==='spot'){body.innerHTML=`<div class="muted small">Tap the line with the mistake.</div><div class="opts">${c.lines.map((x,i)=>`<button class="opt mono" data-i="${i}"><span class="ln">${i+1}</span> ${esc(x)}</button>`).join('')}</div>`;
-    body.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(over)return;const i=+b.dataset.i;body.querySelectorAll('.opt').forEach(x=>{x.disabled=true;if(+x.dataset.i===c.bad)x.classList.add('bad');});if(i!==c.bad)b.classList.add('pick');finish(i===c.bad,`The mistake is in line ${c.bad+1}. `);});}
+    const opts=()=>[...body.querySelectorAll('.opt')];const lock=()=>opts().forEach(x=>{x.disabled=true;if(+x.dataset.i===c.bad)x.classList.add('bad');});
+    opts().forEach(b=>b.onclick=()=>{if(over)return;const i=+b.dataset.i;lock();if(i!==c.bad)b.classList.add('pick');finish(i===c.bad,`The mistake is in line ${c.bad+1}. `);});
+    hint=()=>{const open=opts().filter(x=>!x.disabled);if(open.length>2){const keep=c.bad>0?c.bad-1:c.bad+1;open.forEach(x=>{const i=+x.dataset.i;if(i!==c.bad&&i!==keep){x.disabled=true;x.classList.add('gone');}});say('The mistake is in one of the two lines still open. Redo the working yourself.');}
+      else say(c.hint||'Work each step out yourself and compare.');};
+    reveal=()=>{lock();finish(false,`The mistake is in line ${c.bad+1}. `,true);};}
+  box.querySelector('[data-h="hint"]').onclick=()=>{if(over)return;hinted=true;hint();hints++;};
+  box.querySelector('[data-h="show"]').onclick=()=>{if(over)return;reveal();};
 }
 const GEN_IDS=new Set(BANK.filter(c=>c.gen).map(c=>c.id));
 
@@ -1657,8 +1703,8 @@ function drawReview(){
   H().innerHTML=`<div class="hhead"><div><div class="crumb"><a href="#today">← Today</a></div><h1>Today’s review</h1></div><div class="mono muted">${pos}</div></div>
    <div class="pbar"><i style="width:${S_.retry?100:Math.round(100*S_.i/all)}%"></i></div>
    <section class="card qcard" id="qcard"></section><div class="row end"><button class="btn primary" id="qNext" hidden>${S_.retry?(S_.i+1<S_.again.length?'Next':'Finish'):(S_.i+1<all?'Next question →':'Finish')}</button></div>`;
-  renderQ(document.getElementById('qcard'),c,ok=>{
-    if(!S_.retry){S_.first[c.id]=ok;record(c,ok);if(!ok)S_.again.push(c.gen||GEN_IDS.has(c.id)?inst(cardById(c.id)):c);}
+  renderQ(document.getElementById('qcard'),c,(ok,hinted)=>{
+    if(!S_.retry){S_.first[c.id]=ok;record(c,ok,hinted);if(!ok)S_.again.push(c.gen||GEN_IDS.has(c.id)?inst(cardById(c.id)):c);}
     const nb=document.getElementById('qNext');nb.hidden=false;nb.focus({preventScroll:true});nb.onclick=()=>{S_.i++;if(!S_.retry&&S_.i>=all){if(S_.again.length){S_.retry=true;S_.i=0;}else return endReview();}drawReview();};
   });}
 function endReview(){
@@ -1677,14 +1723,18 @@ function startKumon(){
   const best=Object.values(P.days).filter(x=>x.kn&&x.kn.c===x.kn.n).map(x=>x.kn.ms).sort((a,b)=>a-b)[0];
   H().innerHTML=`<div class="hhead"><div><div class="crumb"><a href="#today">← Today</a></div><h1>Kumon sheet</h1></div><div class="mono" id="kClock">0s</div></div>
    <p class="tagline">Five problems, fresh numbers. Work in your notebook, type only the answer. ${best?`Your best full-marks time: <b>${fmtTime(best)}</b>.`:''}</p>
-   <section class="card tcard">${probs.map((p,i)=>`<div class="kp"><div class="qtext"><span class="ln">${i+1}</span> ${esc(p.q)}</div><div class="fillrow"><input type="text" autocomplete="off" aria-label="Answer ${i+1}" data-i="${i}" placeholder="Answer"><button class="btn" data-i="${i}">Check</button></div><div class="qfb" id="kf${i}"></div></div>`).join('')}
+   <section class="card tcard">${probs.map((p,i)=>`<div class="kp"><div class="qtext"><span class="ln">${i+1}</span> ${esc(p.q)}</div><div class="fillrow"><input type="text" autocomplete="off" aria-label="Answer ${i+1}" data-i="${i}" placeholder="Answer"><button class="btn" data-i="${i}">Check</button></div><div class="helpbar" id="kb${i}"><button class="hbtn" data-k="hint" data-i="${i}">💡 Hint</button><button class="hbtn" data-k="show" data-i="${i}">Show answer</button><span class="hint" id="kh${i}"></span></div><div class="qfb" id="kf${i}"></div></div>`).join('')}
    <div class="row"><button class="btn primary" id="kDone">Finish sheet</button><span class="err" id="kErr"></span></div></section>`;
   const clock=setInterval(()=>{const el=document.getElementById('kClock');if(!el){clearInterval(clock);return;}el.textContent=fmtTime(Date.now()-t0);},1000);
-  const check=i=>{if(res[i]!==null)return;const inp=H().querySelector(`input[data-i="${i}"]`);if(!inp.value.trim()){document.getElementById('kf'+i).innerHTML='<span class="err">Type an answer first.</span>';return;}
-    const p=probs[i],ok=p.type==='mcq'?false:p.a.some(a=>same(inp.value,a));res[i]=ok;inp.disabled=true;inp.classList.add(ok?'ok':'bad');H().querySelector(`button[data-i="${i}"]`).disabled=true;
+  const check=i=>{if(res[i]!==null)return;const inp=H().querySelector(`input[data-i="${i}"]`);if(!inp.value.trim()){document.getElementById('kf'+i).innerHTML='<span class="err">Type an answer first, or use Hint.</span>';return;}
+    const p=probs[i],ok=p.type==='mcq'?false:p.a.some(a=>same(inp.value,a));res[i]=ok;document.getElementById('kb'+i).classList.add('done');inp.disabled=true;inp.classList.add(ok?'ok':'bad');H().querySelector(`button[data-i="${i}"]`).disabled=true;
     document.getElementById('kf'+i).innerHTML=`<div class="${ok?'fok':'fbad'}"><b>${ok?'✓':'✗'}</b> ${ok?'':`Answer: <b>${esc(p.a[0].replace(/^-/,'−'))}</b>. `}${esc(p.why)}</div>`;
     const bc=BANK.find(x=>x.gen===p.g),d=DAY(todayK());if(bc)d.tp=[...new Set([...(d.tp||[]),bc.t])];};
-  H().querySelectorAll('.kp button').forEach(b=>b.onclick=()=>check(+b.dataset.i));
+  H().querySelectorAll('.kp .fillrow button').forEach(b=>b.onclick=()=>check(+b.dataset.i));
+  const hl={};H().querySelectorAll('.kp [data-k="hint"]').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(res[i]!==null)return;hl[i]=(hl[i]||0);document.getElementById('kh'+i).textContent=autoHint(probs[i],hl[i]);hl[i]++;});
+  H().querySelectorAll('.kp [data-k="show"]').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(res[i]!==null)return;const p=probs[i],inp=H().querySelector(`input[data-i="${i}"]`),ans=p.a[0].replace(/^-/,'−');
+    res[i]=false;inp.value=ans;inp.disabled=true;inp.classList.add('shown');H().querySelector(`.fillrow button[data-i="${i}"]`).disabled=true;document.getElementById('kb'+i).classList.add('done');
+    document.getElementById('kf'+i).innerHTML=`<div class="fbad"><b>Here’s the answer: ${esc(ans)}.</b> ${esc(p.why)}</div>`;});
   H().querySelectorAll('.kp input').forEach(inp=>inp.onkeydown=e=>{if(e.key==='Enter'){check(+inp.dataset.i);const nx=H().querySelector(`input[data-i="${+inp.dataset.i+1}"]`);if(nx)nx.focus();}});
   document.getElementById('kDone').onclick=()=>{if(res.some(r=>r===null)){document.getElementById('kErr').textContent='Check all five answers first.';return;}
     clearInterval(clock);const ms=Date.now()-t0,c=res.filter(Boolean).length,d=DAY(todayK());d.kn=(d.kn&&(d.kn.c>c||(d.kn.c===c&&d.kn.ms<=ms)))?d.kn:{n:5,c,ms,d:1};persist();
@@ -1746,7 +1796,7 @@ function runSet(cards,opt){
     H().innerHTML=`${opt.head}<div class="pbar"><i style="width:${Math.round(100*st.i/st.cards.length)}%"></i></div>
      <div class="mono muted small" style="text-align:right">${st.i+1} / ${st.cards.length}</div>
      <section class="card qcard" id="qcard"></section><div class="row end"><button class="btn primary" id="qNext" hidden>${st.i+1<st.cards.length?'Next question →':'See results'}</button></div>`;
-    renderQ(document.getElementById('qcard'),c,ok=>{st.res[c.id]=ok;if(opt.record)record(c,ok);
+    renderQ(document.getElementById('qcard'),c,(ok,hinted)=>{st.res[c.id]=ok;if(opt.record)record(c,ok,hinted);
       const nb=document.getElementById('qNext');nb.hidden=false;nb.focus({preventScroll:true});nb.onclick=()=>{st.i++;draw();};});};
   draw();}
 
