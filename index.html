@@ -124,6 +124,11 @@ ol.lines li.new .why{color:var(--accent-ink)}
 @keyframes pop{from{transform:translateY(6px);opacity:.2}to{transform:none;opacity:1}}
 
 [hidden]{display:none!important}
+.glancebox{background:var(--paper);color:var(--ink);border:2px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0}
+ol.glance{margin:6px 0 0;padding-left:22px}ol.glance li{padding:8px 0;border-bottom:1px dashed var(--soft)}ol.glance li:last-child{border-bottom:none}
+.gq{font-weight:600;line-height:1.45}.ga{margin-top:4px;padding:4px 10px;border-left:4px solid var(--res);background:var(--chip2);color:#2a2620;line-height:1.5;font-size:14px}
+.gw{font-size:13px;color:var(--muted);margin-top:3px;line-height:1.45}
+details.glancedet summary{cursor:pointer;font-family:var(--mono);font-size:13px;font-weight:600;margin:6px 0}
 .helpbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}.helpbar.done .hbtn:not([data-h="explain"]):not([data-k="explain"]){display:none}
 .exp{margin-top:10px;border:2px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--bg);line-height:1.6}
 .exp h3{font-family:var(--mono);font-size:16px;margin:6px 0}.exp p{margin:6px 0}.exp .board{display:flex;flex-direction:column;gap:8px}
@@ -1545,6 +1550,16 @@ function nextLessonToStudy(){const st=studiedSet();return ALL.find(l=>!st.has(l.
 function lockedNote(what){const nl=nextLessonToStudy();return `<section class="card tcard main"><span class="kicker">LEARN FIRST</span><h2>${what}</h2>
   <p>Practice here only uses what you’ve already learned, so nothing is unlocked yet. Each lesson you finish unlocks its questions.</p>
   <div class="row"><a class="btn primary" href="#${lessonEntry(nl.slug)}">Start here: ${esc(nl.title)} →</a><a class="btn" href="#today">Back to Today</a></div></section>`;}
+function glanceA(c){switch(c.type){
+  case 'mcq':return esc(c.opts[c.a]);case 'fill':return esc(c.a[0].replace(/^-/,'−'));
+  case 'tf':return `<b>${c.a?'True':'False'}</b>: ${esc(c.reasons[c.ra])}`;
+  case 'match':return c.pairs.map(p=>`${esc(p[0])} → <b>${esc(p[1])}</b>`).join('<br>');
+  case 'order':return c.items.map((x,i)=>`${i+1}) ${esc(x)}`).join('<br>');
+  case 'spot':return `Line ${c.bad+1} is wrong: “${esc(c.lines[c.bad])}”`;}return '';}
+function glanceHTML(lesson,k){const own=BANK.filter(c=>c.l[0]===lesson.slug&&!c.gen).sort((a,b)=>a.l[1]-b.l[1]);
+  if(!own.length)return '';const n=own.length;k=Math.min(k,n);
+  const pick=[...new Set(Array.from({length:k},(_,i)=>own[Math.round(i*(n-1)/Math.max(1,k-1))]))];
+  return `<ol class="glance">${pick.map(c=>`<li><div class="gq">${esc(c.q)}</div><div class="ga">${glanceA(c)}</div><div class="gw">${esc(c.why||'')}</div></li>`).join('')}</ol>`;}
 function buildSession(n,only){
   const day=todayK();let pool;
   if(only)pool=only.map(cardById).filter(Boolean);
@@ -1609,12 +1624,17 @@ function renderToday(){
     <div class="streak"><b>${st.n}</b><span>day streak</span></div></div>
   <p class="tagline">One short review a day keeps ${esc(COURSE.subject||'this course')} in your memory. Rest day: 1 per week, used automatically if you miss a day. <span id="syncTxt" class="mono"></span></p>
   <section class="card tcard main">
-    <span class="kicker">TODAY’S REVIEW · ACTIVE RECALL</span>
-    ${!UT.size?`<h2>Start here: ${esc(nl0.title)}</h2><p>Practice only uses what you’ve learned. Read the big idea, go through the lesson, and its questions unlock here for tomorrow’s review.${d.rv&&d.rv.d?' Today’s review is already done, so your streak is safe.':''}</p><div class="row"><a class="btn primary" href="#${lessonEntry(nl0.slug)}">Start the lesson →</a></div>`
+    <span class="kicker">${!UT.size?'START HERE · YOUR FIRST LESSON':'TODAY’S REVIEW · ACTIVE RECALL'}</span>
+    ${!UT.size?`<h2>Start here: ${esc(nl0.title)}</h2><p>Before you begin, take a quick glance at what this lesson teaches you to answer. Just read: nothing here is a test.</p>
+      <div class="glancebox"><span class="kicker">QUICK GLANCE · QUESTIONS AND ANSWERS YOU’LL LEARN</span>${glanceHTML(nl0,5)}</div>
+      <p>Practice only uses what you’ve learned. Go through the lesson, and its questions unlock here for tomorrow’s review.${d.rv&&d.rv.d?' Today’s review is already done, so your streak is safe.':''}</p><div class="row"><a class="btn primary" href="#${lessonEntry(nl0.slug)}">Start here: ${esc(nl0.title)} →</a></div>`
     :d.rv&&d.rv.d?`<h2>Done ✓ ${d.rv.c}/${d.rv.n} correct · ${fmtTime(d.rv.ms)}</h2><p>Your streak is safe. Extra practice still counts towards the schedule.</p><div class="row"><a class="btn" href="#review">Do 5 more</a></div>`
     :nothing?`<h2>Start here: ${esc(nl0.title)}</h2><p>Practice only uses what you’ve learned. Read the big idea, go through the lesson, and its questions unlock here for tomorrow’s review.</p><div class="row"><a class="btn primary" href="#${lessonEntry(nl0.slug)}">Start the lesson →</a></div>`
     :`<h2>${sessN} questions · ${topics} topics mixed · ~${Math.max(3,Math.round(sessN*0.6))} min</h2><p>Answer from memory first. Wrong answers come back tomorrow with a link to the lesson step.</p><div class="row"><a class="btn primary" href="#review">Start review →</a></div>`}
   </section>
+  ${UT.size&&!studiedSet().has(nl0.slug)?`<section class="card tcard"><span class="kicker">UP NEXT</span><h3>${esc(nl0.title)}</h3>
+    <details class="glancedet"><summary>Quick glance: questions and answers you’ll learn</summary>${glanceHTML(nl0,5)}</details>
+    <div class="row"><a class="btn" href="#${lessonEntry(nl0.slug)}">Start ${esc(nl0.title)} →</a></div></section>`:''}
   <div class="twocol">
     <section class="card tcard"><span class="kicker">KUMON SHEET · DAILY</span><h3>${d.kn&&d.kn.n?`✓ ${d.kn.c}/${d.kn.n} in ${fmtTime(d.kn.ms)}`:'5 problems, fresh numbers'}</h3><p>Type the answers. Try to get faster each day.</p>${KUMON_GENS.some(g=>{const bc=BANK.find(x=>x.gen===g);return bc&&UT.has(bc.t);})?`<a class="btn" href="#kumon">${d.kn&&d.kn.n?'Try another sheet':'Start sheet'}</a>`:'<p class="muted small">🔒 Unlocks when you finish a lesson.</p>'}</section>
     <section class="card tcard"><span class="kicker">BRAIN DUMP · WEEKLY</span><h3>${bdWeek?`✓ ${bdWeek.g}/${bdWeek.t} points this week`:'60 seconds, notebook only'}</h3><p>Write all you remember, then tick it against the checklist.</p>${DUMPS.some(x=>UT.has(x.t))?`<a class="btn" href="#dump">${bdWeek?'Do another':'Start'}</a>`:'<p class="muted small">🔒 Unlocks when you finish a lesson.</p>'}</section>
