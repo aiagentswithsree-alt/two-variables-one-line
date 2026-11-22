@@ -56,3 +56,7 @@ Each exercise question shows **In simple words**, **Given** and **To find**. Pre
 ## Editing
 
 The course content is the `COURSE` object between `COURSE-DATA:START` and `COURSE-DATA:END` in `index.html`. Each step lists its text, its graph (`plot`: lines, points, rise/run triangle, moving dots) and its metric values.
+
+## Reusing the engine for another chapter
+
+`index.html` is a reusable engine plus one course's data. To build a new chapter, copy it and replace only the block between `/* COURSE-DATA:START */` and `/* COURSE-DATA:END */`. That block holds `COURSE` (modules, lessons, steps), the exam-practice lessons, the recall bank (`TOPICS`, `BANK`, `GEN`, `KUMON_GENS`, `DUMPS`) and the course settings (`COURSE.subject`, `COURSE.recallKey`, `COURSE.lessonTopic`). The `interactive-lesson-builder-v2` skill describes the full schema and build steps.

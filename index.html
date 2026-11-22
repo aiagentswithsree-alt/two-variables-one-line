@@ -1232,6 +1232,11 @@ const DUMPS = [
  {t:'T5',title:'How many solutions? (ratio test)',pts:['a₁/a₂ ≠ b₁/b₂ → one solution, lines cross','a₁/a₂ = b₁/b₂ = c₁/c₂ → infinitely many, same line','a₁/a₂ = b₁/b₂ ≠ c₁/c₂ → none, parallel lines','Elimination giving 0 = 0 means infinitely many','Elimination giving 0 = (non-zero) means no solution','Parallel lines have the same slope']}
 ];
 
+/* course-level settings used by the daily-practice engine */
+COURSE.subject = 'Chapter 13';                 // shown on the Today screen
+COURSE.recallKey = 'gm9-ch13-recall-v1';       // localStorage key for practice progress (keep stable once live)
+COURSE.lessonTopic = {'ex-13-4':'T4'};         // topic for lessons that have no questions of their own
+
 /* COURSE-DATA:END */
 
 /* ENGINE:START — reusable; do not edit per lesson */
@@ -1439,7 +1444,7 @@ addEventListener('hashchange',()=>{const m=location.hash.match(/^#([\w-]+?)-(\d+
 /* ENGINE:END */
 /* RECALL:START — Today screen, spaced review, Kumon sheet, brain dump, tracker */
 var HOME_ON=false,KPROBS=null;
-const RKEY='gm9-ch13-recall-v1';
+const RKEY=COURSE.recallKey||(COURSE.storageKey+'-recall');
 const BOX_DAYS=[0,1,3,7,14,30,60];          // box 1..5, then 6 = learned (60-day check)
 const SESSION=10;
 const pad2=n=>String(n).padStart(2,'0');
@@ -1563,7 +1568,7 @@ function renderToday(){
   H().innerHTML=`
   <div class="hhead"><div><div class="crumb">${new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'})}</div><h1>Today</h1></div>
     <div class="streak"><b>${st.n}</b><span>day streak</span></div></div>
-  <p class="tagline">One short review a day keeps Chapter 13 in your memory. Rest day: 1 per week, used automatically if you miss a day. <span id="syncTxt" class="mono"></span></p>
+  <p class="tagline">One short review a day keeps ${esc(COURSE.subject||'this course')} in your memory. Rest day: 1 per week, used automatically if you miss a day. <span id="syncTxt" class="mono"></span></p>
   <section class="card tcard main">
     <span class="kicker">TODAY’S REVIEW · ACTIVE RECALL</span>
     ${d.rv&&d.rv.d?`<h2>Done ✓ ${d.rv.c}/${d.rv.n} correct · ${fmtTime(d.rv.ms)}</h2><p>Your streak is safe. Extra practice still counts towards the schedule.</p><div class="row"><a class="btn" href="#review">Do 5 more</a></div>`
@@ -1668,7 +1673,7 @@ function endReview(){
 
 /* ---------- Kumon sheet ---------- */
 function startKumon(){
-  const gens=shuffle(KUMON_GENS).slice(0,5),probs=gens.map(g=>({...GEN[g](),g})),t0=Date.now(),res=Array(5).fill(null);KPROBS=probs;
+  const gens=shuffle(KUMON_GENS),probs=[0,1,2,3,4].map(i=>{const g=gens[i%gens.length];return {...GEN[g](),g};}),t0=Date.now(),res=Array(probs.length).fill(null);KPROBS=probs;
   const best=Object.values(P.days).filter(x=>x.kn&&x.kn.c===x.kn.n).map(x=>x.kn.ms).sort((a,b)=>a-b)[0];
   H().innerHTML=`<div class="hhead"><div><div class="crumb"><a href="#today">← Today</a></div><h1>Kumon sheet</h1></div><div class="mono" id="kClock">0s</div></div>
    <p class="tagline">Five problems, fresh numbers. Work in your notebook, type only the answer. ${best?`Your best full-marks time: <b>${fmtTime(best)}</b>.`:''}</p>
@@ -1678,7 +1683,7 @@ function startKumon(){
   const check=i=>{if(res[i]!==null)return;const inp=H().querySelector(`input[data-i="${i}"]`);if(!inp.value.trim()){document.getElementById('kf'+i).innerHTML='<span class="err">Type an answer first.</span>';return;}
     const p=probs[i],ok=p.type==='mcq'?false:p.a.some(a=>same(inp.value,a));res[i]=ok;inp.disabled=true;inp.classList.add(ok?'ok':'bad');H().querySelector(`button[data-i="${i}"]`).disabled=true;
     document.getElementById('kf'+i).innerHTML=`<div class="${ok?'fok':'fbad'}"><b>${ok?'✓':'✗'}</b> ${ok?'':`Answer: <b>${esc(p.a[0].replace(/^-/,'−'))}</b>. `}${esc(p.why)}</div>`;
-    const d=DAY(todayK());d.tp=[...new Set([...(d.tp||[]),cardById('g-'+{findY:'findy',findK:'findk',slope2:'slope2',slopeStd:'slopestd',sumDiff:'sumdiff',subst:'subst'}[p.g]).t])];};
+    const bc=BANK.find(x=>x.gen===p.g),d=DAY(todayK());if(bc)d.tp=[...new Set([...(d.tp||[]),bc.t])];};
   H().querySelectorAll('.kp button').forEach(b=>b.onclick=()=>check(+b.dataset.i));
   H().querySelectorAll('.kp input').forEach(inp=>inp.onkeydown=e=>{if(e.key==='Enter'){check(+inp.dataset.i);const nx=H().querySelector(`input[data-i="${+inp.dataset.i+1}"]`);if(nx)nx.focus();}});
   document.getElementById('kDone').onclick=()=>{if(res.some(r=>r===null)){document.getElementById('kErr').textContent='Check all five answers first.';return;}
@@ -1710,7 +1715,7 @@ function logLesson(slug){const d=DAY(todayK());d.nl=[...new Set([...(d.nl||[]),s
 /* RECALL:END */
 /* TABS:START — Screen 2: Before / Understand / After for every lesson */
 let curTab='understand';
-const LESSON_TOPIC={'ex-13-4':'T4'};
+const LESSON_TOPIC=COURSE.lessonTopic||{};
 const lessonDone=slug=>!!store.get(doneKey,{})[slug];
 function lessonEntry(slug){return slug+(lessonDone(slug)?'-after':'-before');}
 function parseHash(h){
@@ -1719,7 +1724,7 @@ function parseHash(h){
   if(m&&ALL.some(l=>l.slug===m[1]))return {kind:'tab',slug:m[1],tab:m[2]};
   return null;}
 function lessonPool(slug){
-  const own=BANK.filter(c=>c.l[0]===slug);const tps=new Set(own.map(c=>c.t));if(!tps.size)tps.add(LESSON_TOPIC[slug]||'T1');
+  const own=BANK.filter(c=>c.l[0]===slug);const tps=new Set(own.map(c=>c.t));if(!tps.size)tps.add(LESSON_TOPIC[slug]||Object.keys(TOPICS)[0]);
   return {own,rel:BANK.filter(c=>tps.has(c.t)&&c.l[0]!==slug)};}
 function paintTabs(tab){
   const el=document.getElementById('ltabs');if(!el||!L)return;
