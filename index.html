@@ -124,6 +124,8 @@ ol.lines li.new .why{color:var(--accent-ink)}
 @keyframes pop{from{transform:translateY(6px);opacity:.2}to{transform:none;opacity:1}}
 
 [hidden]{display:none!important}
+.fshow{border:2px solid var(--line);border-radius:10px;padding:10px 12px;line-height:1.55;background:var(--chip1);color:#2a2620}.fshow a{color:#245a8a}
+.qtip{font-size:14px;border-left:4px solid #e2b44a;background:var(--chip1);color:#2a2620;padding:6px 10px;margin:0 0 10px}
 .watch{font-family:var(--mono);font-size:12px;border:2px solid var(--line);border-radius:10px;padding:6px 9px;background:var(--chip2);color:#2a2620;white-space:nowrap;box-shadow:2px 2px 0 var(--line)}
 .watch b{font-size:13px}.watch.paused{background:var(--bg);color:var(--muted)}
 @media(max-width:720px){.watch .wsub{display:none}.brand{font-size:15px}}
@@ -1751,7 +1753,7 @@ function autoHint(c,level){
   if(/^-?\d+(\.\d+)?$/.test(a))return `The answer is a ${a.includes('.')?'decimal':'whole'} number${a.startsWith('-')?' (negative)':''}.`;
   if(/^-?\d+\/\d+$/.test(a))return `The answer is a fraction${a.startsWith('-')?' (negative)':''}.`;
   return `It is a word with ${a.replace(/\s/g,'').length} letters.`;}
-function renderQ(box,c,done){
+function renderQ(box,c,done,ctx){ctx=ctx||{record:true};
   const typeName={mcq:'Choose one',fill:'Fill in the blank',tf:'True or false, with a reason',match:'Match the following',order:'Put in order',spot:'Spot the mistake'}[c.type];
   box.innerHTML=`<div class="qmeta"><span class="tag SOLVE">${typeName}</span><span class="muted">${TOPICS[c.t]}${c.gen||GEN_IDS.has(c.id)?' · fresh numbers':''}</span></div><div class="qtext">${esc(c.q)}</div><div class="qbody"></div>
    <div class="helpbar"><button class="hbtn" data-h="explain" aria-expanded="false">📖 Explain</button><button class="hbtn" data-h="hint">💡 Hint</button><button class="hbtn" data-h="show">Show answer</button><span class="hint" aria-live="polite"></span></div><div class="expbox"></div><div class="qfb" aria-live="polite"></div>`;
@@ -1759,8 +1761,8 @@ function renderQ(box,c,done){
   const say=t=>{hintEl.textContent=t;};
   const finish=(ok,extra='',revealed=false)=>{if(over)return;over=true;box.querySelector('.helpbar').classList.add('done');
     const head=revealed?'<b>Here’s the answer.</b>':ok?(hinted?'<b>✓ Correct, with help.</b>':'<b>✓ Correct.</b>'):'<b>✗ Not quite.</b>';
-    const tail=revealed?' It comes back tomorrow, and once more at the end of a review session.':(ok&&hinted?' Because you used help, it stays in its box and comes back sooner.':'');
-    fb.innerHTML=`<div class="${ok?'fok':'fbad'}">${head} ${extra}${esc(c.why||'')}${tail}${ok?'':` <a href="#${c.l[0]}-${c.l[1]}" class="lessonlink">Review this in the lesson →</a>`}</div>`;done(ok,hinted);};
+    const tail=!ctx.record?(ctx.preview?' This is a preview: nothing is recorded, and the lesson explains it.':' Nothing here is recorded.'):revealed?' It comes back tomorrow, and once more at the end of a review session.':(ok&&hinted?' Because you used help, it stays in its box and comes back sooner.':'');
+    fb.innerHTML=`<div class="${revealed?'fshow':ok?'fok':'fbad'}">${head} ${extra}${esc(c.why||'')}${tail}${ok?'':` <a href="#${c.l[0]}-${c.l[1]}" class="lessonlink">Review this in the lesson →</a>`}</div>`;done(ok,hinted);};
   let hint=()=>{},reveal=()=>{};
   if(c.type==='mcq'){body.innerHTML=`<div class="opts">${c.opts.map((o,i)=>`<button class="opt" data-i="${i}">${esc(o)}</button>`).join('')}</div>`;
     const opts=()=>[...body.querySelectorAll('.opt')];
@@ -1798,7 +1800,7 @@ function renderQ(box,c,done){
     hint=()=>{const i=L.findIndex((x,k)=>link[k]!==right(k));if(i<0){say('Every pair is right. Press Check.');return;}
       const j=right(i);Object.keys(link).forEach(k=>{if(link[k]===j)delete link[k];});link[i]=j;fixed.add(i);sel=null;paint();
       const left=L.filter((x,k)=>link[k]!==right(k)).length;say(left?`Placed: “${L[i]}” → “${c.pairs[i][1]}”. ${left} left to match.`:'All pairs placed. Press Check.');};
-    reveal=()=>{L.forEach((x,i)=>{link[i]=right(i);});paint();lock();finish(false,'',true);};}
+    reveal=()=>{L.forEach((x,i)=>{link[i]=right(i);});paint();lock();finish(false,`The pairs are: ${c.pairs.map(p=>`<b>${esc(p[0])}</b> → ${esc(p[1])}`).join('; ')}. `,true);};}
   else if(c.type==='order'){const pool=shuffle(c.items.map((x,i)=>i));let seq=[];
     body.innerHTML=`<div class="muted small">Tap the steps in the right order.</div><ol class="seq"></ol><div class="opts pool"></div><div class="row"><button class="btn undo">Undo</button><button class="btn primary ochk">Check</button><span class="err"></span></div>`;
     const paint=()=>{body.querySelector('.seq').innerHTML=seq.map(i=>`<li>${esc(c.items[i])}</li>`).join('')||'<li class="muted ph">Your order appears here</li>';
@@ -1809,7 +1811,7 @@ function renderQ(box,c,done){
     body.querySelector('.ochk').onclick=()=>{if(over)return;if(seq.length<c.items.length){body.querySelector('.err').textContent='Use every step first, or use Hint.';return;}
       const ok=seq.every((x,i)=>x===i);lock();finish(ok,ok?'':`Right order: ${c.items.map((x,i)=>`${i+1}) ${esc(x)}`).join('  ')}. `);};
     hint=()=>{let k=0;while(k<seq.length&&seq[k]===k)k++;seq=seq.slice(0,k);if(k<c.items.length){seq.push(k);paint();say(k+1<c.items.length?`Step ${k+1} placed for you. Choose what comes next.`:'Last step placed. Press Check.');}else say('The order is right. Press Check.');};
-    reveal=()=>{seq=c.items.map((x,i)=>i);paint();lock();finish(false,'',true);};}
+    reveal=()=>{seq=c.items.map((x,i)=>i);paint();lock();finish(false,`The order is: ${c.items.map((x,i)=>`${i+1}) ${esc(x)}`).join('  ')}. `,true);};}
   else if(c.type==='spot'){body.innerHTML=`<div class="muted small">Tap the line with the mistake.</div><div class="opts">${c.lines.map((x,i)=>`<button class="opt mono" data-i="${i}"><span class="ln">${i+1}</span> ${esc(x)}</button>`).join('')}</div>`;
     const opts=()=>[...body.querySelectorAll('.opt')];const lock=()=>opts().forEach(x=>{x.disabled=true;if(+x.dataset.i===c.bad)x.classList.add('bad');});
     opts().forEach(b=>b.onclick=()=>{if(over)return;const i=+b.dataset.i;lock();if(i!==c.bad)b.classList.add('pick');finish(i===c.bad,`The mistake is in line ${c.bad+1}. `);});
@@ -1941,9 +1943,9 @@ function runSet(cards,opt){
   const draw=()=>{const c=st.cards[st.i];if(!c)return opt.end(st);
     H().innerHTML=`${opt.head}<div class="pbar"><i style="width:${Math.round(100*st.i/st.cards.length)}%"></i></div>
      <div class="mono muted small" style="text-align:right">${st.i+1} / ${st.cards.length}</div>
-     <section class="card qcard" id="qcard"></section><div class="row end"><button class="btn primary" id="qNext" hidden>${st.i+1<st.cards.length?'Next question →':'See results'}</button></div>`;
+     ${opt.tip?`<p class="qtip">${opt.tip}</p>`:''}<section class="card qcard" id="qcard"></section><div class="row end">${opt.skip?`<a class="btn" href="${opt.skip}">Skip to the lesson</a>`:''}<button class="btn primary" id="qNext" hidden>${st.i+1<st.cards.length?'Next question →':'See results'}</button></div>`;
     renderQ(document.getElementById('qcard'),c,(ok,hinted)=>{st.res[c.id]=ok;if(opt.record)record(c,ok,hinted);
-      const nb=document.getElementById('qNext');nb.hidden=false;nb.focus({preventScroll:true});nb.onclick=()=>{st.i++;draw();};});};
+      const nb=document.getElementById('qNext');nb.hidden=false;nb.focus({preventScroll:true});nb.onclick=()=>{st.i++;draw();};},{record:!!opt.record,preview:!!opt.preview});};
   draw();}
 
 function solveHTML(P,upto){const n=P.lines.length;upto=Math.min(upto,n);
@@ -1992,7 +1994,7 @@ function startWarmup(done){
   const pick=[...own].sort((a,b)=>easy(a)-easy(b)).slice(0,n);if(pick.length<n)pick.push(...shuffle(rel).slice(0,n-pick.length));
   const head=`<div class="crumb">${esc(L.module.name)} · warm-up</div><h1>${done?'What do you remember?':'Predict'}</h1>
     <p class="tagline">${done?'Answer from memory before you re-read anything. Use 📖 Explain if you’re stuck. These don’t change your review schedule.':'Use the big idea to make a guess. Wrong guesses are fine: the lesson explains each one. Nothing here changes your schedule.'}</p>`;
-  const go=()=>runSet(pick,{record:false,head,end:st=>{
+  const go=()=>runSet(pick,{record:false,preview:!done,skip:done?null:`#${L.slug}-1`,tip:done?'Stuck? Use 📖 Explain to read the lesson part, or 💡 Hint.':'Don’t know? That’s expected before the lesson. Use 📖 Explain to read the idea, 💡 Hint for a nudge, or skip to the lesson.',head,end:st=>{
     const c=Object.values(st.res).filter(Boolean).length;
     H().innerHTML=`${head}<section class="card tcard main"><h2>${c} / ${st.cards.length} ${done?'remembered':'predicted right'}</h2>
       <p>${done?(c===st.cards.length?'Strong recall. Head to After for practice that counts.':'Some gaps: the lesson fills them.'):'Keep these in mind: the lesson answers each of them.'}</p>
