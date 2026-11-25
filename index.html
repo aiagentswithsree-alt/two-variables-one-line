@@ -131,6 +131,8 @@ ol.lines li.new .why{color:var(--accent-ink)}
 .afset{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:4px 0 8px}.afset .kicker{margin:0}.afset .small{flex-basis:100%;margin:0}
 .seg{display:inline-flex;border:2px solid var(--line);border-radius:10px;overflow:hidden}.seg button{border:0;border-left:2px solid var(--line);background:var(--paper);padding:6px 10px;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--ink);cursor:pointer}
 .seg button:first-child{border-left:0}.seg button.on{background:var(--ink);color:var(--paper)}
+.bar.reps{position:relative}.bar.reps b{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--line);opacity:.5}
+.paperc{border-style:dashed}
 .qtip{font-size:14px;border-left:4px solid #e2b44a;background:var(--chip1);color:#2a2620;padding:6px 10px;margin:0 0 10px}
 .watch{font-family:var(--mono);font-size:12px;border:2px solid var(--line);border-radius:10px;padding:6px 9px;background:var(--chip2);color:#2a2620;white-space:nowrap;box-shadow:2px 2px 0 var(--line)}
 .watch b{font-size:13px}.watch.paused{background:var(--bg);color:var(--muted)}
@@ -1531,7 +1533,7 @@ function mergeP(a,b){const o=blankP();o.upd=Math.max(a.upd||0,b.upd||0);{const s
   new Set([...Object.keys(a.cards||{}),...Object.keys(b.cards||{})]).forEach(id=>{const x=(a.cards||{})[id],y=(b.cards||{})[id];
     o.cards[id]=!x?y:!y?x:((x.r+x.w)!==(y.r+y.w)?((x.r+x.w)>(y.r+y.w)?x:y):((x.l||'')>=(y.l||'')?x:y));});
   new Set([...Object.keys(a.days||{}),...Object.keys(b.days||{})]).forEach(k=>{const x=(a.days||{})[k]||{},y=(b.days||{})[k]||{},d={};
-    ['rv','kn','bd','af'].forEach(f=>{const r=pickRec(x[f],y[f]);if(r)d[f]=r;});
+    ['rv','kn','bd','af','pa'].forEach(f=>{const r=pickRec(x[f],y[f]);if(r)d[f]=r;});
     if(x.tm||y.tm){d.tm={};new Set([...Object.keys(x.tm||{}),...Object.keys(y.tm||{})]).forEach(dv=>{const a=(x.tm||{})[dv]||{},b=(y.tm||{})[dv]||{},o={};
       new Set([...Object.keys(a),...Object.keys(b)]).forEach(k=>{o[k]=Math.max(a[k]||0,b[k]||0);});d.tm[dv]=o;});}
     const tp=[...new Set([...(x.tp||[]),...(y.tp||[])])];if(tp.length)d.tp=tp;
@@ -1593,7 +1595,7 @@ function savePoint(){if(Object.keys(P.days).length)persist();}
 /* ---------- calendar: time and what was learnt ---------- */
 let CAL=null;
 function bucketName(b){if(b.startsWith('L:')){const l=ALL.find(x=>x.slug===b.slice(2));return l?l.title:'Lesson';}
-  return {today:'Today screen',review:'Today’s review',kumon:'Kumon sheet',dump:'Brain dump'}[b]||b;}
+  return {today:'Today screen',review:'Today’s review',kumon:'Kumon sheet',dump:'Brain dump',paper:'On paper'}[b]||b;}
 function calendarHTML(){
   const t=todayK();if(!CAL)CAL={y:dparse(t).getFullYear(),m:dparse(t).getMonth(),sel:t};
   const first=new Date(CAL.y,CAL.m,1),days=new Date(CAL.y,CAL.m+1,0).getDate(),off=(first.getDay()+6)%7,st=mainStreak();
@@ -1617,6 +1619,7 @@ function dayDetailHTML(k){
   if(d.rv)learnt.push(`Today’s review: ${d.rv.c}/${d.rv.n} correct${d.rv.d?' ✓':''}`);
   if(d.af)learnt.push(`After practice: ${d.af.c}/${d.af.n} from memory`);
   if(d.kn)learnt.push(`Kumon sheet: ${d.kn.c}/${d.kn.n} in ${fmtTime(d.kn.ms)}`);
+  if(d.pa)learnt.push(`One action on paper: <b>${esc(d.pa.t||'')}</b> · ${{ok:'all correct',part:'small slips',miss:'needed the solution'}[d.pa.r]||''}`);
   if(d.bd){const D=DUMPS.find(x=>x.t===d.bd.topic);learnt.push(`Brain dump${D?` (${esc(D.title)})`:''}: ${d.bd.g}/${d.bd.t} points`);}
   return `<h3>${dparse(k).toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'})} · ${tot?clock(tot):'no time recorded'}</h3>
     ${rows?`<span class="kicker">TIME SPENT</span><table class="tbl">${rows}<tr class="sum"><td>Total</td><td class="mono">${clock(tot)}</td></tr></table>`:''}
@@ -1646,6 +1649,29 @@ function glanceHTML(lesson,k){const own=BANK.filter(c=>c.l[0]===lesson.slug&&!c.
   if(!own.length)return '';const n=own.length;k=Math.min(k,n);
   const pick=[...new Set(Array.from({length:k},(_,i)=>own[Math.round(i*(n-1)/Math.max(1,k-1))]))];
   return `<ol class="glance">${pick.map(c=>`<li><div class="gq">${esc(c.q)}</div><div class="ga">${glanceA(c)}</div><div class="gw">${esc(c.why||'')}</div></li>`).join('')}</ol>`;}
+function topicReps(t){let n=0;BANK.forEach(c=>{if(c.t!==t)return;const s=P.cards[c.id];if(s)n+=Math.max(0,(s.r||0)-(s.h||0));});
+  Object.values(P.days).forEach(d=>{if(d.pa&&d.pa.r==='ok'&&(d.pa.tp||[]).includes(t))n++;});return n;}
+function lessonTopics(slug){const t=new Set(BANK.filter(c=>c.l[0]===slug).map(c=>c.t));const lt=(COURSE.lessonTopic||{})[slug];if(lt)t.add(lt);return [...t];}
+function paperPool(){const UT=unlockedTopics(),out=[];ALL.forEach(l=>{const tps=lessonTopics(l.slug);if(!tps.some(t=>UT.has(t)))return;l.steps.forEach((s,i)=>{if(s.solve)out.push({l,n:i+1,s,tps});});});return out;}
+function paperPick(off){const pool=paperPool();if(!pool.length)return null;const done=new Set(Object.values(P.days).map(d=>d.pa&&d.pa.q).filter(Boolean));
+  const fresh=pool.filter(x=>!done.has(x.l.slug+':'+x.n)),src=fresh.length?fresh:pool;let h=0;for(const ch of todayK())h=(h*31+ch.charCodeAt(0))>>>0;return src[(h+(off||0))%src.length];}
+function startPaper(off){
+  const pk=paperPick(off);const head=`<div class="hhead"><div><div class="crumb"><a href="#today">← Today</a></div><h1>One action on paper</h1></div></div>`;
+  if(!pk){H().innerHTML=head+lockedNote('Exam questions unlock with your first lesson');return;}
+  const P_=pk.s.solve;
+  H().innerHTML=`${head}<p class="tagline">Knowing isn’t the same as doing. Turn it into a real exam answer, by hand.</p>
+   <section class="card tcard"><span class="kicker">TODAY’S QUESTION · ${esc(pk.l.title)}</span><h2>${esc(pk.s.title)}</h2><div class="board">${solveHTML(P_,0)}</div>
+     <ol class="points"><li>Put the phone or laptop aside.</li><li>In your notebook, write <b>Given</b>, <b>To find</b>, every step, and the final answer.</li><li>Then come back and check your work.</li></ol>
+     <div class="row"><button class="btn primary" id="paCheck">I’ve written it → Check my work</button><button class="btn" id="paOther">Different question</button><a class="btn" href="#${pk.l.slug}-${pk.n}">Stuck? Read it in the lesson</a></div></section>`;
+  document.getElementById('paOther').onclick=()=>startPaper((off||0)+1);
+  document.getElementById('paCheck').onclick=()=>{
+    H().querySelector('.tcard').innerHTML=`<span class="kicker">CHECK YOUR WORK LINE BY LINE · ${esc(pk.l.title)}</span><h2>${esc(pk.s.title)}</h2><div class="board">${solveHTML(P_,P_.lines.length)}</div>
+      <span class="kicker">HOW DID IT GO?</span><div class="row"><button class="btn primary" data-r="ok">All correct ✓</button><button class="btn" data-r="part">Small slips</button><button class="btn" data-r="miss">Needed the solution</button></div><p class="muted small" id="paMsg"></p>`;
+    H().querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{const r=b.dataset.r,d=DAY(todayK()),rank={ok:3,part:2,miss:1};
+      const rec={q:pk.l.slug+':'+pk.n,t:pk.s.title,r,tp:pk.tps,d:1,n:1};if(!d.pa||rank[r]>=rank[d.pa.r])d.pa=rec;d.tp=[...new Set([...(d.tp||[]),...pk.tps])];persist();
+      H().querySelectorAll('[data-r]').forEach(x=>x.disabled=true);
+      document.getElementById('paMsg').innerHTML=`Saved. ${{ok:'That counts as a rep for this topic.',part:'Circle the slip in your notebook so you notice it next time.',miss:'That’s fine: tomorrow, try a similar one without looking.'}[r]} <a href="#today">Back to Today</a>`;});};
+}
 function buildSession(n,only){
   const day=todayK();let pool;
   if(only)pool=only.map(cardById).filter(Boolean);
@@ -1657,7 +1683,7 @@ function buildSession(n,only){
   return pool;}
 
 /* ---------- streaks ---------- */
-const did=(k,f)=>{const d=P.days[k];if(!d)return false;if(f==='rv')return !!(d.rv&&d.rv.d);if(f==='kn')return !!(d.kn&&d.kn.n);if(f==='mx')return (d.tp||[]).length>=2;if(f==='nl')return !!(d.nl&&d.nl.length);return false;};
+const did=(k,f)=>{const d=P.days[k];if(!d)return false;if(f==='rv')return !!(d.rv&&d.rv.d);if(f==='kn')return !!(d.kn&&d.kn.n);if(f==='mx')return (d.tp||[]).length>=2;if(f==='nl')return !!(d.nl&&d.nl.length);if(f==='pa')return !!(d.pa&&d.pa.d);return false;};
 function mainStreak(){const t=todayK(),rest=new Set(),dd=Object.keys(P.days).filter(k=>did(k,'rv')).sort();if(!dd.length)return {n:0,rest};
   let k=did(t,'rv')?t:addD(t,-1),n=0;const used={};
   while(k>=dd[0]){if(did(k,'rv'))n++;else{const w=weekK(k);if(!used[w]&&did(addD(k,-1),'rv')){used[w]=1;rest.add(k);}else break;}k=addD(k,-1);}
@@ -1671,8 +1697,8 @@ function homeRoute(){const r=parseHash(location.hash.slice(1));if(!r){hideHome()
   if(r.kind==='home')showHome(r.v);else showTab(r.slug,r.tab);return true;}
 function showHome(v){savePoint();HOME_ON=true;curView=v;document.body.classList.add('homeon');document.body.classList.remove('lessonctx');$('#brand').innerHTML=COURSE.brand;
   if(location.hash!=='#'+v)history.replaceState(null,'',`#${v}`);
-  document.title=`${{today:'Today',review:'Today’s review',kumon:'Kumon sheet',dump:'Brain dump'}[v]} · ${COURSE.brand.replace(/<[^>]+>/g,'')}`;
-  ({today:renderToday,review:startReview,kumon:startKumon,dump:startDump})[v]();window.scrollTo({top:0});
+  document.title=`${{today:'Today',review:'Today’s review',kumon:'Kumon sheet',dump:'Brain dump',paper:'One action on paper'}[v]} · ${COURSE.brand.replace(/<[^>]+>/g,'')}`;
+  ({today:renderToday,review:startReview,kumon:startKumon,dump:startDump,paper:()=>startPaper(0)})[v]();window.scrollTo({top:0});
   try{renderDrawer();}catch(e){}}
 function hideHome(){savePoint();HOME_ON=false;document.body.classList.remove('homeon');document.body.classList.add('lessonctx');}
 addEventListener('hashchange',()=>{const r=parseHash(location.hash.slice(1));if(r){if(r.kind==='home')showHome(r.v);else showTab(r.slug,r.tab);}else if(HOME_ON){hideHome();route();}});
@@ -1695,6 +1721,7 @@ function renderToday(){
     ['Spaced repetition','questions due today',due.length?`${due.length} due`:'all clear ✓',`${Object.values(P.cards).filter(c=>c.b>=4).length} in box 4+`],
     ['Kumon sheet','5 fresh problems',d.kn&&d.kn.n?`✓ ${d.kn.c}/${d.kn.n} · ${fmtTime(d.kn.ms)}`:'not yet',pl(runStreak('kn'),'day')],
     ['Mixed topics','2+ topics in a day',`${(d.tp||[]).length} today`,pl(runStreak('mx'),'day')],
+    ['One action on paper','one exam question, by hand',d.pa&&d.pa.d?`✓ ${{ok:'all correct',part:'small slips',miss:'needed help'}[d.pa.r]}`:'not yet',pl(runStreak('pa'),'day')],
     ['Brain dump','once a week',bdWeek?`✓ ${bdWeek.g}/${bdWeek.t}`:'due this week',pl(dumpWeeks(),'week')],
     ['New lesson','Before → Understand → After',d.nl?`✓ ${d.nl.length}`:'—',pl(Object.values(P.days).filter(x=>x.nl).length,'day')+' total']];
   let heat='';for(let i=27;i>=0;i--){const k=addD(t,-i),x=P.days[k]||{};const lv=['rv','kn','mx'].filter(f=>did(k,f)).length+(x.bd?1:0)+(x.nl?1:0);
@@ -1721,6 +1748,8 @@ function renderToday(){
     :nothing?`<h2>Start here: ${esc(nl0.title)}</h2><p>Practice only uses what you’ve learned. Read the big idea, go through the lesson, and its questions unlock here for tomorrow’s review.</p><div class="row"><a class="btn primary" href="#${lessonEntry(nl0.slug)}">Start the lesson →</a></div>`
     :`<h2>${sessN} questions · ${topics} topics mixed · ~${Math.max(3,Math.round(sessN*0.6))} min</h2><p>Answer from memory first. Wrong answers come back tomorrow with a link to the lesson step.</p><div class="row"><a class="btn primary" href="#review">Start review →</a></div>`}
   </section>
+  ${(()=>{const pk=paperPick(0);if(!pk)return '';return `<section class="card tcard paperc"><span class="kicker">ONE ACTION ON PAPER · DAILY</span>${d.pa&&d.pa.d?`<h3>✓ Done: ${esc(d.pa.t)} · ${{ok:'all correct',part:'small slips',miss:'needed the solution'}[d.pa.r]}</h3><p>You turned what you know into a real exam answer. That’s the step that makes it stick.</p><a class="btn" href="#paper">Do another</a>`
+    :`<h3>${esc(pk.s.title)}</h3><p>Solve one exam question in your notebook, by hand, without the app. Then check it line by line against the worked solution.</p><a class="btn primary" href="#paper">Start →</a>`}</section>`;})()}
   ${UT.size&&!studiedSet().has(nl0.slug)?`<section class="card tcard"><span class="kicker">UP NEXT</span><h3>${esc(nl0.title)}</h3>
     <p>Before you start, read these 5 questions with their answers. Just read: nothing here is a test.</p><div class="glancebox"><span class="kicker">QUICK GLANCE · QUESTIONS AND ANSWERS YOU’LL LEARN</span>${glanceHTML(nl0,5)}</div>
     <div class="row"><a class="btn primary" href="#${lessonEntry(nl0.slug)}">Start ${esc(nl0.title)} →</a></div></section>`:''}
@@ -1737,6 +1766,10 @@ function renderToday(){
     <section class="card tcard"><span class="kicker">COMING UP</span><p><b>${dueTom}</b> questions due tomorrow<br><b>${due7}</b> due in the next 7 days<br><b>${nw}</b> new questions ready${locked?`<br><b>${locked}</b> more unlock as you finish lessons`:''}${paused?`<br><b>${paused}</b> paused until you learn their lesson`:''}</p></section>
     <section class="card tcard"><span class="kicker">THIS WEEK VS LAST</span><p>Accuracy: <b>${tw.acc==null?'—':tw.acc+'%'}</b> <span class="muted">(last week ${lw.acc==null?'—':lw.acc+'%'})</span><br>Practice: <b>${tw.min} min</b> over <b>${tw.days}</b> days <span class="muted">(last week ${lw.min} min)</span></p></section>
   </div>
+  <section class="card tcard"><span class="kicker">RECALL REPS · AIM FOR 30 PER TOPIC</span>
+    <p class="muted small">One correct recall is noise; many, spread over days, become a pattern. Reps count correct answers without help, plus correct solutions on paper.</p>
+    ${Object.keys(TOPICS).map(k=>{const n=topicReps(k),open=UT.has(k),st=n>=30?'pattern locked in ✓':n>=10?'weak signal: keep going':'noise: just started';
+      return `<div class="mrow"><span>${open?'':'🔒 '}${TOPICS[k]}</span><span class="bar reps"><i style="width:${Math.min(100,Math.round(100*n/30))}%"></i><b style="left:33.3%"></b></span><span class="mono">${n}/30</span></div><div class="msub">${open?st:'unlocks with its lesson'}</div>`;}).join('')}</section>
   <section class="card tcard"><span class="kicker">MASTERY BY TOPIC · BOX 4 OR HIGHER</span>${mastery}</section>
   <section class="card tcard"><span class="kicker">WEAK SPOTS</span>${weak.length?`<ol class="weak">${weak.map(c=>`<li><span>${esc(c.q||('Fresh-number: '+TOPICS[c.t]))}</span><span class="muted mono">✗${P.cards[c.id].w} ✓${P.cards[c.id].r}</span><a href="#${c.l[0]}-${c.l[1]}">Review step →</a></li>`).join('')}</ol><button class="btn" id="weakGo">Practise these now</button>`:'<p class="muted">No weak spots yet. Questions you get wrong will show here.</p>'}</section>
   <section class="card tcard"><span class="kicker">BACKUP</span><p class="muted">Progress syncs to your claude.ai account. A backup code also lets you restore it anywhere.</p>
@@ -1946,7 +1979,7 @@ const LESSON_TOPIC=COURSE.lessonTopic||{};
 const lessonDone=slug=>!!store.get(doneKey,{})[slug];
 function lessonEntry(slug){return slug+(lessonDone(slug)?'-after':'-before');}
 function parseHash(h){
-  if(!h||['today','review','kumon','dump'].includes(h))return {kind:'home',v:h||'today'};
+  if(!h||['today','review','kumon','dump','paper'].includes(h))return {kind:'home',v:h||'today'};
   const m=h.match(/^([\w-]+)-(before|after)$/);
   if(m&&ALL.some(l=>l.slug===m[1]))return {kind:'tab',slug:m[1],tab:m[2]};
   return null;}
