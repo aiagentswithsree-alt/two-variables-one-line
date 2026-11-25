@@ -125,6 +125,12 @@ ol.lines li.new .why{color:var(--accent-ink)}
 
 [hidden]{display:none!important}
 .fshow{border:2px solid var(--line);border-radius:10px;padding:10px 12px;line-height:1.55;background:var(--chip1);color:#2a2620}.fshow a{color:#245a8a}
+.studyans{margin:10px 0 6px;padding:10px 12px;border:2px solid var(--line);border-left:6px solid var(--res);border-radius:10px;background:var(--chip2);color:#2a2620;font-size:16px;line-height:1.55}
+.studyans .kicker,.studywhy .kicker{display:block;margin-bottom:2px}.studywhy{padding:6px 12px;line-height:1.55;font-size:15px}
+.tag.STUDY{background:var(--chip2)}.kstudy{margin:6px 0 8px}
+.afset{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:4px 0 8px}.afset .kicker{margin:0}.afset .small{flex-basis:100%;margin:0}
+.seg{display:inline-flex;border:2px solid var(--line);border-radius:10px;overflow:hidden}.seg button{border:0;border-left:2px solid var(--line);background:var(--paper);padding:6px 10px;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--ink);cursor:pointer}
+.seg button:first-child{border-left:0}.seg button.on{background:var(--ink);color:var(--paper)}
 .qtip{font-size:14px;border-left:4px solid #e2b44a;background:var(--chip1);color:#2a2620;padding:6px 10px;margin:0 0 10px}
 .watch{font-family:var(--mono);font-size:12px;border:2px solid var(--line);border-radius:10px;padding:6px 9px;background:var(--chip2);color:#2a2620;white-space:nowrap;box-shadow:2px 2px 0 var(--line)}
 .watch b{font-size:13px}.watch.paused{background:var(--bg);color:var(--muted)}
@@ -1284,7 +1290,8 @@ const DUMPS = [
 ];
 
 /* course-level settings used by the daily-practice engine */
-COURSE.subject = 'Chapter 13';                 // shown on the Today screen
+COURSE.subject = 'Chapter 13';
+COURSE.answerFirst = 'always';             // look → cover → recall: show answer + why before every question                 // shown on the Today screen
 COURSE.recallKey = 'gm9-ch13-recall-v1';       // localStorage key for practice progress (keep stable once live)
 COURSE.lessonTopic = {'ex-13-4':'T4'};         // topic for lessons that have no questions of their own
 
@@ -1520,7 +1527,7 @@ async function flush(){if(!dbRef||writing||!dirty)return;writing=true;dirty=fals
   try{await dbRef.set(canon(JSON.parse(JSON.stringify(P))));syncSt='synced';}catch(e){syncSt='error';}
   writing=false;paintSync();if(dirty)flush();}
 function pickRec(X,Y){if(!X)return Y;if(!Y)return X;if((X.d||0)!==(Y.d||0))return (X.d||0)>(Y.d||0)?X:Y;return (X.n||X.t||0)>=(Y.n||Y.t||0)?X:Y;}
-function mergeP(a,b){const o=blankP();o.upd=Math.max(a.upd||0,b.upd||0);
+function mergeP(a,b){const o=blankP();o.upd=Math.max(a.upd||0,b.upd||0);{const sa=a.set,sb=b.set;if(sa||sb)o.set=!sa?sb:!sb?sa:((sa.t||0)>=(sb.t||0)?sa:sb);}
   new Set([...Object.keys(a.cards||{}),...Object.keys(b.cards||{})]).forEach(id=>{const x=(a.cards||{})[id],y=(b.cards||{})[id];
     o.cards[id]=!x?y:!y?x:((x.r+x.w)!==(y.r+y.w)?((x.r+x.w)>(y.r+y.w)?x:y):((x.l||'')>=(y.l||'')?x:y));});
   new Set([...Object.keys(a.days||{}),...Object.keys(b.days||{})]).forEach(k=>{const x=(a.days||{})[k]||{},y=(b.days||{})[k]||{},d={};
@@ -1703,6 +1710,8 @@ function renderToday(){
   <div class="hhead"><div><div class="crumb">${new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'})}</div><h1>Today</h1></div>
     <div class="streak"><b>${st.n}</b><span>day streak</span></div></div>
   <p class="tagline">One short review a day keeps ${esc(COURSE.subject||'this course')} in your memory. Rest day: 1 per week, used automatically if you miss a day. <span id="syncTxt" class="mono"></span></p>
+  <div class="afset"><span class="kicker">ANSWER FIRST</span><div class="seg">${[['always','Always'],['learning','While learning'],['off','Off']].map(([v,l])=>`<button data-af="${v}" class="${answerFirstMode()===v?'on':''}" aria-pressed="${answerFirstMode()===v}">${l}</button>`).join('')}</div>
+    <span class="muted small">${{always:'Every question first shows its answer and explanation. Read it, cover it, then answer from memory.',learning:'New questions and ones you got wrong show the answer first. Questions you know are asked cold.',off:'Questions are asked cold. Explain and Hint are always there if you get stuck.'}[answerFirstMode()]}</span></div>
   <section class="card tcard main">
     <span class="kicker">${!UT.size?'START HERE · YOUR FIRST LESSON':'TODAY’S REVIEW · ACTIVE RECALL'}</span>
     ${!UT.size?`<h2>Start here: ${esc(nl0.title)}</h2><p>Before you begin, take a quick glance at what this lesson teaches you to answer. Just read: nothing here is a test.</p>
@@ -1734,6 +1743,7 @@ function renderToday(){
     <div class="row"><button class="btn" id="bkCopy">Copy backup code</button><button class="btn" id="bkShow">Restore from code</button></div>
     <div id="bkBox" hidden><textarea id="bkText" rows="3" placeholder="Paste a backup code here"></textarea><div class="row"><button class="btn" id="bkGo">Restore</button><span id="bkMsg" class="muted"></span></div></div></section>`;
   paintSync();wireCalendar();
+  H().querySelectorAll('[data-af]').forEach(b=>b.onclick=()=>{setAnswerFirst(b.dataset.af);renderToday();});
   const wg=document.getElementById('weakGo');if(wg)wg.onclick=()=>{SESS_ONLY=weak.map(c=>c.id);location.hash='#review';};
   document.getElementById('bkCopy').onclick=async e=>{const code=btoa(unescape(encodeURIComponent(JSON.stringify(P))));
     try{await navigator.clipboard.writeText(code);e.target.textContent='Copied ✓';}catch(err){const b=document.getElementById('bkBox');b.hidden=false;const ta=document.getElementById('bkText');ta.value=code;ta.select();document.getElementById('bkMsg').textContent='Copy the code above.';}};
@@ -1753,9 +1763,26 @@ function autoHint(c,level){
   if(/^-?\d+(\.\d+)?$/.test(a))return `The answer is a ${a.includes('.')?'decimal':'whole'} number${a.startsWith('-')?' (negative)':''}.`;
   if(/^-?\d+\/\d+$/.test(a))return `The answer is a fraction${a.startsWith('-')?' (negative)':''}.`;
   return `It is a word with ${a.replace(/\s/g,'').length} letters.`;}
+function answerFirstMode(){return (P.set&&P.set.af)||COURSE.answerFirst||'off';}
+function setAnswerFirst(v){P.set={...(P.set||{}),af:v,t:Date.now()};persist();}
+function studyFirst(id){const m=answerFirstMode();return m==='always'||(m==='learning'&&(((P.cards[id]||{}).b||0)<3));}
 function renderQ(box,c,done,ctx){ctx=ctx||{record:true};
+  if(!ctx.studied&&(ctx.study!=null?ctx.study:studyFirst(c.id))){
+    box.innerHTML=`<div class="qmeta"><span class="tag STUDY">Step 1 · Study</span><span class="muted">${TOPICS[c.t]}${c.gen||GEN_IDS.has(c.id)?' · fresh numbers':''}</span></div>
+      <div class="qtext">${esc(c.q)}</div>
+      <div class="studyans"><span class="kicker">ANSWER</span><div>${glanceA(c)}</div></div>
+      <div class="studywhy"><span class="kicker">WHY</span>${esc(c.why||'')}</div>
+      <div class="helpbar"><button class="hbtn" data-h="explain" aria-expanded="false">📖 Read the lesson part</button></div><div class="expbox"></div>
+      <p class="muted small">Read it, say the answer to yourself, then cover it and answer from memory.</p>
+      <div class="row"><button class="btn primary" data-cover>Cover it and try →</button></div>`;
+    const xb=box.querySelector('[data-h="explain"]'),xbox=box.querySelector('.expbox');
+    xb.onclick=()=>{if(xb.getAttribute('aria-expanded')==='true'){xbox.innerHTML='';xb.setAttribute('aria-expanded','false');xb.textContent='📖 Read the lesson part';return;}
+      explainInto(xbox,c.l[0],c.l[1]);xb.setAttribute('aria-expanded','true');xb.textContent='📖 Hide the lesson part';};
+    box.querySelector('[data-cover]').onclick=()=>{renderQ(box,c,done,{...ctx,studied:true});box.scrollIntoView({block:'nearest',behavior:reduce?'auto':'smooth'});};
+    setTimeout(()=>{const b=box.querySelector('[data-cover]');if(b)b.focus({preventScroll:true});},50);
+    return;}
   const typeName={mcq:'Choose one',fill:'Fill in the blank',tf:'True or false, with a reason',match:'Match the following',order:'Put in order',spot:'Spot the mistake'}[c.type];
-  box.innerHTML=`<div class="qmeta"><span class="tag SOLVE">${typeName}</span><span class="muted">${TOPICS[c.t]}${c.gen||GEN_IDS.has(c.id)?' · fresh numbers':''}</span></div><div class="qtext">${esc(c.q)}</div><div class="qbody"></div>
+  box.innerHTML=`<div class="qmeta"><span class="tag SOLVE">${ctx.studied?'Step 2 · Recall: ':''}${typeName}</span><span class="muted">${TOPICS[c.t]}${c.gen||GEN_IDS.has(c.id)?' · fresh numbers':''}</span></div><div class="qtext">${esc(c.q)}</div><div class="qbody"></div>
    <div class="helpbar"><button class="hbtn" data-h="explain" aria-expanded="false">📖 Explain</button><button class="hbtn" data-h="hint">💡 Hint</button><button class="hbtn" data-h="show">Show answer</button><span class="hint" aria-live="polite"></span></div><div class="expbox"></div><div class="qfb" aria-live="polite"></div>`;
   const body=box.querySelector('.qbody'),fb=box.querySelector('.qfb'),hintEl=box.querySelector('.hint');let over=false,hinted=false,hints=0;
   const say=t=>{hintEl.textContent=t;};
@@ -1862,10 +1889,11 @@ function startKumon(){
   const UTk=unlockedTopics(),okG=KUMON_GENS.filter(g=>{const bc=BANK.find(x=>x.gen===g);return bc&&UTk.has(bc.t);});
   if(!okG.length){H().innerHTML=`<div class="hhead"><div><div class="crumb"><a href="#today">← Today</a></div><h1>Kumon sheet</h1></div></div>`+lockedNote('Kumon problems unlock with your first lesson');return;}
   const gens=shuffle(okG),probs=[0,1,2,3,4].map(i=>{const g=gens[i%gens.length];return {...GEN[g](),g};}),t0=Date.now(),res=Array(probs.length).fill(null);KPROBS=probs;
+  probs.forEach(p=>{const bc=BANK.find(x=>x.gen===p.g);p.study=studyFirst(bc?bc.id:'');});
   const best=Object.values(P.days).filter(x=>x.kn&&x.kn.c===x.kn.n).map(x=>x.kn.ms).sort((a,b)=>a-b)[0];
   H().innerHTML=`<div class="hhead"><div><div class="crumb"><a href="#today">← Today</a></div><h1>Kumon sheet</h1></div><div class="mono" id="kClock">0s</div></div>
    <p class="tagline">Five problems, fresh numbers. Work in your notebook, type only the answer. ${best?`Your best full-marks time: <b>${fmtTime(best)}</b>.`:''}</p>
-   <section class="card tcard">${probs.map((p,i)=>`<div class="kp"><div class="qtext"><span class="ln">${i+1}</span> ${esc(p.q)}</div><div class="fillrow"><input type="text" autocomplete="off" aria-label="Answer ${i+1}" data-i="${i}" placeholder="Answer"><button class="btn" data-i="${i}">Check</button></div><div class="helpbar" id="kb${i}"><button class="hbtn" data-k="explain" data-i="${i}" aria-expanded="false">📖 Explain</button><button class="hbtn" data-k="hint" data-i="${i}">💡 Hint</button><button class="hbtn" data-k="show" data-i="${i}">Show answer</button><span class="hint" id="kh${i}"></span></div><div class="expbox" id="kx${i}"></div><div class="qfb" id="kf${i}"></div></div>`).join('')}
+   <section class="card tcard">${probs.map((p,i)=>`<div class="kp"><div class="qtext"><span class="ln">${i+1}</span> ${esc(p.q)}</div>${p.study?`<div class="kstudy" id="ks${i}"><div class="studyans"><span class="kicker">ANSWER</span><div>${esc(p.a[0].replace(/^-/,'−'))}</div></div><div class="studywhy"><span class="kicker">WHY</span>${esc(p.why)}</div><div class="row"><button class="btn primary" data-kcover="${i}">Cover it and try →</button></div></div>`:''}<div class="fillrow"><input type="text" autocomplete="off" aria-label="Answer ${i+1}" data-i="${i}" placeholder="${p.study?'Cover the answer first':'Answer'}" ${p.study?'disabled':''}><button class="btn" data-i="${i}">Check</button></div><div class="helpbar" id="kb${i}"><button class="hbtn" data-k="explain" data-i="${i}" aria-expanded="false">📖 Explain</button><button class="hbtn" data-k="hint" data-i="${i}">💡 Hint</button><button class="hbtn" data-k="show" data-i="${i}">Show answer</button><span class="hint" id="kh${i}"></span></div><div class="expbox" id="kx${i}"></div><div class="qfb" id="kf${i}"></div></div>`).join('')}
    <div class="row"><button class="btn primary" id="kDone">Finish sheet</button><span class="err" id="kErr"></span></div></section>`;
   const clock=setInterval(()=>{const el=document.getElementById('kClock');if(!el){clearInterval(clock);return;}el.textContent=fmtTime(Date.now()-t0);},1000);
   const check=i=>{if(res[i]!==null)return;const inp=H().querySelector(`input[data-i="${i}"]`);if(!inp.value.trim()){document.getElementById('kf'+i).innerHTML='<span class="err">Type an answer first, or use Hint.</span>';return;}
@@ -1876,6 +1904,7 @@ function startKumon(){
   H().querySelectorAll('.kp [data-k="explain"]').forEach(b=>b.onclick=()=>{const i=+b.dataset.i,bc=BANK.find(x=>x.gen===probs[i].g),box=document.getElementById('kx'+i);if(!bc)return;
     if(b.getAttribute('aria-expanded')==='true'){box.innerHTML='';b.setAttribute('aria-expanded','false');b.textContent='📖 Explain';return;}
     explainInto(box,bc.l[0],bc.l[1]);b.setAttribute('aria-expanded','true');b.textContent='📖 Hide explanation';});
+  H().querySelectorAll('[data-kcover]').forEach(b=>b.onclick=()=>{const i=+b.dataset.kcover;document.getElementById('ks'+i).remove();const inp=H().querySelector(`input[data-i="${i}"]`);inp.disabled=false;inp.placeholder='Answer from memory';inp.focus();});
   const hl={};H().querySelectorAll('.kp [data-k="hint"]').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(res[i]!==null)return;hl[i]=(hl[i]||0);document.getElementById('kh'+i).textContent=autoHint(probs[i],hl[i]);hl[i]++;});
   H().querySelectorAll('.kp [data-k="show"]').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(res[i]!==null)return;const p=probs[i],inp=H().querySelector(`input[data-i="${i}"]`),ans=p.a[0].replace(/^-/,'−');
     res[i]=false;inp.value=ans;inp.disabled=true;inp.classList.add('shown');H().querySelector(`.fillrow button[data-i="${i}"]`).disabled=true;document.getElementById('kb'+i).classList.add('done');
