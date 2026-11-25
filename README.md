@@ -39,6 +39,8 @@ The page opens on **Today**, a 5–7 minute routine that keeps the chapter in lo
 - **Calendar:** a month view with the minutes spent each day, ✓ for streak days and rest days marked. Tap a day for time per lesson and activity, plus what you learnt: lessons finished, topics practised and scores.
 - **Tracker:** a main streak (one rest day per week), a streak for each technique, a 4-week heatmap, mastery by topic, weak spots, and this week vs last week.
 
+**Start over** (in the Backup card on Today) deletes all practice progress on every device after a confirm step; other devices adopt the reset on their next sync. Settings are kept.
+
 Progress syncs to your claude.ai account when the page is opened from claude.ai. Opened from GitHub Pages or a local file, it is saved in that browser only; use **Copy backup code** to move it.
 
 ## Lesson tabs: Before, Understand, After

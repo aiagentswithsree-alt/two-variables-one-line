@@ -133,6 +133,7 @@ ol.lines li.new .why{color:var(--accent-ink)}
 .seg button:first-child{border-left:0}.seg button.on{background:var(--ink);color:var(--paper)}
 .bar.reps{position:relative}.bar.reps b{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--line);opacity:.5}
 .paperc{border-style:dashed}
+.rsbox{border:2px solid var(--warn);border-radius:10px;padding:10px 12px;margin-top:8px;background:var(--bg)}.rsbox p{margin:6px 0}.btn.danger{background:var(--warn);color:#fff;border-color:var(--line)}
 .qtip{font-size:14px;border-left:4px solid #e2b44a;background:var(--chip1);color:#2a2620;padding:6px 10px;margin:0 0 10px}
 .watch{font-family:var(--mono);font-size:12px;border:2px solid var(--line);border-radius:10px;padding:6px 9px;background:var(--chip2);color:#2a2620;white-space:nowrap;box-shadow:2px 2px 0 var(--line)}
 .watch b{font-size:13px}.watch.paused{background:var(--bg);color:var(--muted)}
@@ -1521,7 +1522,9 @@ const canon=o=>Array.isArray(o)?o.map(canon):(o&&typeof o==='object')?Object.key
 
 /* ---------- state + sync ---------- */
 const blankP=()=>({v:1,cards:{},days:{},upd:0});
+function applyReset(){try{const seen=+localStorage.getItem(RKEY+'-rs')||0;if((P.rs||0)>seen){localStorage.removeItem(COURSE.storageKey+'-done');localStorage.setItem(RKEY+'-rs',String(P.rs));}}catch(e){}}
 let P=(()=>{try{return JSON.parse(localStorage.getItem(RKEY))||blankP();}catch(e){return blankP();}})();
+applyReset();
 let dbRef=null,syncSt='local',writing=false,dirty=false,saveT=0;
 const DAY=k=>P.days[k]||(P.days[k]={});
 function persist(){P.upd=Date.now();try{localStorage.setItem(RKEY,JSON.stringify(P));}catch(e){}dirty=true;clearTimeout(saveT);saveT=setTimeout(flush,1200);}
@@ -1529,7 +1532,7 @@ async function flush(){if(!dbRef||writing||!dirty)return;writing=true;dirty=fals
   try{await dbRef.set(canon(JSON.parse(JSON.stringify(P))));syncSt='synced';}catch(e){syncSt='error';}
   writing=false;paintSync();if(dirty)flush();}
 function pickRec(X,Y){if(!X)return Y;if(!Y)return X;if((X.d||0)!==(Y.d||0))return (X.d||0)>(Y.d||0)?X:Y;return (X.n||X.t||0)>=(Y.n||Y.t||0)?X:Y;}
-function mergeP(a,b){const o=blankP();o.upd=Math.max(a.upd||0,b.upd||0);{const sa=a.set,sb=b.set;if(sa||sb)o.set=!sa?sb:!sb?sa:((sa.t||0)>=(sb.t||0)?sa:sb);}
+function mergeP(a,b){if((a.rs||0)!==(b.rs||0))return JSON.parse(JSON.stringify((a.rs||0)>(b.rs||0)?a:b));const o=blankP();if(a.rs)o.rs=a.rs;o.upd=Math.max(a.upd||0,b.upd||0);{const sa=a.set,sb=b.set;if(sa||sb)o.set=!sa?sb:!sb?sa:((sa.t||0)>=(sb.t||0)?sa:sb);}
   new Set([...Object.keys(a.cards||{}),...Object.keys(b.cards||{})]).forEach(id=>{const x=(a.cards||{})[id],y=(b.cards||{})[id];
     o.cards[id]=!x?y:!y?x:((x.r+x.w)!==(y.r+y.w)?((x.r+x.w)>(y.r+y.w)?x:y):((x.l||'')>=(y.l||'')?x:y));});
   new Set([...Object.keys(a.days||{}),...Object.keys(b.days||{})]).forEach(k=>{const x=(a.days||{})[k]||{},y=(b.days||{})[k]||{},d={};
@@ -1552,7 +1555,7 @@ function mergeP(a,b){const o=blankP();o.upd=Math.max(a.upd||0,b.upd||0);{const s
     const remote=s.exists?s.data():null;
     const m=remote?mergeP(P,remote):P;
     const need=!remote||JSON.stringify(canon(m))!==JSON.stringify(canon(remote));
-    P=m;try{localStorage.setItem(RKEY,JSON.stringify(P));}catch(e){}
+    P=m;try{localStorage.setItem(RKEY,JSON.stringify(P));}catch(e){}applyReset();
     if(!s.metadata.fromCache)syncSt='synced';
     paintSync();if(need&&Object.keys(P.cards).length+Object.keys(P.days).length){dirty=true;flush();}
     if(HOME_ON&&curView==='today')renderToday();
@@ -1774,12 +1777,18 @@ function renderToday(){
   <section class="card tcard"><span class="kicker">WEAK SPOTS</span>${weak.length?`<ol class="weak">${weak.map(c=>`<li><span>${esc(c.q||('Fresh-number: '+TOPICS[c.t]))}</span><span class="muted mono">✗${P.cards[c.id].w} ✓${P.cards[c.id].r}</span><a href="#${c.l[0]}-${c.l[1]}">Review step →</a></li>`).join('')}</ol><button class="btn" id="weakGo">Practise these now</button>`:'<p class="muted">No weak spots yet. Questions you get wrong will show here.</p>'}</section>
   <section class="card tcard"><span class="kicker">BACKUP</span><p class="muted">Progress syncs to your claude.ai account. A backup code also lets you restore it anywhere.</p>
     <div class="row"><button class="btn" id="bkCopy">Copy backup code</button><button class="btn" id="bkShow">Restore from code</button></div>
-    <div id="bkBox" hidden><textarea id="bkText" rows="3" placeholder="Paste a backup code here"></textarea><div class="row"><button class="btn" id="bkGo">Restore</button><span id="bkMsg" class="muted"></span></div></div></section>`;
+    <div id="bkBox" hidden><textarea id="bkText" rows="3" placeholder="Paste a backup code here"></textarea><div class="row"><button class="btn" id="bkGo">Restore</button><span id="bkMsg" class="muted"></span></div></div>
+    <div class="row"><button class="btn" id="rsAsk">Start over…</button></div>
+    <div id="rsBox" hidden class="rsbox"><b>Start over from the beginning?</b><p>This permanently deletes all practice progress on every device: questions and their boxes, streaks, calendar time, scores and finished lessons. Your settings stay. Copy a backup code first if you might want it back.</p>
+      <div class="row"><button class="btn danger" id="rsYes">Yes, delete and start over</button><button class="btn" id="rsNo">Cancel</button></div></div></section>`;
   paintSync();wireCalendar();
   H().querySelectorAll('[data-af]').forEach(b=>b.onclick=()=>{setAnswerFirst(b.dataset.af);renderToday();});
   const wg=document.getElementById('weakGo');if(wg)wg.onclick=()=>{SESS_ONLY=weak.map(c=>c.id);location.hash='#review';};
   document.getElementById('bkCopy').onclick=async e=>{const code=btoa(unescape(encodeURIComponent(JSON.stringify(P))));
     try{await navigator.clipboard.writeText(code);e.target.textContent='Copied ✓';}catch(err){const b=document.getElementById('bkBox');b.hidden=false;const ta=document.getElementById('bkText');ta.value=code;ta.select();document.getElementById('bkMsg').textContent='Copy the code above.';}};
+  document.getElementById('rsAsk').onclick=()=>{document.getElementById('rsBox').hidden=false;};
+  document.getElementById('rsNo').onclick=()=>{document.getElementById('rsBox').hidden=true;};
+  document.getElementById('rsYes').onclick=()=>startOver();
   document.getElementById('bkShow').onclick=()=>{document.getElementById('bkBox').hidden=false;};
   document.getElementById('bkGo').onclick=()=>{const m=document.getElementById('bkMsg');try{const x=JSON.parse(decodeURIComponent(escape(atob(document.getElementById('bkText').value.trim()))));
     if(!x||!x.cards||!x.days)throw 0;P=mergeP(P,x);persist();m.textContent='Restored ✓';setTimeout(renderToday,600);}catch(err){m.textContent='That code didn’t work. Copy it again and paste the whole thing.';}};
@@ -1971,6 +1980,8 @@ function startDump(pick){
     d.tp=[...new Set([...(d.tp||[]),D.t])];persist();
     document.getElementById('bdMsg').innerHTML=`Saved: ${g}/${D.pts.length}. ${g<D.pts.length?'Read the unticked points once, then close the book.':'Everything remembered.'} <a href="#today">Back to Today</a>`;};
 }
+function startOver(){P={...blankP(),rs:Date.now(),set:P.set};applyReset();persist();clearTimeout(saveT);flush();CAL=null;ACT={k:null,ms:0};
+  showHome('today');const m=document.querySelector('#home .tagline');if(m)m.insertAdjacentHTML('afterend','<p class="qtip">Fresh start ✓ All old progress is cleared on every device. Begin with the quick glance and “Start here” below.</p>');}
 function logLesson(slug){const d=DAY(todayK());d.nl=[...new Set([...(d.nl||[]),slug])];persist();}
 /* RECALL:END */
 /* TABS:START — Screen 2: Before / Understand / After for every lesson */
